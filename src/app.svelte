@@ -6,7 +6,8 @@
 
     const routes = [
         { name: "Home", link: "/" },
-        { name: "Login", link: "/login" }
+        { name: "Login", link: "/login" },
+        { name: "Planner", link: "/planner" }
     ]
     
     let currentEmail = ""

@@ -18,7 +18,12 @@
         "strict": true,
         "noUnusedLocals": true,
         "noUnusedParameters": true,
-        "noFallthroughCasesInSwitch": true
+        "noFallthroughCasesInSwitch": true,
+        "paths": {
+            // This is reflected in the vite.config.ts
+            "@/*": ["src/*"] 
+        }
+
     },
     "include": ["src"]
 }
