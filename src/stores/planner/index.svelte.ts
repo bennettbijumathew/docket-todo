@@ -1,6 +1,6 @@
 import { onAuthStateChanged } from "firebase/auth"
 import { auth, db } from "@/lib/config/firebase.ts"
-import { collection, onSnapshot, query, where, Unsubscribe as FirestoreUnsub, orderBy } from "firebase/firestore";
+import { collection, onSnapshot, query, Unsubscribe as FirestoreUnsub, orderBy } from "firebase/firestore";
 import { Unsubscribe as AuthUnsub } from "firebase/auth";
 
 class PlannerState {
@@ -15,20 +15,18 @@ class PlannerState {
 
             this.unsubFromQuery?.()
             this.unsubFromQuery = null
-
-            if (!user) return
             
+            if (!user) return
+
             // This query gets a list of planners that are correlated to the user
             const q = query(collection(db, "planners"), orderBy(`users.${userId}`));
 
             this.unsubFromQuery = onSnapshot(q, (querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                    this.planners.push({
+                this.planners = querySnapshot.docs.map((doc) => { 
+                    return { 
                         name: doc.data().name,
                         users: doc.data().users
-                    })
-
-                    console.log(Object.hasOwn(doc.data().users, userId))
+                    }
                 })
             })            
         }) 
