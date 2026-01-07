@@ -33,7 +33,6 @@
         <div class="pb-4">
             <button class="border p-1" onclick={handleLogIn}>log in</button>
             <button class="border p-1" onclick={handleLogOut}>signout</button>
-            <a class="border p-1" href="/reset-password">forgot</a>
         </div>
     </section>
 </main>
