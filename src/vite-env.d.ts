@@ -13,6 +13,7 @@ interface ImportMetaEnv {
     readonly VITE_ACCOUNT_TEST_A_EMAIL: string,
     readonly VITE_ACCOUNT_TEST_B_EMAIL: string,
     readonly VITE_ACCOUNT_TEST_PASSWORD: string
+    readonly MODE: string
 }
 
 interface ImportMeta {
