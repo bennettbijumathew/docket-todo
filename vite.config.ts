@@ -2,6 +2,7 @@ import { defineConfig } from "vite";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
 import tailwindcss from '@tailwindcss/vite'
 import { router } from 'sv-router/vite-plugin'; 
+import { fileURLToPath } from "node:url";
 
 const host = process.env.TAURI_DEV_HOST;
 
@@ -34,4 +35,11 @@ export default defineConfig(async () => ({
         router()
     ],
     envDir: "./",
+    resolve: {
+        // This is reflected in the tsconfig.json
+        alias: {
+            '@': fileURLToPath(new URL("./src", import.meta.url)), 
+        },
+    },
+
 }));

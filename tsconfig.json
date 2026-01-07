@@ -18,7 +18,13 @@
         "strict": true,
         "noUnusedLocals": true,
         "noUnusedParameters": true,
-        "noFallthroughCasesInSwitch": true
+        "noFallthroughCasesInSwitch": true,
+        "paths": {  
+            // This is reflected in the vite.config.ts
+            "@/*": ["./src/*"], 
+            "sv-router/generated": [".router/router.ts"],
+        }
+
     },
-    "include": ["src"]
+    "include": ["src", ".router"]
 }
