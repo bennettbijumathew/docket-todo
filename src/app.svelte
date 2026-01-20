@@ -24,30 +24,28 @@
 
 </script>
 
-<main>  
-    <nav class="p-4 flex items-center border-b justify-between">
-        <div class="gap-x-4 flex">
-            {#each routes as route}
-                <a href={route.link}>
-                    {route.name}
-                </a>
-            {/each}
+<nav class="p-4 flex items-center border-b justify-between">
+    <div class="gap-x-4 flex">
+        {#each routes as route}
+            <a href={route.link}>
+                {route.name}
+            </a>
+        {/each}
+    </div>
+        
+    <div class="gap-x-4 flex">
+        <div>
+            {currentEmail}
         </div>
-            
-        <div class="gap-x-4 flex">
-            <div>
-                {currentEmail}
-            </div>
-            
-            <button onclick={handleUserALogin}>
-                USER A
-            </button>
+        
+        <button onclick={handleUserALogin}>
+            USER A
+        </button>
 
-            <button onclick={handleUserBLogin}>
-                USER B
-            </button>
-        </div>
-    </nav>
+        <button onclick={handleUserBLogin}>
+            USER B
+        </button>
+    </div>
+</nav>
 
-    <Router />
-</main>
+<Router />
