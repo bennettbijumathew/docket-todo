@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { signInWithEmailAndPassword } from "firebase/auth";
 	import { Router } from "sv-router";
 	import "sv-router/generated";
-    import { auth } from "./lib/config/firebase";
+    import { authController } from "./lib/controllers/auth.controller";
+    import { authStore } from "./lib/stores/auth.store.svelte";
 
     const routes = [
         { name: "Home", link: "/" },
@@ -10,16 +10,12 @@
         { name: "Planner", link: "/planner" }
     ]
     
-    let currentEmail = ""
-
     async function handleUserALogin() {
-        await signInWithEmailAndPassword(auth, import.meta.env.VITE_ACCOUNT_TEST_A_EMAIL, import.meta.env.VITE_ACCOUNT_TEST_PASSWORD);
-        currentEmail = auth.currentUser?.email || ""
+        await authController.logInWithEmail(import.meta.env.VITE_ACCOUNT_TEST_A_EMAIL, import.meta.env.VITE_ACCOUNT_TEST_PASSWORD);
     }
 
     async function handleUserBLogin() {
-        await signInWithEmailAndPassword(auth, import.meta.env.VITE_ACCOUNT_TEST_B_EMAIL, import.meta.env.VITE_ACCOUNT_TEST_PASSWORD);
-        currentEmail = auth.currentUser?.email || ""
+        await authController.logInWithEmail(import.meta.env.VITE_ACCOUNT_TEST_B_EMAIL, import.meta.env.VITE_ACCOUNT_TEST_PASSWORD);
     }
 
 </script>
@@ -35,7 +31,7 @@
         
     <div class="gap-x-4 flex">
         <div>
-            {currentEmail}
+            {authStore.getUser()?.email}
         </div>
         
         <button onclick={handleUserALogin}>

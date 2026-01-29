@@ -5,7 +5,7 @@
 // An AuthStore object is used to create an AuthController object. The AuthRepository object can be used
 // anywhere to handle account management such as sign in and sign out.  
 
-import { onAuthStateChanged, signInWithEmailAndPassword, User } from "firebase/auth";
+import { onAuthStateChanged, signInWithEmailAndPassword, UserCredential, User } from "firebase/auth";
 import { auth } from "../config/firebase";
 
 export class AuthRepository {
@@ -16,7 +16,7 @@ export class AuthRepository {
     }
     
     // A wrapper function to sign in using an Email account.
-    async logInWithEmail(email: string, password: string): Promise<void> {
+    async emailLogIn(email: string, password: string): Promise<void> {
         await signInWithEmailAndPassword(auth, email, password);
     }
 
@@ -25,3 +25,5 @@ export class AuthRepository {
         await auth.signOut()
     }
 }
+
+export const authRepo = new AuthRepository()
