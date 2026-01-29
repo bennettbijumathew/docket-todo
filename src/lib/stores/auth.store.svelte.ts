@@ -42,7 +42,7 @@ export class AuthDataStore {
         this.ready = state
     }
 
-    // getUser() {
+    // A getter function for the user, it only exposes the necessary information.
     getUser(): {email: string, displayName: string, uid: string} | null {
         if (this.user === null) {
             return null
