@@ -1,18 +1,27 @@
 <script lang="ts">
-    import { signInWithEmailAndPassword } from "firebase/auth";
     import { auth } from "@/lib/config/firebase.ts";
 	import { navigate } from "sv-router/generated";
+    import { authController } from "@/lib/controllers/auth.controller";
 
     let email: string = $state(import.meta.env.VITE_ACCOUNT_TEST_B_EMAIL ?? "");
     let password: string = $state(import.meta.env.VITE_ACCOUNT_TEST_PASSWORD ?? "");
 
     async function handleLogIn() {
-        await signInWithEmailAndPassword(auth, email, password);
-        navigate("/planner");
+        try {
+            await authController.logInWithEmail(email, password);
+        }
+        finally {
+            navigate("/planner");
+        }
     }
 
     async function handleLogOut() {
-        await auth.signOut()
+        try {
+            await auth.signOut()
+        }
+        finally {
+            navigate("/");
+        }
     }
 </script>
 

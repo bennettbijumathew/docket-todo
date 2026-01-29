@@ -1,0 +1,83 @@
+// Purpose: 
+// AuthStore is responsible for managing the state of the user. 
+
+// Context:
+// An AuthStore object is used to create an AuthController object. The AuthStore object can be used
+// anywhere to update state of the User by providing a Firebase User variable. 
+
+import { User } from "firebase/auth";
+
+export class AuthDataStore {
+    // If logged in, the user variable will use Firebase's "User" Type. If not, then the variable will be null.
+    // The loading variable is used to represent the state between loading the account data. 
+    // The ready variable is representative of if the user is ready to use. 
+    private user: User | null;
+    private loading: boolean;
+    private ready: boolean;
+
+    constructor() {
+        this.user = $state(null);
+        this.loading = $state(true);
+        this.ready = $state(false);
+    }
+
+    // Getter function for the loading variable.
+    getLoading(): boolean {
+        return this.loading
+    }
+
+    // Setter function for the loading variable.
+    setLoading(state: boolean): void {
+        this.loading = state
+    }
+
+
+    // Getter function for the ready variable.
+    getReady(): boolean {
+        return this.ready
+    }
+
+    // Setter function for the ready variable.
+    setReady(state: boolean): void {
+        this.ready = state
+    }
+
+    // getUser() {
+    getUser(): {email: string, displayName: string, uid: string} | null {
+        if (this.user === null) {
+            return null
+        }
+
+        return {
+            email: this.user.email ?? "",
+            displayName: this.user.displayName ?? "",
+            uid: this.user.uid
+        }
+    }
+
+    // Setter function for the user variable. 
+    // On receiving a new user, the store is updated with the new user.
+    setUser(newUser: User | null): void {
+        this.setReady(false)
+        this.setLoading(true)
+
+        // If the user doesn't exist, the code clears the user. 
+        if (newUser == null) {
+            this.clearUser()
+        }
+        
+        // Sets the user state to the new user. 
+        this.user = newUser;
+        this.setReady(true)
+        this.setLoading(false)
+    }
+
+    // Removes the user from the state. 
+    clearUser(): void {
+        this.setLoading(false)
+        this.user = null;
+        this.setReady(true)
+    }
+}
+
+export const authStore = new AuthDataStore()
