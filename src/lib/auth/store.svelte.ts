@@ -43,16 +43,24 @@ export class AuthDataStore {
     }
 
     // A getter function for the user, it only exposes the necessary information.
-    getUser(): {email: string, displayName: string, uid: string} | null {
-        if (this.user === null) {
+    getUser(): {email: string, displayName: string} | null {
+        if (this.user == null) {
             return null
         }
 
         return {
             email: this.user.email ?? "",
             displayName: this.user.displayName ?? "",
-            uid: this.user.uid
         }
+    }
+
+    // A getter function for the user's id, returns null if there is no user.
+    getUserId(): string | null {
+        if (this.user === null) {
+            return null
+        }
+
+        return this.user.uid
     }
 
     // Setter function for the user variable. 
