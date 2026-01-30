@@ -1,5 +1,7 @@
 <script lang="ts">
     import { authController } from '@/lib/auth/controller';
+    import { authStore } from '@/lib/auth/store.svelte';
+    import { plannerRepo } from '@/lib/planner/repository';
 	import { onDestroy, onMount, type Snippet } from 'svelte';  
     
 	let { children }: { children: Snippet } = $props();
@@ -13,6 +15,8 @@
     onDestroy(() => {
         authController.stop()
     })
+
+    console.log(plannerRepo.getAllPlanners(authStore.getUserId()))
 </script>
 
 <main>
