@@ -9,8 +9,8 @@
 // the AuthStore and AuthRepository objects.
 
 import { User } from "firebase/auth";
-import { authRepo, AuthRepository } from "../repositories/auth.repository.ts";
-import { authStore, AuthDataStore } from "../stores/auth.store.svelte";
+import { authRepo, AuthRepository } from "./repository.ts";
+import { authStore, AuthDataStore } from "./store.svelte";
 
 export class AuthController {
     // The unSubFromAuth is a variable that holds a function for an authentication listener.

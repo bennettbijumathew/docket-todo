@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { authController } from '@/lib/controllers/auth.controller';
+    import { authController } from '@/lib/auth/controller';
 	import { onDestroy, onMount, type Snippet } from 'svelte';  
     
 	let { children }: { children: Snippet } = $props();

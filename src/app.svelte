@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { Router } from "sv-router";
 	import "sv-router/generated";
-    import { authController } from "./lib/controllers/auth.controller";
-    import { authStore } from "./lib/stores/auth.store.svelte";
+    import { authController } from "@/lib/auth/controller";
+    import { authStore } from "@/lib/auth/store.svelte";
 
     const routes = [
         { name: "Home", link: "/" },

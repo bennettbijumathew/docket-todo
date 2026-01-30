@@ -5,7 +5,7 @@
 // An AuthStore object is used to create an AuthController object. The AuthRepository object can be used
 // anywhere to handle account management such as sign in and sign out.  
 
-import { onAuthStateChanged, signInWithEmailAndPassword, UserCredential, User } from "firebase/auth";
+import { onAuthStateChanged, signInWithEmailAndPassword, User } from "firebase/auth";
 import { auth } from "../config/firebase";
 
 export class AuthRepository {
