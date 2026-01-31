@@ -16,12 +16,12 @@ export class AuthRepository {
     }
     
     // A wrapper function to sign in using an Email account.
-    async emailLogIn(email: string, password: string): Promise<void> {
+    public async emailLogIn(email: string, password: string): Promise<void> {
         await signInWithEmailAndPassword(auth, email, password);
     }
 
     // A wrapper function to sign out with all types of accounts.
-    async logOut(): Promise<void> {
+    public async logOut(): Promise<void> {
         await auth.signOut()
     }
 }

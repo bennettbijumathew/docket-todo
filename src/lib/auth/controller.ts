@@ -28,7 +28,7 @@ export class AuthController {
 
     // This function starts the authentication listener and appends it to an unsubscribe function. 
     // On changes such as a user logging in, the store will be updated appropriately. 
-    start(): void {
+    public start(): void {
         this.unSubFromAuth = this.authRepo.listen((user: User | null) => {
             this.authStore.setUser(user)
         })
@@ -36,13 +36,13 @@ export class AuthController {
 
     // This function unsubscribes the Authentication listener, causing the authentication changes 
     // to no longer be tracked. 
-    stop(): void {
+    public stop(): void {
         this.unSubFromAuth?.()
     }
 
 
     // This function logs the user into the application.
-    async logInWithEmail(email: string, password: string): Promise<void> {
+    public async logInWithEmail(email: string, password: string): Promise<void> {
         authStore.setLoading(true)
 
         try {
@@ -54,7 +54,7 @@ export class AuthController {
     }
 
     // This functions logs the user out from the authentication session for the UI and Firebase
-    logOut(): void {
+    public logOut(): void {
         // Removes the user from the state, This leads to the UI being updated without any user.
         this.authStore.clearUser()
 
