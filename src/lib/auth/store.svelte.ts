@@ -21,29 +21,31 @@ export class AuthDataStore {
         this.ready = $state(false);
     }
 
+
     // Getter function for the loading variable.
-    getLoading(): boolean {
+    public getLoading(): boolean {
         return this.loading
     }
 
     // Setter function for the loading variable.
-    setLoading(state: boolean): void {
+    public setLoading(state: boolean): void {
         this.loading = state
     }
 
 
     // Getter function for the ready variable.
-    getReady(): boolean {
+    public getReady(): boolean {
         return this.ready
     }
 
     // Setter function for the ready variable.
-    setReady(state: boolean): void {
+    public setReady(state: boolean): void {
         this.ready = state
     }
 
+
     // A getter function for the user, it only exposes the necessary information.
-    getUser(): {email: string, displayName: string} | null {
+    public getUser(): {email: string, displayName: string} | null {
         if (this.user == null) {
             return null
         }
@@ -55,7 +57,7 @@ export class AuthDataStore {
     }
 
     // A getter function for the user's id, returns null if there is no user.
-    getUserId(): string | null {
+    public getUserId(): string | null {
         if (this.user === null) {
             return null
         }
@@ -65,7 +67,7 @@ export class AuthDataStore {
 
     // Setter function for the user variable. 
     // On receiving a new user, the store is updated with the new user.
-    setUser(newUser: User | null): void {
+    public setUser(newUser: User | null): void {
         this.setReady(false)
         this.setLoading(true)
 
@@ -81,7 +83,7 @@ export class AuthDataStore {
     }
 
     // Removes the user from the state. 
-    clearUser(): void {
+    public clearUser(): void {
         this.setLoading(false)
         this.user = null;
         this.setReady(true)

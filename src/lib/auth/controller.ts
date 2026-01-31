@@ -41,6 +41,7 @@ export class AuthController {
     }
 
 
+    // This function logs the user into the application.
     async logInWithEmail(email: string, password: string): Promise<void> {
         authStore.setLoading(true)
 
@@ -51,7 +52,6 @@ export class AuthController {
             this.authStore.setLoading(false)
         }
     }
-
 
     // This functions logs the user out from the authentication session for the UI and Firebase
     logOut(): void {
