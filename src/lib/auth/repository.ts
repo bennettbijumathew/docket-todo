@@ -11,7 +11,7 @@ import { auth } from "../config/firebase";
 export class AuthRepository {
     // This function takes a function and returns Firebase's onAuthStateChanged 
     // listener that listens on the user's account state.
-    listen(callbackFn: (user: User | null) => void) {
+    onAuthChange(callbackFn: (user: User | null) => void) {
         return onAuthStateChanged(auth, callbackFn)
     }
     

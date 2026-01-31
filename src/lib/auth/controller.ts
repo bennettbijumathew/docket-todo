@@ -29,7 +29,7 @@ export class AuthController {
     // This function starts the authentication listener and appends it to an unsubscribe function. 
     // On changes such as a user logging in, the store will be updated appropriately. 
     public start(): void {
-        this.unSubFromAuth = this.authRepo.listen((user: User | null) => {
+        this.unSubFromAuth = this.authRepo.onAuthChange((user: User | null) => {
             this.authStore.setUser(user)
         })
     }

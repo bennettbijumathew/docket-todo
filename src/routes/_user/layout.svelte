@@ -16,8 +16,6 @@
     onDestroy(() => {
         appController.stop()
     })
-
-    console.log(plannerRepo.getAllPlanners(authStore.getUserId()))
 </script>
 
 <main>
