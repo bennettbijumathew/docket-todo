@@ -1,5 +1,5 @@
 import { db } from "@/lib/config/firebase.ts"
-import { collection, query, orderBy, getDocs, onSnapshot, QuerySnapshot } from "firebase/firestore";
+import { collection, query, orderBy, onSnapshot, QuerySnapshot } from "firebase/firestore";
 import { Planner } from "./type";
 
 export class PlannerRepository {

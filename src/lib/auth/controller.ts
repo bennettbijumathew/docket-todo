@@ -13,10 +13,8 @@ import { authRepo, AuthRepository } from "./repository.ts";
 import { authStore, AuthDataStore } from "./store.svelte";
 
 export class AuthController {
-    // The unSubFromAuth is a variable that holds a function for an authentication listener.
     // The authRepo class is one that provides services from Firebase Authentication, 
     // while the authStore is a class that handles the UI state of the authentication process.
-    private unSubFromAuth?: () => void
     private authRepo: AuthRepository;
     private authStore: AuthDataStore;
     
@@ -26,20 +24,20 @@ export class AuthController {
         this.authStore = store;
     }
 
-    // This function starts the authentication listener and appends it to an unsubscribe function. 
-    // On changes such as a user logging in, the store will be updated appropriately. 
-    public start(): void {
-        this.unSubFromAuth = this.authRepo.onAuthChange((user: User | null) => {
-            this.authStore.setUser(user)
-        })
+    // This function takes a returns the auth state listener from the Firebase repository.
+    public listenForAuth(callbackFn: (user: User | null) => void) {
+        return this.authRepo.listen(callbackFn)
     }
 
-    // This function unsubscribes the Authentication listener, causing the authentication changes 
-    // to no longer be tracked. 
+    // This function starts a session with a new Firebase user.
+    public start(user: User): void {
+        this.authStore.setUser(user);
+    }
+
+    // This function clears the current user.
     public stop(): void {
-        this.unSubFromAuth?.()
+        this.authStore.clearUser();
     }
-
 
     // This function logs the user into the application.
     public async logInWithEmail(email: string, password: string): Promise<void> {

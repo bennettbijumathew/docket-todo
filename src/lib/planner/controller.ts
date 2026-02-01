@@ -19,6 +19,7 @@ export class PlannerController {
 
     public stop() {
         this.unSubFromUpdates?.()
+        this.plannerStore.clearList()
     }
 }
 

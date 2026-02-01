@@ -1,8 +1,5 @@
 <script lang="ts">
-    // import { authController } from '@/lib/auth/controller';
     import { appController } from '@/lib/app/controller';
-    import { authStore } from '@/lib/auth/store.svelte';
-    import { plannerRepo } from '@/lib/planner/repository';
 	import { onDestroy, onMount, type Snippet } from 'svelte';  
     
 	let { children }: { children: Snippet } = $props();

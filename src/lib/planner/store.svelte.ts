@@ -16,6 +16,11 @@ export class PlannerDataStore {
     public setList(newList: Planner[]): void {
         this.list = newList;
     }
+
+    // Clears the list.
+    public clearList(): void {
+        this.list = [];
+    }
 }
 
 export const plannerStore = new PlannerDataStore()
