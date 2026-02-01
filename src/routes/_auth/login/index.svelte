@@ -1,7 +1,7 @@
 <script lang="ts">
     import { auth } from "@/lib/config/firebase.ts";
 	import { navigate } from "sv-router/generated";
-    import { authController } from "@/lib/controllers/auth.controller";
+    import { authController } from "@/lib/auth/controller";
 
     let email: string = $state(import.meta.env.VITE_ACCOUNT_TEST_B_EMAIL ?? "");
     let password: string = $state(import.meta.env.VITE_ACCOUNT_TEST_PASSWORD ?? "");

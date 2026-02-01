@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { Router } from "sv-router";
 	import "sv-router/generated";
-    import { authController } from "./lib/controllers/auth.controller";
-    import { authStore } from "./lib/stores/auth.store.svelte";
+    import { authController } from "@/lib/auth/controller";
+    import { authStore } from "@/lib/auth/store.svelte";
 
     const routes = [
         { name: "Home", link: "/" },
@@ -18,6 +18,9 @@
         await authController.logInWithEmail(import.meta.env.VITE_ACCOUNT_TEST_B_EMAIL, import.meta.env.VITE_ACCOUNT_TEST_PASSWORD);
     }
 
+    function handleLogOut() {
+        authController.logOut();
+    }
 </script>
 
 <nav class="p-4 flex items-center border-b justify-between">
@@ -40,6 +43,10 @@
 
         <button onclick={handleUserBLogin}>
             USER B
+        </button>
+
+        <button onclick={handleLogOut}>
+            LOG OUT
         </button>
     </div>
 </nav>
