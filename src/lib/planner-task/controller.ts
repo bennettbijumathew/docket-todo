@@ -34,7 +34,13 @@ export class PlannerTaskController {
     public stop() {
         this.unSubFromPlannerUpdates?.()
         this.unSubFromTaskUpdates?.()
+
         this.plannerStore.clearList()
+        this.taskStore.clearList()
+    }
+
+    updatePlannerVisibility(uid: string, id: string, newValue: boolean): void {
+        this.plannerRepo.editVisibility(uid, id, newValue)
     }
 }
 

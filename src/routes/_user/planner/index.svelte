@@ -1,5 +1,7 @@
 <script>
+    import { authStore } from "@/lib/auth/store.svelte";
     import { auth } from "@/lib/config/firebase";
+    import { plannerTaskController } from "@/lib/planner-task/controller";
     import { plannerStore } from "@/lib/planner/store.svelte";
     import { taskStore } from "@/lib/task/store.svelte";
 </script>
@@ -14,6 +16,8 @@
                     <p> {planner.name} </p>
                     <p class="text-sm font-light"> {Object.keys(planner.users)} </p>
                 </div>
+                
+                <input type="checkbox" checked={planner.users[authStore.getUserId()]} onclick={() => plannerTaskController.updatePlannerVisibility(authStore.getUserId(), planner.id, !planner.users[authStore.getUserId()])}> 
             </div>
         {/each}
 
