@@ -1,5 +1,5 @@
 import { db } from "@/lib/config/firebase.ts"
-import { collection, query, orderBy, onSnapshot, QuerySnapshot } from "firebase/firestore";
+import { collection, query, orderBy, onSnapshot, QuerySnapshot, where, getDocs } from "firebase/firestore";
 import { Planner } from "./type";
 
 export class PlannerRepository {
@@ -16,9 +16,18 @@ export class PlannerRepository {
                 }
             })
 
-            callbackFn(planners) 
+            callbackFn(planners)
         })            
     }
+
+    async getVisiblePlanners(userId: string): Promise<string[]> {
+        const q = query(collection(db, "planners"), where(`users.${userId}`, "==", true));
+        const document = await getDocs(q)
+
+        return document.docs.map((doc) => 
+            doc.id,
+        )
+    }   
 }
 
 export const plannerRepo = new PlannerRepository()

@@ -1,6 +1,7 @@
 <script>
     import { auth } from "@/lib/config/firebase";
     import { plannerStore } from "@/lib/planner/store.svelte";
+    import { taskStore } from "@/lib/task/store.svelte";
 </script>
 
 <main class="flex-1 p-4">
@@ -12,6 +13,15 @@
                 <div>
                     <p> {planner.name} </p>
                     <p class="text-sm font-light"> {Object.keys(planner.users)} </p>
+                </div>
+            </div>
+        {/each}
+
+        {#each taskStore.getList() as task}
+            <div class="flex justify-between p-2 border border-dotted">
+                <div>
+                    <p> {task.name} </p>
+                    <p class="text-sm font-light"> {task.id}, {task.planners.toString()} </p>
                 </div>
             </div>
         {/each}
