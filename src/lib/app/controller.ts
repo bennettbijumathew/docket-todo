@@ -23,7 +23,7 @@ export class AppController {
                 this.plannerTaskController.stop();
             }
         });
-    }
+}
 
     // A function that resets the controllers of the application. 
     public stop() {

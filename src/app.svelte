@@ -3,11 +3,13 @@
 	import "sv-router/generated";
     import { authController } from "@/lib/auth/controller";
     import { authStore } from "@/lib/auth/store.svelte";
+    import { getCurrentWindow } from '@tauri-apps/api/window';
 
     const routes = [
         { name: "Home", link: "/" },
         { name: "Login", link: "/login" },
-        { name: "Planner", link: "/planner" }
+        { name: "Planner", link: "/planner" },
+        { name: "Task", link: "/task" }
     ]
     
     async function handleUserALogin() {
@@ -21,22 +23,26 @@
     function handleLogOut() {
         authController.logOut();
     }
+
+    function isTauri(): boolean {
+        return typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
+    }
 </script>
 
-<nav class="p-4 flex items-center border-b justify-between">
+<header data-tauri-drag-region class="flex justify-between bg-orange-300 p-3">
     <div class="gap-x-4 flex">
+        <h1 class="font-semibold"> Docket </h1>
+        
+        <div class="border-r-2 border-black/40"></div>
+
         {#each routes as route}
             <a href={route.link}>
                 {route.name}
             </a>
         {/each}
-    </div>
-        
-    <div class="gap-x-4 flex">
-        <div>
-            {authStore.getUser()?.email}
-        </div>
-        
+
+        <div class="border-r-2 border-black/40"></div>
+
         <button onclick={handleUserALogin}>
             USER A
         </button>
@@ -48,7 +54,23 @@
         <button onclick={handleLogOut}>
             LOG OUT
         </button>
+
+        <div class="border-r-2 border-black/40"></div>
+
+        <button>
+            {authStore.getUser()?.email}
+        </button>
     </div>
-</nav>
+    
+    {#if isTauri() == true}
+        <div>
+            <button onclick={getCurrentWindow().minimize}> MINIMIZE </button>
+
+            <button onclick={getCurrentWindow().toggleMaximize}> MAXIMIZE </button>
+
+            <button onclick={getCurrentWindow().close}> CLOSE </button>
+        </div>
+    {/if}
+</header>
 
 <Router />
