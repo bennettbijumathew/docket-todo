@@ -17,7 +17,7 @@
                     <p class="text-sm font-light"> {Object.keys(planner.users)} </p>
                 </div>
                 
-                <input type="checkbox" checked={planner.users[authStore.getUserId()]} onclick={() => plannerTaskController.updatePlannerVisibility(authStore.getUserId(), planner.id, !planner.users[authStore.getUserId()])}> 
+                <input type="checkbox" id={planner.id} bind:checked={planner.users[authStore.getUserId()]} onclick={() => plannerTaskController.updatePlannerVisibility(authStore.getUserId(), planner.id, !planner.users[authStore.getUserId()])}> 
             </div>
         {/each}
 

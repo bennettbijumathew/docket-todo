@@ -4,6 +4,13 @@ import { Task } from "./type";
 
 export class TaskRepository {
     onChange(plannerIds: string[], callbackFn: (tasks: Task[]) => void) {
+        if (plannerIds.length <= 0) {
+            callbackFn([])
+            
+            return () => {}
+        }
+
+
         const q = query(collection(db, "tasks"), where("planners", "array-contains-any", plannerIds))
         
         // This snapshot sets the planner list while adding a visible attribute for each user 

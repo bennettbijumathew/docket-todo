@@ -1,6 +1,5 @@
 import { authController, AuthController } from "../auth/controller";
 import { PlannerTaskController, plannerTaskController } from "../planner-task/controller";
-import { taskRepo } from "../task/repository";
 
 export class AppController {
     private unSubFromAuth?: () => void
