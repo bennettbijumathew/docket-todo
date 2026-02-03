@@ -1,14 +1,14 @@
 import { authController, AuthController } from "../auth/controller";
-import { PlannerController, plannerController } from "../planner/controller";
+import { PlannerTaskController, plannerTaskController } from "../planner-task/controller";
 
 export class AppController {
     private unSubFromAuth?: () => void
     private authController: AuthController;
-    private plannerController: PlannerController;
+    private plannerTaskController: PlannerTaskController;
     
-    constructor(authControl: AuthController, plannerControl: PlannerController) {
+    constructor(authControl: AuthController, plannerTaskControl: PlannerTaskController) {
         this.authController = authControl;
-        this.plannerController = plannerControl
+        this.plannerTaskController = plannerTaskControl
     }
 
     // A function that starts the controllers that are used through the application
@@ -16,11 +16,11 @@ export class AppController {
         this.unSubFromAuth = this.authController.listenForAuth((user) => {  
             if (user) {
                 this.authController.start(user)
-                this.plannerController.start(user.uid);
+                this.plannerTaskController.start(user.uid);
             }
 
             else {
-                this.plannerController.stop();
+                this.plannerTaskController.stop();
             }
         });
     }
@@ -28,9 +28,9 @@ export class AppController {
     // A function that resets the controllers of the application. 
     public stop() {
         this.authController.stop();
-        this.plannerController.stop();
+        this.plannerTaskController.stop();
         this.unSubFromAuth?.()
     }
 }
 
-export const appController = new AppController(authController, plannerController);
+export const appController = new AppController(authController, plannerTaskController);

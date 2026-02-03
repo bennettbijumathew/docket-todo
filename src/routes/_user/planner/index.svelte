@@ -1,6 +1,9 @@
 <script>
+    import { authStore } from "@/lib/auth/store.svelte";
     import { auth } from "@/lib/config/firebase";
+    import { plannerTaskController } from "@/lib/planner-task/controller";
     import { plannerStore } from "@/lib/planner/store.svelte";
+    import { taskStore } from "@/lib/task/store.svelte";
 </script>
 
 <main class="flex-1 p-4">
@@ -12,6 +15,17 @@
                 <div>
                     <p> {planner.name} </p>
                     <p class="text-sm font-light"> {Object.keys(planner.users)} </p>
+                </div>
+                
+                <input type="checkbox" id={planner.id} bind:checked={planner.users[authStore.getUserId()]} onclick={() => plannerTaskController.updatePlannerVisibility(authStore.getUserId(), planner.id, !planner.users[authStore.getUserId()])}> 
+            </div>
+        {/each}
+
+        {#each taskStore.getList() as task}
+            <div class="flex justify-between p-2 border border-dotted">
+                <div>
+                    <p> {task.name} </p>
+                    <p class="text-sm font-light"> {task.id}, {task.planners.toString()} </p>
                 </div>
             </div>
         {/each}
