@@ -38,6 +38,8 @@
                         <input 
                             type="checkbox" 
                             class="m-2 ml-0 size-4"
+                            id={task.id} 
+                            bind:checked={task.completed} 
                         >   
 
                         <div>

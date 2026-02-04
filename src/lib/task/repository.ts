@@ -20,7 +20,8 @@ export class TaskRepository {
                 id: doc.id,
                 name: doc.data().name,
                 planners: doc.data().planners,
-                dueDate: dayjs.unix(doc.data().dueDate.seconds)
+                dueDate: dayjs.unix(doc.data().dueDate.seconds),
+                completed: doc.data().completed
             }) as Task)
                         
             callbackFn(newTasks) 

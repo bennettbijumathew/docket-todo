@@ -5,4 +5,5 @@ export interface Task {
     name: string,
     planners: string[]
     dueDate: Dayjs
+    completed: boolean
 }
