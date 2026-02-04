@@ -42,7 +42,7 @@
 
                         <div>
                             <h3 class="font-bold"> {task.name} </h3>
-                            <p class="text-sm">January 1st February</p>
+                            <p class="text-sm"> Due Date: {task.dueDate.format("dddd D, MMMM YYYY")} </p>
                         </div>
                     </section>
 

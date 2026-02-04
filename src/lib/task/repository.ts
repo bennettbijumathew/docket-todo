@@ -1,6 +1,7 @@
 import { db } from "@/lib/config/firebase.ts"
 import { collection, query, onSnapshot, QuerySnapshot, where, orderBy } from "firebase/firestore";
 import { Task } from "./type";
+import dayjs from "dayjs";
 
 export class TaskRepository {
     onChange(plannerIds: string[], callbackFn: (tasks: Task[]) => void) {
@@ -18,9 +19,10 @@ export class TaskRepository {
             const newTasks = querySnapshot.docs.map((doc) => ({ 
                 id: doc.id,
                 name: doc.data().name,
-                planners: doc.data().planners
+                planners: doc.data().planners,
+                dueDate: dayjs.unix(doc.data().dueDate.seconds)
             }) as Task)
-            
+                        
             callbackFn(newTasks) 
         })            
     }
