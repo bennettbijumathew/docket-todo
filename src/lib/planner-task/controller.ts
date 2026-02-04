@@ -20,9 +20,6 @@ export class PlannerTaskController {
 
     public start(userId: string) {
         this.unSubFromPlannerUpdates = this.plannerRepo.onChange(userId, (planners) => {
-            this.plannerStore.clearList()
-            this.taskStore.clearList()
-
             this.plannerStore.setList(planners)
             let currentPlanners = planners.filter((item) => item.users[userId] === true).map((item) => item.id)
 

@@ -13,14 +13,14 @@
             {#each plannerStore.getList() as planner}
                 <button 
                     class="flex min-h-10 justify-between items-center border-l-10 border-{planner.color} hover:bg-background-50 transition-colors cursor-pointer"
-                    onclick={() => plannerTaskController.updatePlannerVisibility(authStore.getUserId(), planner.id, !planner.users[authStore.getUserId()])}
+                    onclick={() => plannerTaskController.updatePlannerVisibility(authStore.getUserId() ?? "", planner.id, !planner.users[authStore.getUserId() ?? ""])}
                 >
                     <p class="ml-2"> {planner.name} </p>
 
                     <input 
                         type="checkbox" 
                         id={planner.id} 
-                        checked={planner.users[authStore.getUserId()]} 
+                        bind:checked={planner.users[authStore.getUserId() ?? ""]} 
                         class="m-2 size-4 accent-{planner.color}"
                     >   
                 </button>
