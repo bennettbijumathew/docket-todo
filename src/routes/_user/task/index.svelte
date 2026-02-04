@@ -5,14 +5,14 @@
     import { plannerTaskController } from "@/lib/planner-task/controller";
 </script>
 
-<main class="flex-1 flex p-4 pt-0 gap-x-4">
-    <section class="flex-1 border border-background-300 rounded-xl p-4">
+<main class="flex-1 flex p-4 pt-0 gap-x-4 min-h-0">
+    <section class="flex-1 border border-background-300 rounded-xl p-4 flex flex-col min-h-0">
         <h2 class="font-default font-semibold text-xl text-center pb-4">Planner</h2>
 
-        <div class="flex flex-col">
+        <div class="flex flex-col flex-1 overflow-y-auto">
             {#each plannerStore.getList() as planner}
                 <button 
-                    class="flex h-13 justify-between items-center border-l-10 border-{planner.color} hover:bg-background-50 transition-colors cursor-pointer"
+                    class="flex min-h-10 justify-between items-center border-l-10 border-{planner.color} hover:bg-background-50 transition-colors cursor-pointer"
                     onclick={() => plannerTaskController.updatePlannerVisibility(authStore.getUserId() ?? "", planner.id, !planner.users[authStore.getUserId() ?? ""])}
                 >
                     <p class="ml-2"> {planner.name} </p>
