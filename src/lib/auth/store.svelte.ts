@@ -57,9 +57,9 @@ export class AuthDataStore {
     }
 
     // A getter function for the user's id, returns null if there is no user.
-    public getUserId(): string | null {
+    public getUserId(): string {
         if (this.user === null) {
-            return null
+            return ""
         }
 
         return this.user.uid

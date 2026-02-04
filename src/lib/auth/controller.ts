@@ -36,7 +36,7 @@ export class AuthController {
 
     // This function clears the current user.
     public stop(): void {
-        this.authStore.clearUser();
+        this.logOut();
     }
 
     // This function logs the user into the application.
