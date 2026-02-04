@@ -27,7 +27,7 @@ export class PlannerDataStore {
         let planners: Planner[] = []
 
         for (const planner of this.list) {
-            if (ids.has(planner.id)) {
+            if (ids.has(planner.id) && planner.visible === true) {
                 planners.push(planner)
             }
         }

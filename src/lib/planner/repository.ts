@@ -5,7 +5,7 @@ import { Planner } from "./type";
 export class PlannerRepository {
     // This returns a listeners that returns the list of planners that are related to the user.
     public onChange(userId: string, callbackFn: (planner: Planner[]) => void): Unsubscribe {
-        const q = query(collection(db, "planners"), orderBy(`users.${userId}`), orderBy("name"));
+        const q = query(collection(db, "planners"), orderBy("name"), orderBy(`users.${userId}`));
         
         // This snapshot sets the planner list while adding a visible attribute for each user 
         return onSnapshot(q, (querySnapshot: QuerySnapshot) => {
@@ -14,6 +14,7 @@ export class PlannerRepository {
                     id: doc.id,
                     name: doc.data().name,
                     users: doc.data().users,
+                    visible: doc.data().users[userId],
                     color: doc.data().color,
                 }
             })
