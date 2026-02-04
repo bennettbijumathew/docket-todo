@@ -4,6 +4,8 @@
     import { authController } from "@/lib/auth/controller";
     import { authStore } from "@/lib/auth/store.svelte";
     import { getCurrentWindow } from '@tauri-apps/api/window';
+    import { X, Maximize2, Minimize2, Minus } from '@lucide/svelte';
+    import { isActive } from 'sv-router/generated';
 
     const routes = [
         { name: "Home", link: "/" },
@@ -12,6 +14,8 @@
         { name: "Task", link: "/task" }
     ]
     
+    let maximizedState: boolean = $state(false) 
+
     async function handleUserALogin() {
         await authController.logInWithEmail(import.meta.env.VITE_ACCOUNT_TEST_A_EMAIL, import.meta.env.VITE_ACCOUNT_TEST_PASSWORD);
     }
@@ -27,48 +31,68 @@
     function isTauri(): boolean {
         return typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
     }
+
+    function isWindowMaximized() {
+        getCurrentWindow().isMaximized().then((item => {
+            maximizedState = item
+        }));
+    }
 </script>
 
-<header data-tauri-drag-region class="flex justify-between bg-orange-300 p-3">
-    <div class="gap-x-4 flex">
-        <h1 class="font-semibold"> Docket </h1>
+<header data-tauri-drag-region class="flex justify-between p-3">
+    <div class="gap-x-4 flex items-center">
+        <h1 class="font-title font-extrabold text-lg"> Docket </h1>
         
-        <div class="border-r-2 border-black/40"></div>
+        <div class="gap-x-4 flex px-2 pt-0.5 items-center">
+            {#each routes as route}
+                {#if isActive(route.link)}
+                    <a href={route.link} class="border-b-2 border-text-300">
+                        {route.name}
+                    </a>
+                {:else}
+                    <a href={route.link} class="border-b-2 border-background-100 hover:border-background-300 transition-colors">
+                        {route.name}
+                    </a>
+                {/if}
+            {/each}
+        </div>
 
-        {#each routes as route}
-            <a href={route.link}>
-                {route.name}
-            </a>
-        {/each}
+        <div class="gap-x-4 flex px-2 pt-0.5 items-center">
+            <button onclick={handleUserALogin} class="border-b-2 border-background-100 hover:border-background-300 transition-colors">
+                USER A
+            </button>
 
-        <div class="border-r-2 border-black/40"></div>
+            <button onclick={handleUserBLogin} class="border-b-2 border-background-100 hover:border-background-300 transition-colors">
+                USER B
+            </button>
 
-        <button onclick={handleUserALogin}>
-            USER A
-        </button>
+            <button onclick={handleLogOut} class="border-b-2 border-background-100 hover:border-background-300 transition-colors">
+                LOG OUT
+            </button>
 
-        <button onclick={handleUserBLogin}>
-            USER B
-        </button>
-
-        <button onclick={handleLogOut}>
-            LOG OUT
-        </button>
-
-        <div class="border-r-2 border-black/40"></div>
-
-        <button>
-            {authStore.getUser()?.email}
-        </button>
+            <p class="border-b-2 border-background-100">
+                {authStore.getUser()?.email}
+            </p>
+        </div>
     </div>
     
     {#if isTauri() == true}
-        <div>
-            <button onclick={getCurrentWindow().minimize}> MINIMIZE </button>
+        <div class="gap-x-6 flex items-center">
+            <button onclick={getCurrentWindow().minimize}>
+                <Minus class="size-5"/>  
+            </button>
 
-            <button onclick={getCurrentWindow().toggleMaximize}> MAXIMIZE </button>
-
-            <button onclick={getCurrentWindow().close}> CLOSE </button>
+            <button onclick={() => { getCurrentWindow().toggleMaximize(); isWindowMaximized() }}> 
+                {#if maximizedState == true}
+                    <Minimize2 class="size-4"/>    
+                {:else}
+                    <Maximize2 class="size-4"/>    
+                {/if}
+            </button>
+            
+            <button onclick={getCurrentWindow().close}> 
+                <X class="size-5"/>    
+            </button>
         </div>
     {/if}
 </header>

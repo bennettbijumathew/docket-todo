@@ -1,1 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 @import "tailwindcss";
+
+@theme {
+  --color-background-100: var(--color-neutral-100);
+  --color-background-300: var(--color-neutral-300);
+  --color-text-300: var(--color-neutral-900);
+  --font-title: "Playfair Display", serif;
+  --font-default: "Figtree", sans-serif;;
+}
