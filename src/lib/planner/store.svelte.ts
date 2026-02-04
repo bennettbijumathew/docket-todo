@@ -21,6 +21,19 @@ export class PlannerDataStore {
     public clearList(): void {
         this.list = [];
     }
+
+    public getSpecific(plannerIds: string[]) {
+        const ids = new Set(plannerIds)
+        let planners: Planner[] = []
+
+        for (const planner of this.list) {
+            if (ids.has(planner.id)) {
+                planners.push(planner)
+            }
+        }
+
+        return planners
+    }
 }
 
 export const plannerStore = new PlannerDataStore()

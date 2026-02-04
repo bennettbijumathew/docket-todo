@@ -2,9 +2,14 @@
 @import "tailwindcss";
 
 @theme {
+  --color-background-50: var(--color-neutral-50);
   --color-background-100: var(--color-neutral-100);
   --color-background-300: var(--color-neutral-300);
   --color-text-300: var(--color-neutral-900);
   --font-title: "Playfair Display", serif;
   --font-default: "Figtree", sans-serif;;
+}
+
+.firebase-emulator-warning {
+    display: none;
 }

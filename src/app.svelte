@@ -39,7 +39,7 @@
     }
 </script>
 
-<header data-tauri-drag-region class="flex justify-between p-3">
+<header data-tauri-drag-region class="flex justify-between p-4">
     <div class="gap-x-4 flex items-center">
         <h1 class="font-title font-extrabold text-lg"> Docket </h1>
         

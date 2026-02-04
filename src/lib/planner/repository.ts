@@ -14,6 +14,7 @@ export class PlannerRepository {
                     id: doc.id,
                     name: doc.data().name,
                     users: doc.data().users,
+                    color: doc.data().color,
                 }
             })
 
