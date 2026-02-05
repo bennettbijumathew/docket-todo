@@ -10,7 +10,6 @@
     const routes = [
         { name: "Home", link: "/" },
         { name: "Login", link: "/login" },
-        { name: "Planner", link: "/planner" },
         { name: "Task", link: "/task" }
     ]
     
