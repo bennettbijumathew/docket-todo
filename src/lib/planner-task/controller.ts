@@ -48,6 +48,10 @@ export class PlannerTaskController {
     removePlannerFromTask(taskId: string, plannerId: string): void {
         this.taskRepo.removePlanner(taskId, plannerId)
     }
+
+    addPlannerFromTask(taskId: string, plannerId: string): void {
+        this.taskRepo.addPlanner(taskId, plannerId)
+    }
 }
 
 export const plannerTaskController = new PlannerTaskController(plannerRepo, plannerStore, taskRepo, taskStore)

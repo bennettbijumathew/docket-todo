@@ -1,5 +1,5 @@
 import { db } from "@/lib/config/firebase.ts"
-import { collection, query, onSnapshot, QuerySnapshot, where, orderBy, doc, updateDoc, arrayRemove } from "firebase/firestore";
+import { collection, query, onSnapshot, QuerySnapshot, where, orderBy, doc, updateDoc, arrayRemove, DocumentReference, Query, getDoc, arrayUnion } from "firebase/firestore";
 import { Task } from "./type";
 import dayjs from "dayjs";
 
@@ -13,7 +13,7 @@ export class TaskRepository {
             return () => {}
         }
 
-        const q = query(collection(db, "tasks"), where("planners", "array-contains-any", plannerIds), orderBy("name"))
+        const q: Query = query(collection(db, "tasks"), where("planners", "array-contains-any", plannerIds), orderBy("name"))
         
         // This snapshot sets the planner list while adding a visible attribute for each user 
         return onSnapshot(q, (querySnapshot: QuerySnapshot) => {
@@ -31,11 +31,26 @@ export class TaskRepository {
 
     // This removes a planner from a task. 
     public async removePlanner(taskId: string, plannerId: string): Promise<void> {
-        const plannerRef = doc(db, "tasks", taskId)
+        const taskRef: DocumentReference = doc(db, "tasks", taskId)
         
-        await updateDoc(plannerRef, {
+        await updateDoc(taskRef, {
             planners: arrayRemove(plannerId)
         })
+    }
+
+    // This adds a planner from a task. 
+    public async addPlanner(taskId: string, plannerId: string): Promise<void> {
+        const plannerRef: DocumentReference = doc(db, "planners", plannerId)
+        const isPlannerReal: boolean = (await getDoc(plannerRef)).exists();
+
+        // This adds a new planner only if the planner document exists in the planners database.
+        if (isPlannerReal === true) {
+            const taskRef = doc(db, "tasks", taskId)
+            
+            await updateDoc(taskRef, {
+                planners: arrayUnion(plannerId)
+            })
+        }
     }
 }
 
