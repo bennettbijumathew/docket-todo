@@ -2,6 +2,7 @@
     import { colors } from "@/lib/helpers/color";
     import { type Task } from "@/lib/task/type";
     import { type Planner } from "@/lib/planner/type";
+    import { plannerTaskController } from "@/lib/planner-task/controller";
 
     const { planners, task }: { planners: Planner[], task: Task } = $props();
     let searchInput: string = $state("")
@@ -24,6 +25,13 @@
     ).sort((a, b) => 
         Number(b.selected) - Number(a.selected)
     ))
+
+    function editTaskPlanner(taskId: string, plannerId: string, isSelected: boolean) {
+        if (isSelected === true) {
+            plannerTaskController.removePlannerFromTask(taskId, plannerId)
+        }
+    }
+
 </script>
 
 <input 
@@ -38,6 +46,7 @@
         {#each searchedPlanners() as planner}
             <button 
                 class="flex w-full justify-between border-l-4 first:rounded-tl-sm last:rounded-bl-sm border-{colors[planner.color]} items-center hover:bg-background-50 transition-colors cursor-pointer"
+                onclick={() => editTaskPlanner(task.id, planner.id, planner.selected)}
             >
                 <p class="ml-1"> {planner.name} </p>
 
