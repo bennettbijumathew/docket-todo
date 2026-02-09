@@ -7,7 +7,12 @@
     import { X, Maximize2, Minimize2, Minus } from '@lucide/svelte';
     import { isActive } from 'sv-router/generated';
 
-    const routes = [
+    interface Route {
+        name: string,
+        link: string
+    }
+
+    const routes: Route[] = [
         { name: "Home", link: "/" },
         { name: "Login", link: "/login" },
         { name: "Task", link: "/task" }
@@ -45,7 +50,7 @@
         <div class="gap-x-4 flex px-2 pt-0.5 items-center">
             {#each routes as route}
                 {#if isActive(route.link)}
-                    <a href={route.link} class="border-b-2 border-text-300">
+                    <a href={route.link} class="border-b-2 border-content-900">
                         {route.name}
                     </a>
                 {:else}
@@ -77,20 +82,29 @@
     
     {#if isTauri() == true}
         <div class="gap-x-6 flex items-center">
-            <button onclick={getCurrentWindow().minimize}>
-                <Minus class="size-5"/>  
+            <button 
+                onclick={getCurrentWindow().minimize}
+                class="cursor-pointer"
+            >
+                <Minus class="size-5 text-content-900 hover:text-content-600 transition-colors"/>  
             </button>
 
-            <button onclick={() => { getCurrentWindow().toggleMaximize(); isWindowMaximized() }}> 
+            <button 
+                onclick={() => { getCurrentWindow().toggleMaximize(); isWindowMaximized() }}
+                class="cursor-pointer"
+            > 
                 {#if maximizedState == true}
-                    <Minimize2 class="size-4"/>    
+                    <Minimize2 class="size-4 text-content-900 hover:text-content-600 transition-colors"/>    
                 {:else}
-                    <Maximize2 class="size-4"/>    
+                    <Maximize2 class="size-4 text-content-900 hover:text-content-600 transition-colors"/>    
                 {/if}
             </button>
             
-            <button onclick={getCurrentWindow().close}> 
-                <X class="size-5"/>    
+            <button 
+                onclick={getCurrentWindow().close}
+                class="cursor-pointer"
+            > 
+                <X class="size-5 text-content-900 hover:text-content-600 transition-colors"/>    
             </button>
         </div>
     {/if}

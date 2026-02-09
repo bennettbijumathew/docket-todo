@@ -55,7 +55,7 @@
                     type="checkbox" 
                     id={planner.id} 
                     checked={planner.selected}
-                    class="size-4 accent-text-300 mr-1"
+                    class="size-4 accent-content-900 mr-1"
                 >   
             </button>
         {/each}

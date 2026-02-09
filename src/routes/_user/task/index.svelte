@@ -45,7 +45,7 @@
         <section class="flex items-center gap-x-1 text-left">
             <input 
                 type="checkbox" 
-                class="m-2 ml-0 size-4 accent-text-300"
+                class="m-2 ml-0 size-4 accent-content-900"
                 id={task.id} 
                 checked={task.completed} 
             >   
@@ -82,7 +82,7 @@
                         type="checkbox" 
                         id={planner.id} 
                         checked={planner.users[authStore.getUserId()]} 
-                        class="m-2 size-4 accent-text-300"
+                        class="m-2 size-4 accent-content-900"
                     >   
                 </button>
             {/each}
