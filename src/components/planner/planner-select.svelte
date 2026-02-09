@@ -1,41 +1,38 @@
 <script lang="ts">
     import { colors } from "@/lib/helpers/color";
     import { type Task } from "@/lib/task/type";
-    import { type Planner } from "@/lib/planner/type";
     import { plannerTaskController } from "@/lib/planner-task/controller";
+    import { plannerStore } from "@/lib/planner/store.svelte";
+    import { taskStore } from "@/lib/task/store.svelte";
+    import { type UserPlanner } from "@/lib/planner/type";
 
-    const { planners, task }: { planners: Planner[], task: Task } = $props();
+    const { task: initialTask }: { task: Task } = $props();
     let searchInput: string = $state("")
     
-    // This sets an array to a list of planners that are selected and unselected by the task. 
-    // This array changes on a state variable changing such as task.planners or planners
-    const taskPlanners = $derived(() => {    
-        const plannerIds = new Set(task.planners);
-
-        // Returns a planners alongside a selected attribute which sees if task has selected the planner
-        return planners.map((item) => ({
+    // Using the task id from the props, the task is fetched from store to ensure proper reactive state. 
+    const task = $derived(taskStore.getList().find(t => t.id === initialTask.id) ?? initialTask);
+    
+    // Deriving from the planner list, a new planner list is created with a selected attribute.
+    // The selected attribute represents the planners that are associated with the task.
+    const taskPlanners: UserPlanner[] = $derived(
+        plannerStore.getList().map((item) => ({
             ...item,
-            selected: plannerIds.has(item.id)
-        }));
-    });
+            selected: task.planners.includes(item.id) || false
+        }))
+    );
 
-    // Using the search input, the list of planners are filtered and then sorted with selected items first.
-    const searchedPlanners = $derived(taskPlanners().filter((item) => 
-        item.name.toLowerCase().includes(searchInput.toLowerCase()) === true
-    ).sort((a, b) => 
-        Number(b.selected) - Number(a.selected)
-    ))
+    // Using the search input, the list of planners are filtered. 
+    const searchedPlanners: UserPlanner[] = $derived(
+        taskPlanners.filter((item) => item.name.toLowerCase().includes(searchInput.toLowerCase()))
+    );
 
-    function editTaskPlanner(taskId: string, index: number) {
-        if (searchedPlanners[index].selected === true) {
-            plannerTaskController.removePlannerFromTask(taskId, searchedPlanners[index].id)
-        }
-        else {
-            plannerTaskController.addPlannerFromTask(taskId, searchedPlanners[index].id)
+    function editTaskPlanner(plannerId: string, isSelected: boolean) {
+        if (isSelected == true) {
+            plannerTaskController.removePlannerFromTask(task.id, plannerId);
+        } else {
+            plannerTaskController.addPlannerFromTask(task.id, plannerId);
         }
     }
-
-    $inspect(task.planners)
 </script>
 
 <input 
@@ -47,17 +44,17 @@
 
 {#if searchedPlanners.length > 0}
     <div class="border border-background-300 rounded-lg p-1 w-full mt-2 max-h-38 overflow-y-auto">
-        {#each searchedPlanners as planner, index}
+        {#each searchedPlanners as planner}
             <button 
                 class="flex w-full justify-between border-l-4 first:rounded-tl-sm last:rounded-bl-sm border-{colors[planner.color]} items-center hover:bg-background-50 transition-colors cursor-pointer"
-                onclick={() => editTaskPlanner(task.id, index)}
+                onclick={() => editTaskPlanner(planner.id, planner.selected)}
             >
                 <p class="ml-1"> {planner.name} </p>
 
                 <input 
                     type="checkbox" 
                     id={planner.id} 
-                    checked={task.planners.includes(planner.id)}
+                    checked={planner.selected}
                     class="size-4 accent-text-300 mr-1"
                 >   
             </button>

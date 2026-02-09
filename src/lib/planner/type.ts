@@ -7,3 +7,7 @@ export interface Planner {
     visible: boolean,
     color: ColorKey
 }
+
+export interface UserPlanner extends Planner { 
+    selected: boolean
+}

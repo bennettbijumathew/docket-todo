@@ -108,7 +108,6 @@
                 <p class="font-bold">Planner</p>
 
                 <PlannerSelect 
-                    planners={plannerStore.getList()} 
                     task={editedTask}
                 />
             </div>
