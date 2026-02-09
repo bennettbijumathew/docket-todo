@@ -24,8 +24,9 @@ export class PlannerRepository {
         })            
     }
 
-    public async editVisibility(uid: string, id: string, newValue: boolean): Promise<void> {
-        const plannerRef = doc(db, "planners", id)
+    // This changes a users' planner visible status through the "user" field.
+    public async editVisibility(uid: string, plannerId: string, newValue: boolean): Promise<void> {
+        const plannerRef = doc(db, "planners", plannerId)
         
         await updateDoc(plannerRef, {
             [`users.${uid}`]: newValue

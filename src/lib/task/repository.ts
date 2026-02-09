@@ -1,16 +1,17 @@
 import { db } from "@/lib/config/firebase.ts"
-import { collection, query, onSnapshot, QuerySnapshot, where, orderBy } from "firebase/firestore";
+import { collection, query, onSnapshot, QuerySnapshot, where, orderBy, doc, updateDoc, arrayRemove } from "firebase/firestore";
 import { Task } from "./type";
 import dayjs from "dayjs";
 
 export class TaskRepository {
-    onChange(plannerIds: string[], callbackFn: (tasks: Task[]) => void) {
+    // This function is a listener that checks for tasks that are associated to the given planner ids. 
+    // Using the callback function, the user can use the given tasks in any manner.
+    public onChange(plannerIds: string[], callbackFn: (tasks: Task[]) => void) {
+        // If there is no planners, an empty array and empty function are given for the caller.
         if (plannerIds.length <= 0) {
             callbackFn([])
-            
             return () => {}
         }
-
 
         const q = query(collection(db, "tasks"), where("planners", "array-contains-any", plannerIds), orderBy("name"))
         
@@ -26,6 +27,15 @@ export class TaskRepository {
                         
             callbackFn(newTasks) 
         })            
+    }
+
+    // This removes a planner from a task. 
+    public async removePlanner(taskId: string, plannerId: string): Promise<void> {
+        const plannerRef = doc(db, "tasks", taskId)
+        
+        await updateDoc(plannerRef, {
+            planners: arrayRemove(plannerId)
+        })
     }
 }
 

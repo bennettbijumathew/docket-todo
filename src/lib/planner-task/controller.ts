@@ -41,8 +41,12 @@ export class PlannerTaskController {
         this.taskStore.clearList()
     }
 
-    updatePlannerVisibility(uid: string, id: string, newValue: boolean): void {
-        this.plannerRepo.editVisibility(uid, id, newValue)
+    updatePlannerVisibility(uid: string, plannerId: string, newValue: boolean): void {
+        this.plannerRepo.editVisibility(uid, plannerId, newValue)
+    }
+
+    removePlannerFromTask(taskId: string, plannerId: string): void {
+        this.taskRepo.removePlanner(taskId, plannerId)
     }
 }
 

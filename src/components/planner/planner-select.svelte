@@ -18,7 +18,7 @@
         }));
     });
 
-    // Using the search input, the list of planners are filtered and then sorted 
+    // Using the search input, the list of planners are filtered and then sorted with selected items first.
     const searchedPlanners = $derived(() => taskPlanners().filter((item) => 
         item.name.toLowerCase().includes(searchInput) === true
     ).sort((a, b) => 
