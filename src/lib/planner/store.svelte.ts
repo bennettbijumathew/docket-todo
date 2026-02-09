@@ -22,12 +22,21 @@ export class PlannerDataStore {
         this.list = [];
     }
 
-    public getSpecific(plannerIds: string[]) {
+    // This returns a list of planners based on id. The result can changed based on if
+    // caller wants to see the user's hidden planners.
+    public getItemsById(plannerIds: string[], showHidden: boolean): Planner[] {
         const ids = new Set(plannerIds)
         let planners: Planner[] = []
-
+        
         for (const planner of this.list) {
-            if (ids.has(planner.id) && planner.visible === true) {
+            // This adds a planner based on if ids match and if the item is visible.
+            if (ids.has(planner.id) && (showHidden == false && planner.visible === true)) {
+                planners.push(planner)
+                continue; 
+            }
+
+            // This adds a planner based on the matching ids.   
+            if (ids.has(planner.id) && showHidden == true) {
                 planners.push(planner)
             }
         }

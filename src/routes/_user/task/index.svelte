@@ -5,20 +5,20 @@
     import { plannerTaskController } from "@/lib/planner-task/controller";
     import { type Task } from "@/lib/task/type";
     import dayjs from "dayjs";
-    import PlannerSelect from "@/components/planner-select.svelte";
     import { colors } from "@/lib/helpers/color";
+    import PlannerSelect from "@/components/planner/planner-select.svelte";
 
     let editModalOpen = $state(true)
-    let currentEditedTask: Task | null = $state(null)
+    let editedTask: Task | null = $state(null)
 
     function showTask(task: Task | null) {
-        if (currentEditedTask === task || task === null) {
+        if (editedTask === task || task === null) {
             editModalOpen = false
-            currentEditedTask = null
+            editedTask = null
             return; 
         }
 
-        currentEditedTask = task
+        editedTask = task
         editModalOpen = true
     }
 </script>
@@ -30,7 +30,7 @@
         <div class="flex flex-col flex-1 overflow-y-auto">
             {#each plannerStore.getList() as planner}
                 <button 
-                    class="flex min-h-10 justify-between items-center border-l-10 border-{colors[planner.color]} hover:bg-background-50 transition-colors cursor-pointer"
+                    class={`flex min-h-10 justify-between items-center border-l-10 border-${colors[planner.color]} hover:bg-background-50 transition-colors cursor-pointer`}
                     onclick={() => plannerTaskController.updatePlannerVisibility(authStore.getUserId(), planner.id, !planner.users[authStore.getUserId()])}
                 >
                     <p class="ml-2"> {planner.name} </p>
@@ -39,7 +39,7 @@
                         type="checkbox" 
                         id={planner.id} 
                         checked={planner.users[authStore.getUserId()]} 
-                        class="m-2 size-4"
+                        class="m-2 size-4 accent-text-300"
                     >   
                 </button>
             {/each}
@@ -58,7 +58,7 @@
                     <section class="flex items-center gap-x-1 text-left">
                         <input 
                             type="checkbox" 
-                            class="m-2 ml-0 size-4"
+                            class="m-2 ml-0 size-4 accent-text-300"
                             id={task.id} 
                             checked={task.completed} 
                         >   
@@ -71,7 +71,7 @@
 
                     <div class="flex gap-x-2">
                         <span class="flex items-center">
-                            {#each plannerStore.getSpecific(task.planners) as taskPlanner}    
+                            {#each plannerStore.getItemsById(task.planners, false) as taskPlanner}    
                                 <div class="text-sm font-light bg-{colors[taskPlanner.color]} h-4 w-6"> </div>
                             {/each}
                         </span>
@@ -81,7 +81,7 @@
         </div>
     </section>
 
-    {#if editModalOpen == true && currentEditedTask != null}
+    {#if editModalOpen == true && editedTask != null}
         <section class="flex-1 flex flex-col gap-y-4 border border-background-300 rounded-xl p-4">
             <h2 class="font-default font-semibold text-xl text-center pb-4">Edit Task</h2>
 
@@ -89,8 +89,8 @@
                 <p class="font-bold">Title</p>
                 <input 
                     type="text" 
-                    value={currentEditedTask.name}
-                    class="border-b w-full"
+                    value={editedTask.name}
+                    class="border border-background-300 rounded-lg p-1 w-full"
                 >
             </div>
 
@@ -98,21 +98,16 @@
                 <p class="font-bold">Due Date</p>
                 <input 
                     type="date" 
-                    value={currentEditedTask.dueDate.format("YYYY-MM-DD")}
-                    class="border-b w-full"
+                    value={editedTask.dueDate.format("YYYY-MM-DD")}
+                    class="border border-background-300 rounded-lg p-1 w-full"
                     min={dayjs().format("YYYY-MM-DD")}
                 >
             </div>
 
             <div>
                 <p class="font-bold">Planner</p>
-                <PlannerSelect planners={plannerStore.getList()} visiblePlanners={plannerStore.getSpecific(currentEditedTask.planners)}/> 
-                <input 
-                    type="date" 
-                    value={currentEditedTask.dueDate.format("YYYY-MM-DD")}
-                    class="border-b w-full"
-                    min={dayjs().format("YYYY-MM-DD")}
-                >
+
+                <PlannerSelect planners={plannerStore.getList()} task={editedTask}></PlannerSelect>
             </div>
         </section>
     {/if}
