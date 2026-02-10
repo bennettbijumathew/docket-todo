@@ -52,6 +52,15 @@ export class TaskRepository {
             })
         }
     }
+
+    // This changes a task to be complete status
+    public async editComplete(taskId: string, newValue: boolean): Promise<void> {
+        const taskRef = doc(db, "tasks", taskId)
+        
+        await updateDoc(taskRef, {
+            completed: newValue
+        })
+    } 
 }
 
 export const taskRepo = new TaskRepository()

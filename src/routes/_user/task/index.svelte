@@ -49,8 +49,8 @@
             <input 
                 type="checkbox" 
                 class="m-2 ml-0 size-4 accent-content-900"
-                id={task.id} 
-                checked={task.completed} 
+                bind:checked={task.completed}
+                onclick={() => plannerTaskController.updateTaskComplete(task.id, !task.completed)}
             >   
 
             <div>
