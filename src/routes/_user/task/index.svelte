@@ -8,7 +8,7 @@
     import dayjs from "dayjs";
     import { colors } from "@/lib/helpers/color";
     import PlannerSelect from "@/components/planner/planner-select.svelte";
-    import { ChevronDown, ChevronRight } from "@lucide/svelte";
+    import { Calendar, ChevronDown, ChevronRight, FolderTree, Plus } from "@lucide/svelte";
     import { type Planner } from "@/lib/planner/type";
 
     // These variables are used to show the tasks of the user.
@@ -37,6 +37,7 @@
     }
 
 </script>
+
 
 <!-- COMPONENT: This is task tile snippet that is used to show a single task -->
 {#snippet taskTile(task: Task)}
@@ -112,6 +113,7 @@
     </div>
 {/snippet}
 
+
 <!-- VIEW: This is what is shown on the arrival of the page -->
 <main class="flex-1 flex p-4 pt-0 gap-x-4 min-h-0">
     <section class="flex-1 border border-background-300 rounded-xl p-4 flex flex-col min-h-0">
@@ -134,11 +136,27 @@
             {@render listOfTasks("Complete Tasks", completeTasks, isCompleteTasksShown, () => isCompleteTasksShown = !isCompleteTasksShown)}
         </div>
 
-        <div>
-            <input 
-                type="text" 
-                class="border border-background-300 rounded-lg p-1"
-            >
+        <!-- This area is the place to add tasks -->
+        <div class="flex border border-background-300 focus-within:outline focus-within:outline-background-500 rounded-lg p-1.5">
+            <div class="flex-1 flex items-center">
+                <button class="py-2 px-2 hover:bg-background-100 rounded-lg cursor-pointer mr-1">
+                    <Plus class="size-4"/>
+                </button>
+
+                <input 
+                    type="text" 
+                    class="outline-none "
+                    placeholder="Enter a new task.."
+                >
+            </div>
+
+            <button class="py-2 px-2 hover:bg-background-100 rounded-lg cursor-pointer">
+                <Calendar class="size-4"/>
+            </button>
+
+            <button class="py-2 px-2 hover:bg-background-100 rounded-lg cursor-pointer">
+                <FolderTree class="size-4"/>
+            </button>
         </div>
     </section>
 
