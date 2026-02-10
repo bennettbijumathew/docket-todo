@@ -1,3 +1,4 @@
+<!-- CODE: -->
 <script lang="ts">
     import { authStore } from "@/lib/auth/store.svelte";
     import { taskStore } from "@/lib/task/store.svelte";
@@ -8,6 +9,7 @@
     import { colors } from "@/lib/helpers/color";
     import PlannerSelect from "@/components/planner/planner-select.svelte";
     import { ChevronDown, ChevronRight } from "@lucide/svelte";
+    import { type Planner } from "@/lib/planner/type";
 
     // These variables are used to show the tasks of the user.
     const completeTasks: Task[] = $derived(taskStore.getList().filter((item) => item.completed === true))
@@ -36,7 +38,7 @@
 
 </script>
 
-<!-- This is task tile snippet that is used to show a single task -->
+<!-- COMPONENT: This is task tile snippet that is used to show a single task -->
 {#snippet taskTile(task: Task)}
     <button
         onclick={() => showTask(task)} 
@@ -66,26 +68,59 @@
     </button>
 {/snippet}
 
-<!-- This is what is shown on the arrival of the page -->
+<!-- COMPONENT: This is planner tile snippet that is used to show a single task in a list -->
+{#snippet plannerTile(planner: Planner)}
+    <button 
+        class={`flex min-h-13 justify-between items-center border-l-10 border-${colors[planner.color]} hover:bg-background-50 transition-colors cursor-pointer`}
+        onclick={() => plannerTaskController.updatePlannerVisibility(authStore.getUserId(), planner.id, !planner.users[authStore.getUserId()])}
+    >
+        <p class="ml-2"> {planner.name} </p>
+
+        <input 
+            type="checkbox" 
+            id={planner.id} 
+            checked={planner.users[authStore.getUserId()]} 
+            class="m-2 size-4 accent-content-900"
+        >   
+    </button>
+{/snippet}
+
+<!-- COMPONENT: This is the snippet used to show a list of tasks -->
+{#snippet listOfTasks(header: string, list: Task[], isTaskShown: boolean, setIsTaskShownFn: () => void)}
+    <div>
+        <button 
+            onclick={setIsTaskShownFn}
+            class="mb-2 flex w-fit px-2 gap-x-2 items-center border-b-2 border-background-100 hover:border-background-300 transition-colors cursor-pointer"
+        >
+            {#if isTaskShown == true}
+                <ChevronDown class="size-4"/>
+            {:else}
+                <ChevronRight class="size-4"/>
+            {/if}
+            
+            {header}
+        </button>
+
+        <!-- Shows a list of complete tasks -->
+        <main class="flex flex-col">
+            {#if isTaskShown === true}  
+                {#each list as task}
+                    {@render taskTile(task)}
+                {/each}
+            {/if}
+        </main>
+    </div>
+{/snippet}
+
+<!-- VIEW: This is what is shown on the arrival of the page -->
 <main class="flex-1 flex p-4 pt-0 gap-x-4 min-h-0">
     <section class="flex-1 border border-background-300 rounded-xl p-4 flex flex-col min-h-0">
         <h2 class="font-default font-semibold text-xl text-center pb-4">Planner</h2>
 
+        <!-- This area renders a list of planners, toggling planners changes the tasks shown -->
         <div class="flex flex-col flex-1 overflow-y-auto">
             {#each plannerStore.getList() as planner}
-                <button 
-                    class={`flex min-h-13 justify-between items-center border-l-10 border-${colors[planner.color]} hover:bg-background-50 transition-colors cursor-pointer`}
-                    onclick={() => plannerTaskController.updatePlannerVisibility(authStore.getUserId(), planner.id, !planner.users[authStore.getUserId()])}
-                >
-                    <p class="ml-2"> {planner.name} </p>
-
-                    <input 
-                        type="checkbox" 
-                        id={planner.id} 
-                        checked={planner.users[authStore.getUserId()]} 
-                        class="m-2 size-4 accent-content-900"
-                    >   
-                </button>
+                {@render plannerTile(planner)}
             {/each}
         </div>
     </section>
@@ -93,52 +128,10 @@
     <section class="flex flex-col gap-y-4 flex-4 border border-background-300 rounded-xl p-4">
         <h2 class="font-default font-semibold text-xl text-center">Task</h2>
 
-        <div class="flex-1 flex flex-col gap-y-4"> 
-            <div class="flex flex-col">
-                <!-- Toggle to show the list of incomplete tasks -->
-                <button 
-                    onclick={() => isIncompleteTasksShown = !isIncompleteTasksShown}
-                    class="flex w-fit mb-1 px-2 gap-x-2 items-center border-b-2 border-background-100 hover:border-background-300 transition-colors cursor-pointer"
-                >
-                    {#if isIncompleteTasksShown == true}
-                        <ChevronDown class="size-4"/>
-                    {:else}
-                        <ChevronRight class="size-4"/>
-                    {/if}
-                    
-                    Incomplete Tasks
-                </button>
-            
-                <!-- Shows a list of complete tasks -->
-                {#if isIncompleteTasksShown === true}  
-                    {#each incompleteTasks as task}
-                        {@render taskTile(task)}
-                    {/each}
-                {/if}
-            </div>
-
-            <div class="flex flex-col">
-                <!-- Toggle to show the list of complete tasks -->
-                <button 
-                    onclick={() => isCompleteTasksShown = !isCompleteTasksShown}
-                    class="flex w-fit mb-1 px-2 gap-x-2 items-center border-b-2 border-background-100 hover:border-background-300 transition-colors cursor-pointer"
-                >
-                    {#if isCompleteTasksShown == true}
-                        <ChevronDown class="size-4"/>
-                    {:else}
-                        <ChevronRight class="size-4"/>
-                    {/if}
-                    
-                    Complete Tasks
-                </button>
-            
-                <!-- Shows a list of complete tasks -->
-                {#if isCompleteTasksShown === true}  
-                    {#each completeTasks as task}
-                        {@render taskTile(task)}
-                    {/each}
-                {/if}
-            </div>
+        <!-- This area renders a list of planners, toggling planners changes the tasks shown -->
+        <div class="flex-1 flex flex-col min-h-0 gap-y-4 overflow-y-auto"> 
+            {@render listOfTasks("Incomplete Tasks", incompleteTasks, isIncompleteTasksShown, () => isIncompleteTasksShown = !isIncompleteTasksShown)}
+            {@render listOfTasks("Complete Tasks", completeTasks, isCompleteTasksShown, () => isCompleteTasksShown = !isCompleteTasksShown)}
         </div>
 
         <div>
@@ -175,9 +168,7 @@
             <div>
                 <p class="font-bold">Planner</p>
 
-                <PlannerSelect 
-                    task={editedTask}
-                />
+                <PlannerSelect task={editedTask}/>
             </div>
         </section>
     {/if}
