@@ -19,13 +19,15 @@ export class PlannerTaskController {
     }
 
     public start(userId: string) {
+        this.unSubFromPlannerUpdates?.()
+        
         this.unSubFromPlannerUpdates = this.plannerRepo.onChange(userId, (planners) => {
+            this.unSubFromTaskUpdates?.()
+
             this.plannerStore.setList(planners)
-            
             let currentPlanners = planners.filter((item) => item.users[userId] === true).map((item) => item.id)
 
             this.unSubFromTaskUpdates = this.taskRepo.onChange(currentPlanners, (tasks) => {
-                console.log(currentPlanners)
                 this.taskStore.setList(tasks)
             })
         })
@@ -39,8 +41,16 @@ export class PlannerTaskController {
         this.taskStore.clearList()
     }
 
-    updatePlannerVisibility(uid: string, id: string, newValue: boolean): void {
-        this.plannerRepo.editVisibility(uid, id, newValue)
+    updatePlannerVisibility(uid: string, plannerId: string, newValue: boolean): void {
+        this.plannerRepo.editVisibility(uid, plannerId, newValue)
+    }
+
+    removePlannerFromTask(taskId: string, plannerId: string): void {
+        this.taskRepo.removePlanner(taskId, plannerId)
+    }
+
+    addPlannerFromTask(taskId: string, plannerId: string): void {
+        this.taskRepo.addPlanner(taskId, plannerId)
     }
 }
 

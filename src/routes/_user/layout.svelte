@@ -15,6 +15,4 @@
     })
 </script>
 
-<main>
-    {@render children()}
-</main>
+{@render children()}

@@ -1,1 +1,74 @@
+@import url('https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 @import "tailwindcss";
+
+@theme {
+  --color-background-50: var(--color-neutral-50);
+  --color-background-100: var(--color-neutral-100);
+  --color-background-300: var(--color-neutral-300);
+  --color-background-500: var(--color-neutral-500);
+  --color-content-600: var(--color-neutral-600);
+  --color-content-900: var(--color-neutral-900);
+  --font-title: "Playfair Display", serif;
+  --font-default: "Figtree", sans-serif;;
+}
+
+.firebase-emulator-warning {
+    display: none;
+}
+
+/* Background colors */
+@source inline("bg-red-400");
+@source inline("bg-orange-400");
+@source inline("bg-amber-400");
+@source inline("bg-yellow-400");
+@source inline("bg-lime-400");
+@source inline("bg-green-400");
+@source inline("bg-emerald-400");
+@source inline("bg-teal-400");
+@source inline("bg-cyan-400");
+@source inline("bg-sky-400");
+@source inline("bg-blue-400");
+@source inline("bg-indigo-400");
+@source inline("bg-violet-400");
+@source inline("bg-purple-400");
+@source inline("bg-fuchsia-400");
+@source inline("bg-pink-400");
+@source inline("bg-rose-400");
+
+/* Border colors */
+@source inline("border-red-400");
+@source inline("border-orange-400");
+@source inline("border-amber-400");
+@source inline("border-yellow-400");
+@source inline("border-lime-400");
+@source inline("border-green-400");
+@source inline("border-emerald-400");
+@source inline("border-teal-400");
+@source inline("border-cyan-400");
+@source inline("border-sky-400");
+@source inline("border-blue-400");
+@source inline("border-indigo-400");
+@source inline("border-violet-400");
+@source inline("border-purple-400");
+@source inline("border-fuchsia-400");
+@source inline("border-pink-400");
+@source inline("border-rose-400");
+
+/* Accent colors */
+@source inline("accent-red-400");
+@source inline("accent-orange-400");
+@source inline("accent-amber-400");
+@source inline("accent-yellow-400");
+@source inline("accent-lime-400");
+@source inline("accent-green-400");
+@source inline("accent-emerald-400");
+@source inline("accent-teal-400");
+@source inline("accent-cyan-400");
+@source inline("accent-sky-400");
+@source inline("accent-blue-400");
+@source inline("accent-indigo-400");
+@source inline("accent-violet-400");
+@source inline("accent-purple-400");
+@source inline("accent-fuchsia-400");
+@source inline("accent-pink-400");
+@source inline("accent-rose-400");
