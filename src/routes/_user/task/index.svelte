@@ -66,6 +66,7 @@
     </button>
 {/snippet}
 
+<!-- This is what is shown on the arrival of the page -->
 <main class="flex-1 flex p-4 pt-0 gap-x-4 min-h-0">
     <section class="flex-1 border border-background-300 rounded-xl p-4 flex flex-col min-h-0">
         <h2 class="font-default font-semibold text-xl text-center pb-4">Planner</h2>
@@ -89,53 +90,62 @@
         </div>
     </section>
 
-    <section class="flex-4 border border-background-300 rounded-xl p-4">
-        <h2 class="font-default font-semibold text-xl text-center pb-4">Task</h2>
+    <section class="flex flex-col gap-y-4 flex-4 border border-background-300 rounded-xl p-4">
+        <h2 class="font-default font-semibold text-xl text-center">Task</h2>
 
-        <div class="flex flex-col pb-6"> 
-            <!-- Toggle to show the list of incomplete tasks -->
-            <button 
-                onclick={() => isIncompleteTasksShown = !isIncompleteTasksShown}
-                class="flex w-fit mb-1 px-2 gap-x-2 items-center border-b-2 border-background-100 hover:border-background-300 transition-colors"
-            >
-                {#if isIncompleteTasksShown == true}
-                    <ChevronDown class="size-4"/>
-                {:else}
-                    <ChevronRight class="size-4"/>
+        <div class="flex-1 flex flex-col gap-y-4"> 
+            <div class="flex flex-col">
+                <!-- Toggle to show the list of incomplete tasks -->
+                <button 
+                    onclick={() => isIncompleteTasksShown = !isIncompleteTasksShown}
+                    class="flex w-fit mb-1 px-2 gap-x-2 items-center border-b-2 border-background-100 hover:border-background-300 transition-colors cursor-pointer"
+                >
+                    {#if isIncompleteTasksShown == true}
+                        <ChevronDown class="size-4"/>
+                    {:else}
+                        <ChevronRight class="size-4"/>
+                    {/if}
+                    
+                    Incomplete Tasks
+                </button>
+            
+                <!-- Shows a list of complete tasks -->
+                {#if isIncompleteTasksShown === true}  
+                    {#each incompleteTasks as task}
+                        {@render taskTile(task)}
+                    {/each}
                 {/if}
-                
-                Incomplete Tasks
-            </button>
-        
-            <!-- Shows a list of complete tasks -->
-            {#if isIncompleteTasksShown === true}  
-                {#each incompleteTasks as task}
-                    {@render taskTile(task)}
-                {/each}
-            {/if}
+            </div>
+
+            <div class="flex flex-col">
+                <!-- Toggle to show the list of complete tasks -->
+                <button 
+                    onclick={() => isCompleteTasksShown = !isCompleteTasksShown}
+                    class="flex w-fit mb-1 px-2 gap-x-2 items-center border-b-2 border-background-100 hover:border-background-300 transition-colors cursor-pointer"
+                >
+                    {#if isCompleteTasksShown == true}
+                        <ChevronDown class="size-4"/>
+                    {:else}
+                        <ChevronRight class="size-4"/>
+                    {/if}
+                    
+                    Complete Tasks
+                </button>
+            
+                <!-- Shows a list of complete tasks -->
+                {#if isCompleteTasksShown === true}  
+                    {#each completeTasks as task}
+                        {@render taskTile(task)}
+                    {/each}
+                {/if}
+            </div>
         </div>
 
-        <div class="flex flex-col"> 
-            <!-- Toggle to show the list of complete tasks -->
-            <button 
-                onclick={() => isCompleteTasksShown = !isCompleteTasksShown}
-                class="flex w-fit mb-1 px-2 gap-x-2 items-center border-b-2 border-background-100 hover:border-background-300 transition-colors"
+        <div>
+            <input 
+                type="text" 
+                class="border border-background-300 rounded-lg p-1"
             >
-                {#if isCompleteTasksShown == true}
-                    <ChevronDown class="size-4"/>
-                {:else}
-                    <ChevronRight class="size-4"/>
-                {/if}
-                
-                Complete Tasks
-            </button>
-        
-            <!-- Shows a list of complete tasks -->
-            {#if isCompleteTasksShown === true}  
-                {#each completeTasks as task}
-                    {@render taskTile(task)}
-                {/each}
-            {/if}
         </div>
     </section>
 
