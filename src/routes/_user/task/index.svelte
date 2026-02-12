@@ -8,8 +8,9 @@
     import dayjs from "dayjs";
     import { colors } from "@/lib/helpers/color";
     import PlannerSelect from "@/components/planner/planner-select.svelte";
-    import { Calendar, ChevronDown, ChevronRight, FolderTree, Plus } from "@lucide/svelte";
+    import { ChevronDown, ChevronRight, FolderTree, Plus } from "@lucide/svelte";
     import { type Planner } from "@/lib/planner/type";
+    import DatePicker from "@/components/ui/date-picker.svelte";
 
     // These variables are used to show the tasks of the user.
     const completeTasks: Task[] = $derived(taskStore.getList().filter((item) => item.completed === true))
@@ -115,7 +116,7 @@
 
 
 <!-- VIEW: This is what is shown on the arrival of the page -->
-<main class="flex-1 flex p-4 pt-0 gap-x-4 min-h-0">
+<main class="flex-1 flex p-4 pt-0 gap-x-4 min-h-0 bg-background-50">
     <section class="flex-1 border border-background-300 rounded-xl p-4 flex flex-col min-h-0">
         <h2 class="font-default font-semibold text-xl text-center pb-4">Planner</h2>
 
@@ -150,9 +151,7 @@
                 >
             </div>
 
-            <button class="py-2 px-2 hover:bg-background-100 rounded-lg cursor-pointer">
-                <Calendar class="size-4"/>
-            </button>
+            <DatePicker/>
 
             <button class="py-2 px-2 hover:bg-background-100 rounded-lg cursor-pointer">
                 <FolderTree class="size-4"/>
