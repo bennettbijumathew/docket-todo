@@ -12,6 +12,7 @@
     import { type Planner } from "@/lib/planner/type";
     import DatePicker from "@/components/ui/date-picker.svelte";
     import { CalendarDateTime, getLocalTimeZone, Time, toCalendarDateTime, today } from "@internationalized/date";
+    import PlannerPicker from "@/components/ui/planner-picker.svelte";
 
     // These variables are used to show the tasks of the user.
     const completeTasks: Task[] = $derived(taskStore.getList().filter((item) => item.completed === true))
@@ -37,18 +38,19 @@
         editedTask = task
         isEditModalOpen = true
     }
-
-    const newTask: {
+    
+    // The interfaces and variables are used to handle new tasks that come in from the inputs
+    interface NewTaskData {
         name: string,
         planners: string[],
         dueDate: CalendarDateTime
-    } = $state({
+    } 
+
+    const newTask: NewTaskData = $state({
         name: "",
         planners: [],
         dueDate: toCalendarDateTime(today(getLocalTimeZone()), new Time(0, 0))
     })
-
-    $inspect(newTask)
 </script>
 
 
@@ -164,6 +166,8 @@
             </div>
 
             <DatePicker bind:value={newTask.dueDate}/>
+
+            <PlannerPicker bind:value={newTask.planners}/>
 
             <button class="py-2 px-2 hover:bg-background-100 rounded-lg cursor-pointer">
                 <FolderTree class="size-4"/>
