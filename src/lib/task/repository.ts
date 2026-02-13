@@ -1,7 +1,7 @@
 import { db } from "@/lib/config/firebase.ts"
-import { collection, query, onSnapshot, QuerySnapshot, where, orderBy, doc, updateDoc, arrayRemove, DocumentReference, Query, getDoc, arrayUnion } from "firebase/firestore";
-import { Task } from "./type";
-import { firestoreToCalendarDateTime } from "@/components/util/date";
+import { collection, query, onSnapshot, QuerySnapshot, where, orderBy, doc, updateDoc, arrayRemove, DocumentReference, Query, getDoc, arrayUnion, setDoc, addDoc } from "firebase/firestore";
+import { type NewTaskData, Task, taskConverter } from "./type";
+import { CalendarDateTime } from "@internationalized/date";
 
 export class TaskRepository {
     // This function is a listener that checks for tasks that are associated to the given planner ids. 
@@ -13,21 +13,25 @@ export class TaskRepository {
             return () => {}
         }
 
-        const q: Query = query(collection(db, "tasks"), where("planners", "array-contains-any", plannerIds), orderBy("name"))
+        const q: Query = query(collection(db, "tasks"), where("planners", "array-contains-any", plannerIds), orderBy("name")).withConverter(taskConverter)
         
         // This snapshot sets the planner list while adding a visible attribute for each user 
         return onSnapshot(q, (querySnapshot: QuerySnapshot) => {
-            const newTasks = querySnapshot.docs.map((doc) => ({ 
-                id: doc.id,
-                name: doc.data().name,
-                planners: doc.data().planners,
-                dueDate: firestoreToCalendarDateTime(doc.data().dueDate),
-                completed: doc.data().completed
-            }))
+            const newTasks: Task[] = querySnapshot.docs.map((doc) => doc.data()) as Task[]
                         
-            console.log(newTasks)
             callbackFn(newTasks) 
         })            
+    }
+
+    // This adds a new task into the tasks database
+    public async createNewTask(newTask: NewTaskData): Promise<void> {
+        const newTaskRef = collection(db, "tasks").withConverter(taskConverter)
+        
+        await addDoc(newTaskRef, {
+            name: newTask.name,
+            planners: newTask.planners,
+            dueDate: newTask.dueDate            
+        });
     }
 
     // This removes a planner from a task. 

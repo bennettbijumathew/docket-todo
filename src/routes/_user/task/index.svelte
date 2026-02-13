@@ -4,15 +4,16 @@
     import { taskStore } from "@/lib/task/store.svelte";
     import { plannerStore } from "@/lib/planner/store.svelte";
     import { plannerTaskController } from "@/lib/planner-task/controller";
-    import { type Task } from "@/lib/task/type";
+    import { type NewTaskData, type Task } from "@/lib/task/type";
     import { colors } from "@/components/util/color";
     import PlannerSelect from "@/components/planner/planner-select.svelte";
     import { ChevronDown, ChevronRight, Plus } from "@lucide/svelte";
     import { type Planner } from "@/lib/planner/type";
     import DatePicker from "@/components/ui/date-picker.svelte";
-    import { CalendarDateTime, getLocalTimeZone, Time, toCalendarDateTime, today } from "@internationalized/date";
+    import { getLocalTimeZone, Time, toCalendarDateTime, today } from "@internationalized/date";
     import PlannerPicker from "@/components/ui/planner-picker.svelte";
     import { formatLongDate } from "@/components/util/date";
+    import { taskRepo } from "@/lib/task/repository";
 
     // These variables are used to show the tasks of the user.
     const completeTasks: Task[] = $derived(taskStore.getList().filter((item) => item.completed === true))
@@ -39,13 +40,7 @@
         isEditModalOpen = true
     }
     
-    // The interfaces and variables are used to handle new tasks that come in from the inputs
-    interface NewTaskData {
-        name: string,
-        planners: string[],
-        dueDate: CalendarDateTime
-    } 
-
+    // This variable is used to handle new tasks that come in from the inputs
     const newTask: NewTaskData = $state({
         name: "",
         planners: [],
@@ -154,7 +149,7 @@
         <!-- This area is the place to add tasks -->
         <div class="flex border border-background-300 focus-within:outline focus-within:outline-background-500 rounded-lg p-1.5">
             <div class="flex-1 flex items-center">
-                <button class="py-2 px-2 hover:bg-background-100 rounded-lg cursor-pointer mr-1">
+                <button class="py-2 px-2 hover:bg-background-100 rounded-lg cursor-pointer mr-1" onclick={() => taskRepo.createNewTask(newTask)}>
                     <Plus class="size-4"/>
                 </button>
 
@@ -162,6 +157,7 @@
                     type="text" 
                     class="outline-none"
                     placeholder="Enter a new task.."
+                    bind:value={newTask.name}
                 >
             </div>
 
