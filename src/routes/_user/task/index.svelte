@@ -13,7 +13,7 @@
     import DatePicker from "@/components/ui/date-picker.svelte";
     import { CalendarDateTime, getLocalTimeZone, Time, toCalendarDateTime, today } from "@internationalized/date";
     import PlannerPicker from "@/components/ui/planner-picker.svelte";
-    import { dateFormatter } from "@/components/util/date-formatter";
+    import { formatLongDate } from "@/components/util/date-formatter";
 
     // These variables are used to show the tasks of the user.
     const completeTasks: Task[] = $derived(taskStore.getList().filter((item) => item.completed === true))
@@ -71,8 +71,7 @@
 
             <div>
                 <h3 class="font-bold"> {task.name} </h3>
-                <p class="text-sm"> Due Date: {dateFormatter.format(task.dueDate.toDate(getLocalTimeZone()))} </p>
-                <!-- <p class="text-sm"> Due Date: {task.dueDate.format("dddd D, MMMM YYYY")} </p> -->
+                <p class="text-sm"> Due Date: {formatLongDate(task.dueDate)} </p>
             </div>
         </section>
 
