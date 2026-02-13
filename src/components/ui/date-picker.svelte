@@ -1,15 +1,16 @@
 <script lang="ts">
     import { ArrowLeft, ArrowRight, Calendar } from "@lucide/svelte";
-    import { DatePicker } from "bits-ui";
-    import { today, getLocalTimeZone } from "@internationalized/date";
+    import { DatePicker, TimeField } from "bits-ui";
+    import { today, getLocalTimeZone, CalendarDateTime } from "@internationalized/date";
  
     const todayDate = today(getLocalTimeZone());
 
+     let { value = $bindable() }: { value: CalendarDateTime } = $props()
 </script>
  
-<DatePicker.Root minValue={todayDate} fixedWeeks={true}>
+<DatePicker.Root bind:value={value} minValue={todayDate} fixedWeeks={true}>
     <!-- Input Selector for the Date Picker.$props -->
-    <DatePicker.Input class="flex items-center hover:bg-background-100 rounded-lg px-2">
+    <DatePicker.Input class="flex items-center hover:bg-background-100 rounded-lg px-2 text-center ">
         {#snippet children({ segments })}
             <!-- Button to open the Calendar Picker. -->
             <DatePicker.Trigger class="cursor-pointer pr-1 flex items-center">
@@ -22,8 +23,12 @@
         {/snippet}
     </DatePicker.Input>
 
-    <DatePicker.Content side="top" sideOffset={25}>
-        <DatePicker.Calendar class="flex flex-col items-center border border-background-300 bg-background-50 rounded-lg p-3">
+    <DatePicker.Content 
+        side="top" 
+        sideOffset={25} 
+        class="flex flex-col items-center border border-background-300 bg-background-50 rounded-lg p-3"
+    >
+        <DatePicker.Calendar>
             {#snippet children({ months, weekdays })}
                 <DatePicker.Header class="flex w-full items-center justify-between gap-x-2 pb-3">
                     <!-- Previous Button for the Calendar -->
@@ -42,6 +47,7 @@
 
                 {#each months as month}
                     <DatePicker.Grid class="w-full">
+                        <!-- Headers for the Days of the Week -->
                         <DatePicker.GridHead>
                             <DatePicker.GridRow>
                                 {#each weekdays as day}
@@ -52,48 +58,23 @@
                             </DatePicker.GridRow>
                         </DatePicker.GridHead>
 
+                        <!-- Calendar -->
                         <DatePicker.GridBody>
                             {#each month.weeks as weekDates}
-                                <DatePicker.GridRow class="">
+                                <DatePicker.GridRow>
                                     {#each weekDates as date}
-                                        <!-- <DatePicker.Cell {date} month={month.value}>
-                                            <DatePicker.Day class="text-center p-1.5 rounded-lg cursor-pointer hover:bg-background-100"/>
-                                        </DatePicker.Cell> -->
-
-
                                         <DatePicker.Cell
                                             {date}
                                             month={month.value}
                                         >
                                             <DatePicker.Day class="
-                                                rounded-lg cursor-pointer text-content-900 p-1.5 size-8 m-1 flex justify-center items-center
-                                                hover:bg-background-100 
-                                                data-selected:bg-content-900 data-selected:text-background-100  
-                                                data-disabled:text-content-600/30
-                                                data-outside-month:pointer-events-none data-disabled:pointer-events-none
-                                                group relative whitespace-nowrap text-sm font-normal transition-all
-                                                data-today:underline
+                                                rounded-lg cursor-pointer text-content-900 p-1.5 size-8 m-1 flex justify-center items-center hover:bg-background-100 transition-all
+                                                data-selected:bg-content-900 data-selected:text-background-100  data-today:underline
+                                                data-disabled:text-content-600/30 data-outside-month:pointer-events-none data-disabled:pointer-events-none
                                             ">
                                                 {date.day}
                                             </DatePicker.Day>
                                         </DatePicker.Cell>
-
-                                        
-                                        <!-- <DatePicker.Cell
-                                            {date}
-                                            month={month.value}
-                                            class="p-0! relative size-10 text-center text-sm"
-                                        >
-                                            <DatePicker.Day
-                                                class="rouded-n9px text-foreground hover:border-foreground data-selected:bg-orange-400 data-disabled:text-orange-400/30 data-selected:text-yellow-400 data-unavailable:text-muted-foreground data-disabled:pointer-events-none data-outside-month:pointer-events-none data-selected:font-medium data-unavailable:line-through group relative inline-flex size-10 items-center justify-center whitespace-nowrap border border-transparent bg-transparent p-0 text-sm font-normal transition-all"
-                                            >
-                                                <div
-                                                    class="bg-red-400 group-data-selected:bg-background group-data-today:block absolute top-[5px] hidden size-1 rounded-full transition-all"
-                                                ></div>
-                                                {date.day}
-                                            </DatePicker.Day>
-                                        </DatePicker.Cell> -->
-
                                     {/each}
                                 </DatePicker.GridRow>
                             {/each}
@@ -102,5 +83,29 @@
                 {/each}
             {/snippet}
         </DatePicker.Calendar>
+
+        <TimeField.Root bind:value={value}>
+            <div class="text-center">
+                <TimeField.Label class="text-sm pt-2">Time:</TimeField.Label>
+                
+                <TimeField.Input class="flex items-center">
+                    {#snippet children({ segments })}
+                        {#each segments as { part, value }}
+                                {#if part !== "literal"}
+                                    <TimeField.Segment {part} class="p-1 w-10">
+                                        {value}
+                                    </TimeField.Segment>
+                                {/if}
+
+                                {#if part === "literal" && value !== ""}
+                                    <TimeField.Segment {part}>
+                                        {value}
+                                    </TimeField.Segment>
+                                {/if}
+                        {/each}
+                    {/snippet}
+                </TimeField.Input>
+            </div>
+        </TimeField.Root>
     </DatePicker.Content>
 </DatePicker.Root>

@@ -11,6 +11,7 @@
     import { ChevronDown, ChevronRight, FolderTree, Plus } from "@lucide/svelte";
     import { type Planner } from "@/lib/planner/type";
     import DatePicker from "@/components/ui/date-picker.svelte";
+    import { CalendarDateTime, getLocalTimeZone, Time, toCalendarDateTime, today } from "@internationalized/date";
 
     // These variables are used to show the tasks of the user.
     const completeTasks: Task[] = $derived(taskStore.getList().filter((item) => item.completed === true))
@@ -37,6 +38,17 @@
         isEditModalOpen = true
     }
 
+    const newTask: {
+        name: string,
+        planners: string[],
+        dueDate: CalendarDateTime
+    } = $state({
+        name: "",
+        planners: [],
+        dueDate: toCalendarDateTime(today(getLocalTimeZone()), new Time(0, 0))
+    })
+
+    $inspect(newTask)
 </script>
 
 
@@ -146,12 +158,12 @@
 
                 <input 
                     type="text" 
-                    class="outline-none "
+                    class="outline-none"
                     placeholder="Enter a new task.."
                 >
             </div>
 
-            <DatePicker/>
+            <DatePicker bind:value={newTask.dueDate}/>
 
             <button class="py-2 px-2 hover:bg-background-100 rounded-lg cursor-pointer">
                 <FolderTree class="size-4"/>
