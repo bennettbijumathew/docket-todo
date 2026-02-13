@@ -1,4 +1,4 @@
-import { ColorKey } from "../helpers/color";
+import { ColorKey } from "../../components/util/color";
 
 export interface Planner { 
     id: string, 

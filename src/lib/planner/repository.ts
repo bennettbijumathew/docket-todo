@@ -1,7 +1,7 @@
 import { db } from "@/lib/config/firebase.ts"
 import { collection, query, orderBy, onSnapshot, QuerySnapshot, doc, Unsubscribe, updateDoc } from "firebase/firestore";
 import { Planner } from "./type";
-import { ColorKey } from "../helpers/color";
+import { ColorKey } from "../../components/util/color";
 
 export class PlannerRepository {
     // This returns a listeners that returns the list of planners that are related to the user.

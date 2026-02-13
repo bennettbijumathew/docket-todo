@@ -1,9 +1,9 @@
-import { Dayjs } from "dayjs"
+import { CalendarDateTime } from "@internationalized/date"
 
 export interface Task { 
     id: string, 
     name: string,
     planners: string[]
-    dueDate: Dayjs
+    dueDate: CalendarDateTime
     completed: boolean
 }

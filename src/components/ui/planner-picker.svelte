@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { colors } from "@/lib/helpers/color";
+    import { colors } from "@/components/util/color";
     import { plannerStore } from "@/lib/planner/store.svelte";
     import { type Planner } from "@/lib/planner/type";
     import { Check, FolderTree } from "@lucide/svelte";

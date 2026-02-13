@@ -6,13 +6,14 @@
     import { plannerTaskController } from "@/lib/planner-task/controller";
     import { type Task } from "@/lib/task/type";
     import dayjs from "dayjs";
-    import { colors } from "@/lib/helpers/color";
+    import { colors } from "@/components/util/color";
     import PlannerSelect from "@/components/planner/planner-select.svelte";
-    import { ChevronDown, ChevronRight, FolderTree, Plus } from "@lucide/svelte";
+    import { ChevronDown, ChevronRight, Plus } from "@lucide/svelte";
     import { type Planner } from "@/lib/planner/type";
     import DatePicker from "@/components/ui/date-picker.svelte";
     import { CalendarDateTime, getLocalTimeZone, Time, toCalendarDateTime, today } from "@internationalized/date";
     import PlannerPicker from "@/components/ui/planner-picker.svelte";
+    import { dateFormatter } from "@/components/util/date-formatter";
 
     // These variables are used to show the tasks of the user.
     const completeTasks: Task[] = $derived(taskStore.getList().filter((item) => item.completed === true))
@@ -70,7 +71,8 @@
 
             <div>
                 <h3 class="font-bold"> {task.name} </h3>
-                <p class="text-sm"> Due Date: {task.dueDate.format("dddd D, MMMM YYYY")} </p>
+                <p class="text-sm"> Due Date: {dateFormatter.format(task.dueDate.toDate(getLocalTimeZone()))} </p>
+                <!-- <p class="text-sm"> Due Date: {task.dueDate.format("dddd D, MMMM YYYY")} </p> -->
             </div>
         </section>
 
@@ -187,7 +189,7 @@
                 <p class="font-bold">Due Date</p>
                 <input 
                     type="date" 
-                    value={editedTask.dueDate.format("YYYY-MM-DD")}
+                    value="{editedTask.dueDate.year}-{editedTask.dueDate.month}-{editedTask.dueDate.day}"
                     class="border border-background-300 rounded-lg p-1 w-full"
                     min={dayjs().format("YYYY-MM-DD")}
                 >

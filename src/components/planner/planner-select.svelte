@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { colors } from "@/lib/helpers/color";
+    import { colors } from "@/components/util/color";
     import { type Task } from "@/lib/task/type";
     import { plannerTaskController } from "@/lib/planner-task/controller";
     import { plannerStore } from "@/lib/planner/store.svelte";
