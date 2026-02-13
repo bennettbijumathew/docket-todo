@@ -5,7 +5,6 @@
     import { plannerStore } from "@/lib/planner/store.svelte";
     import { plannerTaskController } from "@/lib/planner-task/controller";
     import { type Task } from "@/lib/task/type";
-    import dayjs from "dayjs";
     import { colors } from "@/components/util/color";
     import PlannerSelect from "@/components/planner/planner-select.svelte";
     import { ChevronDown, ChevronRight, Plus } from "@lucide/svelte";
@@ -13,7 +12,7 @@
     import DatePicker from "@/components/ui/date-picker.svelte";
     import { CalendarDateTime, getLocalTimeZone, Time, toCalendarDateTime, today } from "@internationalized/date";
     import PlannerPicker from "@/components/ui/planner-picker.svelte";
-    import { formatLongDate } from "@/components/util/date-formatter";
+    import { formatLongDate } from "@/components/util/date";
 
     // These variables are used to show the tasks of the user.
     const completeTasks: Task[] = $derived(taskStore.getList().filter((item) => item.completed === true))

@@ -1,7 +1,7 @@
 import { db } from "@/lib/config/firebase.ts"
 import { collection, query, onSnapshot, QuerySnapshot, where, orderBy, doc, updateDoc, arrayRemove, DocumentReference, Query, getDoc, arrayUnion } from "firebase/firestore";
 import { Task } from "./type";
-import dayjs from "dayjs";
+import { firestoreToCalendarDateTime } from "@/components/util/date";
 
 export class TaskRepository {
     // This function is a listener that checks for tasks that are associated to the given planner ids. 
@@ -21,10 +21,11 @@ export class TaskRepository {
                 id: doc.id,
                 name: doc.data().name,
                 planners: doc.data().planners,
-                dueDate: dayjs.unix(doc.data().dueDate.seconds),
+                dueDate: firestoreToCalendarDateTime(doc.data().dueDate),
                 completed: doc.data().completed
-            }) as Task)
+            }))
                         
+            console.log(newTasks)
             callbackFn(newTasks) 
         })            
     }

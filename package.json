@@ -18,7 +18,6 @@
         "@tauri-apps/api": "^2",
         "@tauri-apps/plugin-opener": "^2",
         "bits-ui": "^2.15.5",
-        "dayjs": "^1.11.19",
         "firebase": "^12.7.0",
         "sv-router": "^0.12.0",
         "svelte": "^5.46.1",
