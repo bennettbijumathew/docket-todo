@@ -166,12 +166,7 @@
             </div>
 
             <DatePicker bind:value={newTask.dueDate}/>
-
             <PlannerPicker bind:value={newTask.planners}/>
-
-            <button class="py-2 px-2 hover:bg-background-100 rounded-lg cursor-pointer">
-                <FolderTree class="size-4"/>
-            </button>
         </div>
     </section>
 

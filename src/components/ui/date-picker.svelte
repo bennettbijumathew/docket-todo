@@ -16,9 +16,11 @@
             <DatePicker.Trigger class="cursor-pointer pr-1 flex items-center">
                 <Calendar class="size-4 mr-2"/>
                 
-                {#each segments as { value }}
-                    {value.toUpperCase()}
-                {/each}
+                <div class="border-b hover:border-0 border-background-100">
+                    {#each segments as { value }}
+                        {value.toUpperCase()}
+                    {/each}
+                </div>
             </DatePicker.Trigger>
         {/snippet}
     </DatePicker.Input>

@@ -27,7 +27,7 @@
     bind:value={value}
 >
     <!-- The button that opens combobox options -->
-    <Combobox.Trigger class="flex items-center hover:bg-background-100 rounded-lg px-2 text-center gap-x-2 cursor-pointer">
+    <Combobox.Trigger class="flex items-center hover:bg-background-100 rounded-lg px-2 text-center gap-x-2 cursor-pointer transition-all">
         <FolderTree class="size-4"/>
 
         <!-- Search input to filter through the planners  -->
@@ -35,8 +35,10 @@
             oninput={(e) => (searchInput = e.currentTarget.value)}
             placeholder="Select a planner..."
             aria-label="Select a planner..."
-            class="w-35"
+            class="w-32 border-b hover:border-0 border-background-100 focus:outline-0"
+            clearOnDeselect={true}
         >
+        
         </Combobox.Input>   
     </Combobox.Trigger>
     
