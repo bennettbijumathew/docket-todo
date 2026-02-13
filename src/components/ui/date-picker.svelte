@@ -85,27 +85,25 @@
         </DatePicker.Calendar>
 
         <TimeField.Root bind:value={value}>
-            <div class="text-center">
-                <TimeField.Label class="text-sm pt-2">Time:</TimeField.Label>
-                
-                <TimeField.Input class="flex items-center">
-                    {#snippet children({ segments })}
-                        {#each segments as { part, value }}
-                                {#if part !== "literal"}
-                                    <TimeField.Segment {part} class="p-1 w-10">
-                                        {value}
-                                    </TimeField.Segment>
-                                {/if}
+            <TimeField.Label class="text-sm pt-2">Time:</TimeField.Label>
+            
+            <TimeField.Input class="flex items-center">
+                {#snippet children({ segments })}
+                    {#each segments as { part, value }}
+                            {#if part !== "literal"}
+                                <TimeField.Segment {part} class="p-1 min-w-8 text-center hover:bg-background-100 rounded-lg transition-colors">
+                                    {value}
+                                </TimeField.Segment>
+                            {/if}
 
-                                {#if part === "literal" && value !== ""}
-                                    <TimeField.Segment {part}>
-                                        {value}
-                                    </TimeField.Segment>
-                                {/if}
-                        {/each}
-                    {/snippet}
-                </TimeField.Input>
-            </div>
+                            {#if part === "literal" && value !== ""}
+                                <TimeField.Segment {part}>
+                                    {value}
+                                </TimeField.Segment>
+                            {/if}
+                    {/each}
+                {/snippet}
+            </TimeField.Input>
         </TimeField.Root>
     </DatePicker.Content>
 </DatePicker.Root>
