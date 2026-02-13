@@ -185,16 +185,6 @@
             </div>
 
             <div>
-                <p class="font-bold">Due Date</p>
-                <input 
-                    type="date" 
-                    value="{editedTask.dueDate.year}-{editedTask.dueDate.month}-{editedTask.dueDate.day}"
-                    class="border border-background-300 rounded-lg p-1 w-full"
-                    min={dayjs().format("YYYY-MM-DD")}
-                >
-            </div>
-
-            <div>
                 <p class="font-bold">Planner</p>
 
                 <PlannerSelect task={editedTask}/>
