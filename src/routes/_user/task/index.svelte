@@ -6,7 +6,7 @@
     import { type NewTaskData, type Task } from "@/lib/task/type";
     import { colors } from "@/components/util/color";
     import PlannerSelect from "@/components/planner/planner-select.svelte";
-    import { ChevronDown, ChevronRight, Plus } from "@lucide/svelte";
+    import { ChevronDown, ChevronRight, Plus, Trash } from "@lucide/svelte";
     import { type Planner } from "@/lib/planner/type";
     import DatePicker from "@/components/ui/date-picker.svelte";
     import { getLocalTimeZone, Time, toCalendarDateTime, today } from "@internationalized/date";
@@ -166,7 +166,7 @@
         </div>
     </section>
 
-    {#if isEditModalOpen == true && editedTask != null}
+    {#if isEditModalOpen == true && editedTask !== null}
         <section class="flex-1 flex flex-col gap-y-4 border border-background-300 rounded-xl p-4">
             <h2 class="font-default font-semibold text-xl text-center pb-4">Edit Task</h2>
 
@@ -183,6 +183,16 @@
                 <p class="font-bold">Planner</p>
 
                 <PlannerSelect task={editedTask}/>
+            </div>
+
+            <div class="text-center">
+                <button 
+                    class="p-2 border border-background-300 hover:bg-background-100 rounded-lg cursor-pointer"
+                    onclick={() => taskRepo.deleteTask(editedTask?.id ?? "")}
+                >   
+                    <Trash class="size-4"/>
+                </button>
+
             </div>
         </section>
     {/if}

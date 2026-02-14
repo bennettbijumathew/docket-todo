@@ -1,5 +1,5 @@
 import { db } from "@/lib/config/firebase.ts"
-import { collection, query, onSnapshot, QuerySnapshot, where, orderBy, doc, updateDoc, arrayRemove, DocumentReference, Query, getDoc, arrayUnion, addDoc } from "firebase/firestore";
+import { collection, query, onSnapshot, QuerySnapshot, where, orderBy, doc, updateDoc, arrayRemove, DocumentReference, Query, getDoc, arrayUnion, addDoc, deleteDoc } from "firebase/firestore";
 import { type NewTaskData, Task, taskConverter } from "./type";
 
 export class TaskRepository {
@@ -40,8 +40,26 @@ export class TaskRepository {
         });
     }
 
+    // This removes a new task into the tasks database
+    public async deleteTask(taskId: string): Promise<void> {
+        // A guard clause to stop the function when there is no task id.
+        if (taskId.trim() == "") {
+            return
+        }
+
+        // Using the task id, the document is deleted of the tasks collection. 
+        const taskRef: DocumentReference = doc(db, "tasks", taskId)
+
+        await deleteDoc(taskRef)
+    }
+
     // This removes a planner from a task. 
     public async removePlannerFromTask(taskId: string, plannerId: string): Promise<void> {
+        // A guard clause to stop the function when there is no task id.
+        if (taskId.trim() == "") {
+            return
+        }
+
         const taskRef: DocumentReference = doc(db, "tasks", taskId)
         const currentTask = await getDoc(taskRef)
 
@@ -56,6 +74,11 @@ export class TaskRepository {
 
     // This adds a planner from a task. 
     public async addPlannerToTask(taskId: string, plannerId: string): Promise<void> {
+        // A guard clause to stop the function when there is no task id.
+        if (taskId.trim() == "") {
+            return
+        }
+
         const plannerRef: DocumentReference = doc(db, "planners", plannerId)
         const isPlannerReal: boolean = (await getDoc(plannerRef)).exists();
 
@@ -71,6 +94,11 @@ export class TaskRepository {
 
     // This changes a task to be complete status
     public async setTaskComplete(taskId: string, newValue: boolean): Promise<void> {
+        // A guard clause to stop the function when there is no task id.
+        if (taskId.trim() == "") {
+            return
+        }
+
         const taskRef = doc(db, "tasks", taskId)
         
         await updateDoc(taskRef, {

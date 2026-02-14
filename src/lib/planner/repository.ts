@@ -26,6 +26,12 @@ export class PlannerRepository {
 
     // This changes a users' planner visible status through the "user" field.
     public async setVisibility(uid: string, plannerId: string, newValue: boolean): Promise<void> {
+        // A guard clause to stop the function when there is no user id or planner id.
+        if (uid.trim() == "" || plannerId.trim() == "") {
+            return
+        }
+
+        // This toggles the planner to have a new visibility for the user.
         const plannerRef = doc(db, "planners", plannerId)
         
         await updateDoc(plannerRef, {
