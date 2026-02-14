@@ -1,7 +1,6 @@
 import { db } from "@/lib/config/firebase.ts"
-import { collection, query, onSnapshot, QuerySnapshot, where, orderBy, doc, updateDoc, arrayRemove, DocumentReference, Query, getDoc, arrayUnion, setDoc, addDoc } from "firebase/firestore";
+import { collection, query, onSnapshot, QuerySnapshot, where, orderBy, doc, updateDoc, arrayRemove, DocumentReference, Query, getDoc, arrayUnion, addDoc } from "firebase/firestore";
 import { type NewTaskData, Task, taskConverter } from "./type";
-import { CalendarDateTime } from "@internationalized/date";
 
 export class TaskRepository {
     // This function is a listener that checks for tasks that are associated to the given planner ids. 
@@ -13,12 +12,12 @@ export class TaskRepository {
             return () => {}
         }
 
+        // The query gets a list of tasks that are related to the planners. It is then ordered by name and converted to the Task type.
         const q: Query = query(collection(db, "tasks"), where("planners", "array-contains-any", plannerIds), orderBy("name")).withConverter(taskConverter)
         
         // This snapshot sets the planner list while adding a visible attribute for each user 
         return onSnapshot(q, (querySnapshot: QuerySnapshot) => {
             const newTasks: Task[] = querySnapshot.docs.map((doc) => doc.data()) as Task[]
-                        
             callbackFn(newTasks) 
         })            
     }
@@ -26,7 +25,7 @@ export class TaskRepository {
     // This adds a new task into the tasks database
     public async createTask(newTask: NewTaskData): Promise<void> {
         const newTaskRef = collection(db, "tasks").withConverter(taskConverter)
-        
+                
         await addDoc(newTaskRef, {
             name: newTask.name,
             planners: newTask.planners,
@@ -37,10 +36,15 @@ export class TaskRepository {
     // This removes a planner from a task. 
     public async removePlannerFromTask(taskId: string, plannerId: string): Promise<void> {
         const taskRef: DocumentReference = doc(db, "tasks", taskId)
-        
-        await updateDoc(taskRef, {
-            planners: arrayRemove(plannerId)
-        })
+        const currentTask = await getDoc(taskRef)
+
+        // Only removes the planner from the task, if tasks exists 
+        // and if there is more than 0 planners in the tasks. 
+        if (currentTask.exists() && currentTask.data().planners.length - 1 > 0) {
+            await updateDoc(taskRef, {
+                planners: arrayRemove(plannerId)
+            })
+        }
     }
 
     // This adds a planner from a task. 
@@ -59,7 +63,7 @@ export class TaskRepository {
     }
 
     // This changes a task to be complete status
-    public async toggleTaskComplete(taskId: string, newValue: boolean): Promise<void> {
+    public async setTaskComplete(taskId: string, newValue: boolean): Promise<void> {
         const taskRef = doc(db, "tasks", taskId)
         
         await updateDoc(taskRef, {

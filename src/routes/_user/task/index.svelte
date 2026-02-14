@@ -60,7 +60,7 @@
                 type="checkbox" 
                 class="m-2 ml-0 size-4 accent-content-900"
                 bind:checked={task.completed}
-                onclick={() => taskRepo.toggleTaskComplete(task.id, !task.completed)}
+                onclick={() => taskRepo.setTaskComplete(task.id, !task.completed)}
             >   
 
             <div>
@@ -83,7 +83,7 @@
 {#snippet plannerTile(planner: Planner)}
     <button 
         class={`flex min-h-13 justify-between items-center border-l-10 border-${colors[planner.color]} hover:bg-background-50 transition-colors cursor-pointer`}
-        onclick={() => plannerRepo.toggleVisibility(authStore.getUserId(), planner.id, !planner.users[authStore.getUserId()])}
+        onclick={() => plannerRepo.setVisibility(authStore.getUserId(), planner.id, !planner.users[authStore.getUserId()])}
     >
         <p class="ml-2"> {planner.name} </p>
 

@@ -25,7 +25,7 @@ export class PlannerRepository {
     }
 
     // This changes a users' planner visible status through the "user" field.
-    public async toggleVisibility(uid: string, plannerId: string, newValue: boolean): Promise<void> {
+    public async setVisibility(uid: string, plannerId: string, newValue: boolean): Promise<void> {
         const plannerRef = doc(db, "planners", plannerId)
         
         await updateDoc(plannerRef, {
