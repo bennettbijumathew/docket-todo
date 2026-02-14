@@ -3,13 +3,17 @@
     import { authStore } from "@/lib/auth/store.svelte";
     import { taskStore } from "@/lib/task/store.svelte";
     import { plannerStore } from "@/lib/planner/store.svelte";
-    import { plannerTaskController } from "@/lib/planner-task/controller";
-    import { type Task } from "@/lib/task/type";
-    import dayjs from "dayjs";
-    import { colors } from "@/lib/helpers/color";
+    import { type NewTaskData, type Task } from "@/lib/task/type";
+    import { colors } from "@/components/util/color";
     import PlannerSelect from "@/components/planner/planner-select.svelte";
-    import { Calendar, ChevronDown, ChevronRight, FolderTree, Plus } from "@lucide/svelte";
+    import { ChevronDown, ChevronRight, Plus, Trash } from "@lucide/svelte";
     import { type Planner } from "@/lib/planner/type";
+    import DatePicker from "@/components/ui/date-picker.svelte";
+    import { getLocalTimeZone, Time, toCalendarDateTime, today } from "@internationalized/date";
+    import PlannerPicker from "@/components/ui/planner-picker.svelte";
+    import { formatLongDate } from "@/components/util/date";
+    import { taskRepo } from "@/lib/task/repository";
+    import { plannerRepo } from "@/lib/planner/repository";
 
     // These variables are used to show the tasks of the user.
     const completeTasks: Task[] = $derived(taskStore.getList().filter((item) => item.completed === true))
@@ -35,7 +39,24 @@
         editedTask = task
         isEditModalOpen = true
     }
+    
+    // This variable is used to handle new tasks that come in from the inputs
+    let newTask: NewTaskData = $state({
+        name: "",
+        planners: [],
+        dueDate: toCalendarDateTime(today(getLocalTimeZone()), new Time(0, 0))
+    })
 
+    // This is a function for adding a new task and resetting the inputs
+    function addNewTask(): void {
+        taskRepo.createTask(newTask)
+        
+        newTask = {
+            name: "",
+            planners: [],
+            dueDate: toCalendarDateTime(today(getLocalTimeZone()), new Time(0, 0))
+        }
+    }
 </script>
 
 
@@ -49,13 +70,13 @@
             <input 
                 type="checkbox" 
                 class="m-2 ml-0 size-4 accent-content-900"
-                id={task.id} 
-                checked={task.completed} 
+                bind:checked={task.completed}
+                onclick={() => taskRepo.setTaskComplete(task.id, !task.completed)}
             >   
 
             <div>
                 <h3 class="font-bold"> {task.name} </h3>
-                <p class="text-sm"> Due Date: {task.dueDate.format("dddd D, MMMM YYYY")} </p>
+                <p class="text-sm"> Due Date: {formatLongDate(task.dueDate)} </p>
             </div>
         </section>
 
@@ -73,7 +94,7 @@
 {#snippet plannerTile(planner: Planner)}
     <button 
         class={`flex min-h-13 justify-between items-center border-l-10 border-${colors[planner.color]} hover:bg-background-50 transition-colors cursor-pointer`}
-        onclick={() => plannerTaskController.updatePlannerVisibility(authStore.getUserId(), planner.id, !planner.users[authStore.getUserId()])}
+        onclick={() => plannerRepo.setVisibility(authStore.getUserId(), planner.id, !planner.users[authStore.getUserId()])}
     >
         <p class="ml-2"> {planner.name} </p>
 
@@ -115,7 +136,7 @@
 
 
 <!-- VIEW: This is what is shown on the arrival of the page -->
-<main class="flex-1 flex p-4 pt-0 gap-x-4 min-h-0">
+<main class="flex-1 flex p-4 pt-0 gap-x-4 min-h-0 bg-background-50">
     <section class="flex-1 border border-background-300 rounded-xl p-4 flex flex-col min-h-0">
         <h2 class="font-default font-semibold text-xl text-center pb-4">Planner</h2>
 
@@ -137,30 +158,38 @@
         </div>
 
         <!-- This area is the place to add tasks -->
-        <div class="flex border border-background-300 focus-within:outline focus-within:outline-background-500 rounded-lg p-1.5">
+        <form
+            class="flex border border-background-300 focus-within:outline focus-within:outline-background-500 rounded-lg p-1.5"
+            onsubmit={(e) => { 
+                e.preventDefault(); 
+                addNewTask() 
+            }}
+        >
             <div class="flex-1 flex items-center">
-                <button class="py-2 px-2 hover:bg-background-100 rounded-lg cursor-pointer mr-1">
+                <button 
+                    class="py-2 px-2 hover:bg-background-100 rounded-lg cursor-pointer mr-1" 
+                    type="submit"
+                >
                     <Plus class="size-4"/>
                 </button>
 
                 <input 
                     type="text" 
-                    class="outline-none "
+                    class="outline-none flex-1"
                     placeholder="Enter a new task.."
+                    bind:value={newTask.name}
+                    aria-required="true"
+                    required
                 >
             </div>
 
-            <button class="py-2 px-2 hover:bg-background-100 rounded-lg cursor-pointer">
-                <Calendar class="size-4"/>
-            </button>
+            <DatePicker bind:value={newTask.dueDate}/>
 
-            <button class="py-2 px-2 hover:bg-background-100 rounded-lg cursor-pointer">
-                <FolderTree class="size-4"/>
-            </button>
-        </div>
+            <PlannerPicker bind:value={newTask.planners}/>
+        </form>
     </section>
 
-    {#if isEditModalOpen == true && editedTask != null}
+    {#if isEditModalOpen == true && editedTask !== null}
         <section class="flex-1 flex flex-col gap-y-4 border border-background-300 rounded-xl p-4">
             <h2 class="font-default font-semibold text-xl text-center pb-4">Edit Task</h2>
 
@@ -174,19 +203,18 @@
             </div>
 
             <div>
-                <p class="font-bold">Due Date</p>
-                <input 
-                    type="date" 
-                    value={editedTask.dueDate.format("YYYY-MM-DD")}
-                    class="border border-background-300 rounded-lg p-1 w-full"
-                    min={dayjs().format("YYYY-MM-DD")}
-                >
-            </div>
-
-            <div>
                 <p class="font-bold">Planner</p>
 
                 <PlannerSelect task={editedTask}/>
+            </div>
+
+            <div class="text-center">
+                <button 
+                    class="p-2 border border-background-300 hover:bg-background-100 rounded-lg cursor-pointer"
+                    onclick={() => taskRepo.deleteTask(editedTask?.id ?? "")}
+                >   
+                    <Trash class="size-4"/>
+                </button>
             </div>
         </section>
     {/if}

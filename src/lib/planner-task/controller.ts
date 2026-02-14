@@ -40,18 +40,6 @@ export class PlannerTaskController {
         this.plannerStore.clearList()
         this.taskStore.clearList()
     }
-
-    updatePlannerVisibility(uid: string, plannerId: string, newValue: boolean): void {
-        this.plannerRepo.editVisibility(uid, plannerId, newValue)
-    }
-
-    removePlannerFromTask(taskId: string, plannerId: string): void {
-        this.taskRepo.removePlanner(taskId, plannerId)
-    }
-
-    addPlannerFromTask(taskId: string, plannerId: string): void {
-        this.taskRepo.addPlanner(taskId, plannerId)
-    }
 }
 
 export const plannerTaskController = new PlannerTaskController(plannerRepo, plannerStore, taskRepo, taskStore)

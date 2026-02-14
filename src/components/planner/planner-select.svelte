@@ -1,10 +1,10 @@
 <script lang="ts">
-    import { colors } from "@/lib/helpers/color";
+    import { colors } from "@/components/util/color";
     import { type Task } from "@/lib/task/type";
-    import { plannerTaskController } from "@/lib/planner-task/controller";
     import { plannerStore } from "@/lib/planner/store.svelte";
     import { taskStore } from "@/lib/task/store.svelte";
     import { type UserPlanner } from "@/lib/planner/type";
+    import { taskRepo } from "@/lib/task/repository";
 
     const { task: initialTask }: { task: Task } = $props();
     let searchInput: string = $state("")
@@ -28,9 +28,9 @@
 
     function editTaskPlanner(plannerId: string, isSelected: boolean) {
         if (isSelected == true) {
-            plannerTaskController.removePlannerFromTask(task.id, plannerId);
+            taskRepo.removePlannerFromTask(task.id, plannerId);
         } else {
-            plannerTaskController.addPlannerFromTask(task.id, plannerId);
+            taskRepo.addPlannerToTask(task.id, plannerId);
         }
     }
 </script>

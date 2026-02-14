@@ -2,7 +2,7 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background-50: var(--color-neutral-50);
+  --color-background-50: var(--color-white);
   --color-background-100: var(--color-neutral-100);
   --color-background-300: var(--color-neutral-300);
   --color-background-500: var(--color-neutral-500);
