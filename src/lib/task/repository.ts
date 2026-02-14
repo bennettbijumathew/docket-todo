@@ -24,7 +24,7 @@ export class TaskRepository {
     }
 
     // This adds a new task into the tasks database
-    public async createNewTask(newTask: NewTaskData): Promise<void> {
+    public async createTask(newTask: NewTaskData): Promise<void> {
         const newTaskRef = collection(db, "tasks").withConverter(taskConverter)
         
         await addDoc(newTaskRef, {
@@ -35,7 +35,7 @@ export class TaskRepository {
     }
 
     // This removes a planner from a task. 
-    public async removePlanner(taskId: string, plannerId: string): Promise<void> {
+    public async removePlannerFromTask(taskId: string, plannerId: string): Promise<void> {
         const taskRef: DocumentReference = doc(db, "tasks", taskId)
         
         await updateDoc(taskRef, {
@@ -44,7 +44,7 @@ export class TaskRepository {
     }
 
     // This adds a planner from a task. 
-    public async addPlanner(taskId: string, plannerId: string): Promise<void> {
+    public async addPlannerToTask(taskId: string, plannerId: string): Promise<void> {
         const plannerRef: DocumentReference = doc(db, "planners", plannerId)
         const isPlannerReal: boolean = (await getDoc(plannerRef)).exists();
 
@@ -59,7 +59,7 @@ export class TaskRepository {
     }
 
     // This changes a task to be complete status
-    public async editComplete(taskId: string, newValue: boolean): Promise<void> {
+    public async toggleTaskComplete(taskId: string, newValue: boolean): Promise<void> {
         const taskRef = doc(db, "tasks", taskId)
         
         await updateDoc(taskRef, {

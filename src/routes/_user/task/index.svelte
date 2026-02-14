@@ -3,7 +3,6 @@
     import { authStore } from "@/lib/auth/store.svelte";
     import { taskStore } from "@/lib/task/store.svelte";
     import { plannerStore } from "@/lib/planner/store.svelte";
-    import { plannerTaskController } from "@/lib/planner-task/controller";
     import { type NewTaskData, type Task } from "@/lib/task/type";
     import { colors } from "@/components/util/color";
     import PlannerSelect from "@/components/planner/planner-select.svelte";
@@ -14,6 +13,7 @@
     import PlannerPicker from "@/components/ui/planner-picker.svelte";
     import { formatLongDate } from "@/components/util/date";
     import { taskRepo } from "@/lib/task/repository";
+    import { plannerRepo } from "@/lib/planner/repository";
 
     // These variables are used to show the tasks of the user.
     const completeTasks: Task[] = $derived(taskStore.getList().filter((item) => item.completed === true))
@@ -60,7 +60,7 @@
                 type="checkbox" 
                 class="m-2 ml-0 size-4 accent-content-900"
                 bind:checked={task.completed}
-                onclick={() => plannerTaskController.updateTaskComplete(task.id, !task.completed)}
+                onclick={() => taskRepo.toggleTaskComplete(task.id, !task.completed)}
             >   
 
             <div>
@@ -83,7 +83,7 @@
 {#snippet plannerTile(planner: Planner)}
     <button 
         class={`flex min-h-13 justify-between items-center border-l-10 border-${colors[planner.color]} hover:bg-background-50 transition-colors cursor-pointer`}
-        onclick={() => plannerTaskController.updatePlannerVisibility(authStore.getUserId(), planner.id, !planner.users[authStore.getUserId()])}
+        onclick={() => plannerRepo.toggleVisibility(authStore.getUserId(), planner.id, !planner.users[authStore.getUserId()])}
     >
         <p class="ml-2"> {planner.name} </p>
 
@@ -149,7 +149,7 @@
         <!-- This area is the place to add tasks -->
         <div class="flex border border-background-300 focus-within:outline focus-within:outline-background-500 rounded-lg p-1.5">
             <div class="flex-1 flex items-center">
-                <button class="py-2 px-2 hover:bg-background-100 rounded-lg cursor-pointer mr-1" onclick={() => taskRepo.createNewTask(newTask)}>
+                <button class="py-2 px-2 hover:bg-background-100 rounded-lg cursor-pointer mr-1" onclick={() => taskRepo.createTask(newTask)}>
                     <Plus class="size-4"/>
                 </button>
 
