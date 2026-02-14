@@ -41,11 +41,22 @@
     }
     
     // This variable is used to handle new tasks that come in from the inputs
-    const newTask: NewTaskData = $state({
+    let newTask: NewTaskData = $state({
         name: "",
         planners: [],
         dueDate: toCalendarDateTime(today(getLocalTimeZone()), new Time(0, 0))
     })
+
+    // This is a function for adding a new task and resetting the inputs
+    function addNewTask(): void {
+        taskRepo.createTask(newTask)
+        
+        newTask = {
+            name: "",
+            planners: [],
+            dueDate: toCalendarDateTime(today(getLocalTimeZone()), new Time(0, 0))
+        }
+    }
 </script>
 
 
@@ -147,23 +158,35 @@
         </div>
 
         <!-- This area is the place to add tasks -->
-        <div class="flex border border-background-300 focus-within:outline focus-within:outline-background-500 rounded-lg p-1.5">
+        <form
+            class="flex border border-background-300 focus-within:outline focus-within:outline-background-500 rounded-lg p-1.5"
+            onsubmit={(e) => { 
+                e.preventDefault(); 
+                addNewTask() 
+            }}
+        >
             <div class="flex-1 flex items-center">
-                <button class="py-2 px-2 hover:bg-background-100 rounded-lg cursor-pointer mr-1" onclick={() => taskRepo.createTask(newTask)}>
+                <button 
+                    class="py-2 px-2 hover:bg-background-100 rounded-lg cursor-pointer mr-1" 
+                    type="submit"
+                >
                     <Plus class="size-4"/>
                 </button>
 
                 <input 
                     type="text" 
-                    class="outline-none"
+                    class="outline-none flex-1"
                     placeholder="Enter a new task.."
                     bind:value={newTask.name}
+                    aria-required="true"
+                    required
                 >
             </div>
 
             <DatePicker bind:value={newTask.dueDate}/>
+
             <PlannerPicker bind:value={newTask.planners}/>
-        </div>
+        </form>
     </section>
 
     {#if isEditModalOpen == true && editedTask !== null}
@@ -192,7 +215,6 @@
                 >   
                     <Trash class="size-4"/>
                 </button>
-
             </div>
         </section>
     {/if}

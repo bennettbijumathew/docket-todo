@@ -8,7 +8,12 @@
      let { value = $bindable() }: { value: CalendarDateTime } = $props()
 </script>
  
-<DatePicker.Root bind:value={value} minValue={todayDate} fixedWeeks={true}>
+<DatePicker.Root 
+    bind:value={value} 
+    minValue={todayDate} 
+    fixedWeeks={true}
+    required
+>
     <!-- Input Selector for the Date Picker.$props -->
     <DatePicker.Input class="flex items-center hover:bg-background-100 rounded-lg px-2 text-center ">
         {#snippet children({ segments })}

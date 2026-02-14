@@ -37,6 +37,8 @@
             aria-label="Select a planner..."
             class="w-32 border-b hover:border-0 border-background-100 focus:outline-0"
             clearOnDeselect={true}
+            autocomplete="off"
+            required
         >
         
         </Combobox.Input>   
