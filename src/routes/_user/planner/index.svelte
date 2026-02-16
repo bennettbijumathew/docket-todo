@@ -118,7 +118,5 @@
         </form>
     </section>
 
-    <section class="flex flex-col gap-y-4 flex-1 border border-background-300 rounded-xl p-4">
-        <PlannerEditor planner={selectedPlanner}/>
-    </section>
+    <PlannerEditor planner={selectedPlanner}/>
 </main>
