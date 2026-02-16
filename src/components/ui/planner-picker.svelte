@@ -48,7 +48,7 @@
         <Combobox.Content 
             sideOffset={25}
             side="top" 
-            class="border border-background-300 bg-background-50 rounded-lg"
+            class="border border-background-300 bg-background-50 rounded-lg mx-8"
         >
             <Combobox.Viewport class="flex flex-col items-center p-3 w-50 max-h-50 overflow-y-auto">
                 {#if searchedPlanners.length > 0}

@@ -15,7 +15,7 @@
     required
 >
     <!-- Input Selector for the Date Picker.$props -->
-    <DatePicker.Input class="flex items-center hover:bg-background-100 rounded-lg px-2 text-center ">
+    <DatePicker.Input class="flex items-center hover:bg-background-100 rounded-lg px-2 text-center mx-8">
         {#snippet children({ segments })}
             <!-- Button to open the Calendar Picker. -->
             <DatePicker.Trigger class="cursor-pointer pr-1 flex items-center">
