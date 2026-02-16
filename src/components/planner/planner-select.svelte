@@ -3,7 +3,7 @@
     import { type Task } from "@/lib/task/type";
     import { plannerStore } from "@/lib/planner/store.svelte";
     import { taskStore } from "@/lib/task/store.svelte";
-    import { type UserPlanner } from "@/lib/planner/type";
+    import { type TaskPlanner } from "@/lib/planner/type";
     import { taskRepo } from "@/lib/task/repository";
 
     const { task: initialTask }: { task: Task } = $props();
@@ -14,7 +14,7 @@
     
     // Deriving from the planner list, a new planner list is created with a selected attribute.
     // The selected attribute represents the planners that are associated with the task.
-    const taskPlanners: UserPlanner[] = $derived(
+    const taskPlanners: TaskPlanner[] = $derived(
         plannerStore.getList().map((item) => ({
             ...item,
             selected: task.planners.includes(item.id) || false
@@ -22,7 +22,7 @@
     );
 
     // Using the search input, the list of planners are filtered. 
-    const searchedPlanners: UserPlanner[] = $derived(
+    const searchedPlanners: TaskPlanner[] = $derived(
         taskPlanners.filter((item) => item.name.toLowerCase().includes(searchInput.toLowerCase()))
     );
 

@@ -15,7 +15,8 @@
     const routes: Route[] = [
         { name: "Home", link: "/" },
         { name: "Login", link: "/login" },
-        { name: "Task", link: "/task" }
+        { name: "Task", link: "/task" },
+        { name: "Planner", link: "/planner" }
     ]
     
     let maximizedState: boolean = $state(false) 

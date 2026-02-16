@@ -1,6 +1,6 @@
 import { db } from "@/lib/config/firebase.ts"
 import { collection, query, onSnapshot, QuerySnapshot, where, orderBy, doc, updateDoc, arrayRemove, DocumentReference, Query, getDoc, arrayUnion, addDoc, deleteDoc } from "firebase/firestore";
-import { type NewTaskData, Task, taskConverter } from "./type";
+import { type NewTaskData, Task, createTaskConverter } from "./type";
 
 export class TaskRepository {
     // This function is a listener that checks for tasks that are associated to the given planner ids. 
@@ -13,7 +13,7 @@ export class TaskRepository {
         }
 
         // The query gets a list of tasks that are related to the planners. It is then ordered by name and converted to the Task type.
-        const q: Query = query(collection(db, "tasks"), where("planners", "array-contains-any", plannerIds), orderBy("name")).withConverter(taskConverter)
+        const q: Query = query(collection(db, "tasks"), where("planners", "array-contains-any", plannerIds), orderBy("name")).withConverter(createTaskConverter())
         
         // This snapshot sets the planner list while adding a visible attribute for each user 
         return onSnapshot(q, (querySnapshot: QuerySnapshot) => {
@@ -31,7 +31,7 @@ export class TaskRepository {
         }
 
         // Grabs the tasks collection from Firestore and adds a new document using the converter. 
-        const newTaskRef = collection(db, "tasks").withConverter(taskConverter)
+        const newTaskRef = collection(db, "tasks").withConverter(createTaskConverter())
                 
         await addDoc(newTaskRef, {
             name: newTask.name,
