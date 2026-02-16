@@ -32,7 +32,7 @@
 
     <DatePicker.Content 
         side="top" 
-        sideOffset={25} 
+        sideOffset={15} 
         class="flex flex-col items-center border border-background-300 bg-background-50 rounded-lg p-3"
     >
         <DatePicker.Calendar>

@@ -8,9 +8,9 @@
     import PlannerSelect from "@/components/planner/planner-select.svelte";
     import { ChevronDown, ChevronRight, Plus, Trash } from "@lucide/svelte";
     import { type Planner } from "@/lib/planner/type";
-    import DatePicker from "@/components/ui/date-picker.svelte";
+    import DatePicker from "@/components/ui/inputs/date-picker.svelte";
     import { getLocalTimeZone, Time, toCalendarDateTime, today } from "@internationalized/date";
-    import PlannerPicker from "@/components/ui/planner-picker.svelte";
+    import PlannerPicker from "@/components/ui/inputs/planner-picker.svelte";
     import { formatLongDate } from "@/components/util/date";
     import { taskRepo } from "@/lib/task/repository";
     import { plannerRepo } from "@/lib/planner/repository";

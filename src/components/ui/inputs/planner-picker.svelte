@@ -46,7 +46,7 @@
     
     <Combobox.Portal>
         <Combobox.Content 
-            sideOffset={25}
+            sideOffset={15}
             side="top" 
             class="border border-background-300 bg-background-50 rounded-lg mx-8"
         >
