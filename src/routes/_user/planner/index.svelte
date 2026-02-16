@@ -8,11 +8,27 @@
     import { type ColorKey, colors } from "@/components/util/color";
     import ColorPicker from "@/components/ui/color-picker.svelte";
 
-    const newPlanner: NewPlannerData = $state({
+    let newPlanner: NewPlannerData = $state({
         name: "",
-        users: {"": false}, 
+        users: {},
         color: "red" as ColorKey
     })
+
+    
+    // This is a function for adding a new task and resetting the inputs
+    function addNewPlanner(): void {
+        newPlanner.users = {
+            [authStore.getUserId()]:  false
+        }
+
+        plannerRepo.createPlanner(newPlanner)
+        
+        newPlanner = {
+            name: "",
+            users: {},
+            color: "red" as ColorKey
+        }
+    }
 </script>
 
 
@@ -73,6 +89,7 @@
             class="flex border border-background-300 focus-within:outline focus-within:outline-background-500 rounded-lg p-1.5"
             onsubmit={(e) => { 
                 e.preventDefault(); 
+                addNewPlanner();
             }}
         >
             <div class="flex-1 flex items-center">
@@ -89,6 +106,7 @@
                     placeholder="Enter a new planner.."
                     aria-required="true"
                     required
+                    bind:value={newPlanner.name}
                 >
             </div>
 

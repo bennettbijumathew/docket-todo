@@ -1,6 +1,6 @@
 import { db } from "@/lib/config/firebase.ts"
-import { collection, query, orderBy, onSnapshot, QuerySnapshot, doc, Unsubscribe, updateDoc } from "firebase/firestore";
-import { createPlannerConverter, Planner } from "./type";
+import { collection, query, orderBy, onSnapshot, QuerySnapshot, doc, Unsubscribe, updateDoc, addDoc } from "firebase/firestore";
+import { createPlannerConverter, NewPlannerData, Planner } from "./type";
 
 export class PlannerRepository {
     // This returns a listeners that returns the list of planners that are related to the user.
@@ -30,6 +30,25 @@ export class PlannerRepository {
         await updateDoc(plannerRef, {
             [`users.${uid}`]: newValue
         })
+    }
+
+    // This adds a new planner into the planners database
+    public async createPlanner(newPlanner: NewPlannerData): Promise<void> {
+        // A guard clause to prevent a new task being added if there is no name
+        // or planners attached to the task.
+        if (newPlanner.name.trim() == "") {
+            return 
+        }
+
+        // Grabs the planner collection from Firestore and adds a new document using the converter. 
+        const newPlannerRef = collection(db, "planners").withConverter(createPlannerConverter())
+                
+        console.log(newPlanner.users)
+        await addDoc(newPlannerRef, {
+            name: newPlanner.name,
+            users: newPlanner.users,
+            color: newPlanner.color            
+        });
     }
 }
 
