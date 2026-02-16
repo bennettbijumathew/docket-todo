@@ -2,10 +2,17 @@
 <script lang="ts">
     import { authStore } from "@/lib/auth/store.svelte";
     import { plannerStore } from "@/lib/planner/store.svelte";
-    import { type Planner } from "@/lib/planner/type";
+    import { type NewPlannerData, type Planner } from "@/lib/planner/type";
     import { plannerRepo } from "@/lib/planner/repository";
     import { Plus } from "@lucide/svelte";
-    import { colors } from "@/components/util/color";
+    import { type ColorKey, colors } from "@/components/util/color";
+    import ColorPicker from "@/components/ui/color-picker.svelte";
+
+    const newPlanner: NewPlannerData = $state({
+        name: "",
+        users: {"": false}, 
+        color: "red" as ColorKey
+    })
 </script>
 
 
@@ -26,11 +33,8 @@
                 <h3 class="font-bold"> {planner.name} </h3>
                 <p class="truncate max-w-150">
                     Users: 
-                    {#each Object.entries(plannerStore.getList()[0].users) as [id]}
-                        {id},
-                        {id},
-                        {id},
-                        {id},
+                    {#each Object.entries(planner.users) as [id]}
+                        {id}
                     {/each}
                 </p>
             </div>
@@ -87,6 +91,8 @@
                     required
                 >
             </div>
+
+            <ColorPicker bind:value={newPlanner.color}/>
         </form>
     </section>
 </main>

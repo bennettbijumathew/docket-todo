@@ -13,7 +13,6 @@ export const colors = {
     indigo: "indigo-400",
     violet: "violet-400",
     purple: "purple-400",
-    fuchsia: "fuchsia-400",
     pink: "pink-400",
     rose: "rose-400"
 } as const;
