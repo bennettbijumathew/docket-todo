@@ -16,7 +16,7 @@ export interface NewTaskData {
     dueDate: CalendarDateTime
 } 
 
-export const taskConverter = {
+export const createTaskConverter = () => ({
     toFirestore: (task: NewTaskData) => {
         const date = new Date(
             task.dueDate.year,
@@ -58,5 +58,5 @@ export const taskConverter = {
 
         return task;
     }
-};
+})
 
