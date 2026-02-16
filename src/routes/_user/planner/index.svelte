@@ -6,7 +6,7 @@
     import { plannerRepo } from "@/lib/planner/repository";
     import { Plus } from "@lucide/svelte";
     import { type ColorKey, colors } from "@/components/util/color";
-    import ColorPicker from "@/components/ui/color-picker.svelte";
+    import ColorPicker from "@/components/ui/inputs/color-picker.svelte";
 
     let newPlanner: NewPlannerData = $state({
         name: "",

@@ -1,7 +1,7 @@
 <script lang="ts">
     import { Check, PaintBucket } from "@lucide/svelte";
     import { Popover } from "bits-ui";
-    import { type ColorKey, colors } from "../util/color";
+    import { type ColorKey, colors } from "@/components/util/color";
 
     // This receives a bounded color key as a prop, updates from the component update the caller's array.
     let { value = $bindable() }: { value: ColorKey } = $props()
