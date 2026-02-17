@@ -41,6 +41,15 @@
 
         plannerRepo.editColor(planner.id, inputs.color) 
     }
+
+    function submitDeletionOfPlanner(plannerId: string) {
+        // // Doesn't delete the planner if planner doesn't exist
+        if (planner === null) {
+            return 
+        }
+
+        plannerRepo.deletePlanner(plannerId) 
+    }
 </script>
 
 <!-- VIEW: A list of inputs that change a planner's details -->
@@ -92,6 +101,7 @@
         <div class="text-center">
             <button 
                 class="p-2 border border-background-300 hover:bg-background-100 rounded-lg cursor-pointer"
+                onclick={() => submitDeletionOfPlanner(planner.id)}
             >   
                 <Trash class="size-4"/>
             </button>

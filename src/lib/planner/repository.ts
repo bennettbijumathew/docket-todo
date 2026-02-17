@@ -1,7 +1,9 @@
 import { db } from "@/lib/config/firebase.ts"
-import { collection, query, orderBy, onSnapshot, QuerySnapshot, doc, Unsubscribe, updateDoc, addDoc } from "firebase/firestore";
+import { collection, query, orderBy, onSnapshot, QuerySnapshot, doc, Unsubscribe, updateDoc, addDoc, where, getDocs, deleteDoc } from "firebase/firestore";
 import { createPlannerConverter, NewPlannerData, Planner } from "./type";
 import { ColorKey } from "@/components/util/color";
+import { createTaskConverter, Task } from "../task/type";
+import { taskRepo } from "../task/repository";
 
 export class PlannerRepository {
     // This returns a listeners that returns the list of planners that are related to the user.
@@ -38,6 +40,22 @@ export class PlannerRepository {
         });
     }
 
+    // This removes a planner from the planners database
+    public async deletePlanner(plannerId: string): Promise<void> {
+        // A guard clause to stop the function when there is no planner id.
+        if (plannerId.trim() == "") {
+            return
+        }
+
+        // Since the planners ids are placed in the tasks, the task repo handles the removal of the planner
+        // from the task's planners array 
+        taskRepo.removePlannerFromAllTasks(plannerId)
+
+        // Using the planner id, the document is deleted of the tasks collection. 
+        const plannerRef = doc(db, "planners", plannerId)
+
+        await deleteDoc(plannerRef)
+    }
 
     // This changes a planner's title
     public async editName(plannerId: string, newName: string): Promise<void> {

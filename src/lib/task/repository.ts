@@ -1,5 +1,5 @@
 import { db } from "@/lib/config/firebase.ts"
-import { collection, query, onSnapshot, QuerySnapshot, where, orderBy, doc, updateDoc, arrayRemove, DocumentReference, Query, getDoc, arrayUnion, addDoc, deleteDoc } from "firebase/firestore";
+import { collection, query, onSnapshot, QuerySnapshot, where, orderBy, doc, updateDoc, arrayRemove, DocumentReference, Query, getDoc, arrayUnion, addDoc, deleteDoc, getDocs } from "firebase/firestore";
 import { type NewTaskData, Task, createTaskConverter } from "./type";
 
 export class TaskRepository {
@@ -21,6 +21,7 @@ export class TaskRepository {
             callbackFn(newTasks) 
         })            
     }
+
 
     // This adds a new task into the tasks database
     public async createTask(newTask: NewTaskData): Promise<void> {
@@ -53,24 +54,6 @@ export class TaskRepository {
         await deleteDoc(taskRef)
     }
 
-    // This removes a planner from a task. 
-    public async removePlannerFromTask(taskId: string, plannerId: string): Promise<void> {
-        // A guard clause to stop the function when there is no task id.
-        if (taskId.trim() == "") {
-            return
-        }
-
-        const taskRef: DocumentReference = doc(db, "tasks", taskId)
-        const currentTask = await getDoc(taskRef)
-
-        // Only removes the planner from the task, if tasks exists 
-        // and if there is more than 0 planners in the tasks. 
-        if (currentTask.exists() && currentTask.data().planners.length - 1 > 0) {
-            await updateDoc(taskRef, {
-                planners: arrayRemove(plannerId)
-            })
-        }
-    }
 
     // This adds a planner from a task. 
     public async addPlannerToTask(taskId: string, plannerId: string): Promise<void> {
@@ -92,6 +75,25 @@ export class TaskRepository {
         }
     }
 
+    // This removes a planner from a task. 
+    public async removePlannerFromTask(taskId: string, plannerId: string): Promise<void> {
+        // A guard clause to stop the function when there is no task id.
+        if (taskId.trim() == "") {
+            return
+        }
+
+        const taskRef: DocumentReference = doc(db, "tasks", taskId)
+        const currentTask = await getDoc(taskRef)
+
+        // Only removes the planner from the task, if tasks exists 
+        // and if there is more than 0 planners in the tasks. 
+        if (currentTask.exists() && currentTask.data().planners.length - 1 > 0) {
+            await updateDoc(taskRef, {
+                planners: arrayRemove(plannerId)
+            })
+        }
+    }
+
     // This changes a task to be complete status
     public async setTaskComplete(taskId: string, newValue: boolean): Promise<void> {
         // A guard clause to stop the function when there is no task id.
@@ -105,6 +107,19 @@ export class TaskRepository {
             completed: newValue
         })
     } 
+
+
+    // Remove all planners from group of tasks
+    public async removePlannerFromAllTasks(plannerId: string) {
+        // Queries all of the tasks that has the planner in the planners array
+        const q = query(collection(db, "tasks"), where("planners", "array-contains-any", [plannerId])).withConverter(createTaskConverter());
+        const result = await getDocs(q);
+
+        // Removes the planner id from the task's array
+        result.docs.map((doc) => {
+            this.removePlannerFromTask(doc.id, plannerId)
+        })
+    }
 }
 
 export const taskRepo = new TaskRepository()
