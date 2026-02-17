@@ -121,5 +121,7 @@
         </form>
     </section>
 
-    <PlannerEditor planner={selectedPlanner}/>
+    {#if selectedPlanner !== null}
+        <PlannerEditor plannerId={selectedPlanner.id}/>
+    {/if}
 </main>

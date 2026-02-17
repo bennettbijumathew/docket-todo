@@ -3,13 +3,17 @@
     import ColorPicker from "../inputs/color-picker.svelte";
     import { Trash, X } from "@lucide/svelte";
     import { plannerRepo } from "@/lib/planner/repository";
+    import { type ColorKey } from "@/components/util/color";
+    import { plannerStore } from "@/lib/planner/store.svelte";
 
-    let { planner }: { planner: Planner | null } = $props()
+    let { plannerId }: { plannerId: string } = $props()
+
+    const planner: Planner | null = $derived(plannerStore.getList().find(p => p.id === plannerId) || null);
 
     let inputs = $derived({
-        name: planner?.name ?? ""   
+        name: planner?.name ?? "", 
+        color: planner?.color ?? "red"
     })
-
 
     // Functions to update the planners' name
     function submitNameChange() {
@@ -19,6 +23,16 @@
         }
 
         plannerRepo.editName(planner.id, inputs.name) 
+    }
+
+    // Functions to update the planners' name
+    function submitColorChange() {
+        // // Doesn't edit the color if planner doesn't exist
+        if (planner === null) {
+            return 
+        }
+
+        plannerRepo.editColor(planner.id, inputs.color) 
     }
 </script>
 
@@ -48,7 +62,7 @@
                     type="text" 
                     class="border border-background-300 rounded-lg p-1 w-full"
                     bind:value={inputs.name}
-                    onblur={submitNameChange}
+                    onblur={() => submitNameChange}
                 >
             </form>
 
@@ -56,9 +70,12 @@
                 <p class="font-bold">Color</p>
 
                 <ColorPicker 
-                    bind:value={planner.color} 
+                    bind:value={inputs.color} 
                     position="bottom"
-                    onChangeFn={(newColor) => console.log(newColor)}
+                    onChangeFn={(newColor) => { 
+                        inputs.color = newColor as ColorKey
+                        submitColorChange()
+                    }}
                     popoverClass="grid grid-cols-4 grid-rows-4 gap-2"
                     buttonClass="rounded-lg px-2 py-1"
                     alignment="start"

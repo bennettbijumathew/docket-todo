@@ -1,6 +1,7 @@
 import { db } from "@/lib/config/firebase.ts"
 import { collection, query, orderBy, onSnapshot, QuerySnapshot, doc, Unsubscribe, updateDoc, addDoc } from "firebase/firestore";
 import { createPlannerConverter, NewPlannerData, Planner } from "./type";
+import { ColorKey } from "@/components/util/color";
 
 export class PlannerRepository {
     // This returns a listeners that returns the list of planners that are related to the user.
@@ -45,11 +46,26 @@ export class PlannerRepository {
             return
         }
 
-        // This toggles the planner to have a new visibility for the user.
+        // This updates the planner to have a new name.
         const plannerRef = doc(db, "planners", plannerId)
         
         await updateDoc(plannerRef, {
             name: newName
+        })
+    }
+
+    // This changes a planner's title
+    public async editColor(plannerId: string, newColor: ColorKey): Promise<void> {
+        // A guard clause to stop the function when there is no planner id or new name.
+        if (plannerId.trim() == "") {
+            return
+        }
+
+        // This updates the planner to have a new color.
+        const plannerRef = doc(db, "planners", plannerId)
+
+        await updateDoc(plannerRef, {
+            color: newColor
         })
     }
 

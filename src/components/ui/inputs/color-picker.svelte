@@ -22,6 +22,8 @@
         buttonClass = "h-full w-27 px-2",
         popoverClass = "grid gap-1 grid-cols-4 grid-row-4 mx-8"
     }: PageProps = $props()
+
+    $inspect(value)
 </script>
  
 <Popover.Root>
@@ -44,9 +46,9 @@
             {#each Object.entries(colors) as [id, color]}
                 <button 
                     class="rounded-lg bg-{color} size-6 flex items-center justify-center cursor-pointer" 
-                    onclick={() => onChangeFn(id as ColorKey)}
                     title="Color Selector Button for {id}"
                     aria-labelledby={id}
+                    onclick={() => onChangeFn(id as ColorKey)}
                 >
                     {#if id as ColorKey === value}
                         <Check class="size-4"/>
