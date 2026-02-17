@@ -9,10 +9,17 @@
     let { plannerId }: { plannerId: string } = $props()
 
     const planner: Planner | null = $derived(plannerStore.getList().find(p => p.id === plannerId) || null);
+    
+    let inputs = $state({
+        name: "", 
+        color: "red" as ColorKey
+    })
 
-    let inputs = $derived({
-        name: planner?.name ?? "", 
-        color: planner?.color ?? "red"
+    $effect(() => {
+        if (planner) {
+            inputs.name = planner.name
+            inputs.color = planner.color
+        }
     })
 
     // Functions to update the planners' name
@@ -70,7 +77,7 @@
                 <p class="font-bold">Color</p>
 
                 <ColorPicker 
-                    bind:value={inputs.color} 
+                    value={inputs.color} 
                     position="bottom"
                     onChangeFn={(newColor) => { 
                         inputs.color = newColor as ColorKey

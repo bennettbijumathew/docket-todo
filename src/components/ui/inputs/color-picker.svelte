@@ -14,7 +14,7 @@
     }
 
     let { 
-        value = $bindable(), 
+        value, 
         onChangeFn,
         alignment = "center",
         position = "top", 
@@ -22,8 +22,6 @@
         buttonClass = "h-full w-27 px-2",
         popoverClass = "grid gap-1 grid-cols-4 grid-row-4 mx-8"
     }: PageProps = $props()
-
-    $inspect(value)
 </script>
  
 <Popover.Root>

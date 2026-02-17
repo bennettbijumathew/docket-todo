@@ -115,7 +115,7 @@
             </div>
 
             <ColorPicker 
-                bind:value={newPlanner.color}
+                value={newPlanner.color}
                 onChangeFn={(newColor) => newPlanner.color = newColor as ColorKey}
             />
         </form>
