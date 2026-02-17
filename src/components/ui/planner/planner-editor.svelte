@@ -78,14 +78,11 @@
 
                 <ColorPicker 
                     value={inputs.color} 
-                    position="bottom"
                     onChangeFn={(newColor) => { 
                         inputs.color = newColor as ColorKey
                         submitColorChange()
                     }}
-                    popoverClass="grid grid-cols-4 grid-rows-4 gap-2"
                     buttonClass="rounded-lg px-2 py-1"
-                    alignment="start"
                     offset={5}
                 />
             </div>
