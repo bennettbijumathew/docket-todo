@@ -94,7 +94,7 @@
 {#snippet plannerTile(planner: Planner)}
     <button 
         class={`flex min-h-13 justify-between items-center border-l-10 border-${colors[planner.color]} hover:bg-background-50 transition-colors cursor-pointer`}
-        onclick={() => plannerRepo.setVisibility(authStore.getUserId(), planner.id, !planner.users[authStore.getUserId()])}
+        onclick={() => plannerRepo.editUserVisibility(authStore.getUserId(), planner.id, !planner.users[authStore.getUserId()])}
     >
         <p class="ml-2"> {planner.name} </p>
 

@@ -46,7 +46,7 @@
                 type="checkbox" 
                 class="m-2 ml-0 size-4 accent-content-900"
                 checked={planner.visible}
-                onclick={() => plannerRepo.setVisibility(authStore.getUserId(), planner.id, !planner.visible)}
+                onclick={() => plannerRepo.editUserVisibility(authStore.getUserId(), planner.id, !planner.visible)}
             >   
 
             <div>
