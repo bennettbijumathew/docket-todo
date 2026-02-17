@@ -2,8 +2,24 @@
     import { type Planner } from "@/lib/planner/type";
     import ColorPicker from "../inputs/color-picker.svelte";
     import { Trash, X } from "@lucide/svelte";
+    import { plannerRepo } from "@/lib/planner/repository";
 
     let { planner }: { planner: Planner | null } = $props()
+
+    let inputs = $derived({
+        name: planner?.name ?? ""   
+    })
+
+
+    // Functions to update the planners' name
+    function submitNameChange() {
+        // Doesn't edit the name if planner doesn't exist or if input and planner names are the same
+        if (planner === null || planner.name === inputs.name || inputs.name.trim() === "" ) {
+            return 
+        }
+
+        plannerRepo.editName(planner.id, inputs.name) 
+    }
 </script>
 
 <!-- VIEW: A list of inputs that change a planner's details -->
@@ -20,14 +36,21 @@
                 </button>
             </div>
 
-            <div>
+            <!-- Form to update name changes for the task -->
+            <form 
+                onsubmit={(e) => { 
+                    e.preventDefault(); 
+                    submitNameChange();
+                }}
+            >
                 <p class="font-bold">Title</p>
                 <input 
                     type="text" 
                     class="border border-background-300 rounded-lg p-1 w-full"
-                    value={planner.name}
+                    bind:value={inputs.name}
+                    onblur={submitNameChange}
                 >
-            </div>
+            </form>
 
             <div class="flex flex-col">
                 <p class="font-bold">Color</p>
