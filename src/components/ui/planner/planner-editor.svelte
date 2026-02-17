@@ -1,8 +1,7 @@
 <script lang="ts">
     import { type Planner } from "@/lib/planner/type";
     import ColorPicker from "../inputs/color-picker.svelte";
-    import { PaintBucket, Trash, X } from "@lucide/svelte";
-    import { colors } from "@/components/util/color";
+    import { Trash, X } from "@lucide/svelte";
 
     let { planner }: { planner: Planner | null } = $props()
 </script>
@@ -32,14 +31,16 @@
 
             <div class="flex flex-col">
                 <p class="font-bold">Color</p>
-                <ColorPicker bind:value={planner.color} position="bottom">
-                    <div class="flex flex-1 items-center rounded-lg w-full p-1 hover:opacity-90 cursor-pointer transition-all bg-{colors[planner.color]}">
-                    <!-- <div class="flex items-center rounded-lg h-full px-2 hover:opacity-90 text-center gap-x-2 cursor-pointer transition-all bg-{colors[planner.color]}"> -->
-                        <PaintBucket class="size-4"/>
 
-                        <p>{planner.color.charAt(0).toUpperCase()}{planner.color.slice(1)}</p>
-                    </div>
-                </ColorPicker>
+                <ColorPicker 
+                    bind:value={planner.color} 
+                    position="bottom"
+                    onChangeFn={(newColor) => console.log(newColor)}
+                    popoverClass="grid grid-cols-4 grid-rows-4 gap-2"
+                    buttonClass="rounded-lg px-2 py-1"
+                    alignment="start"
+                    offset={5}
+                />
             </div>
 
         </div>

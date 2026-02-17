@@ -4,7 +4,7 @@
     import { plannerStore } from "@/lib/planner/store.svelte";
     import { type NewPlannerData, type Planner } from "@/lib/planner/type";
     import { plannerRepo } from "@/lib/planner/repository";
-    import { PaintBucket, Plus } from "@lucide/svelte";
+    import { Plus } from "@lucide/svelte";
     import { type ColorKey, colors } from "@/components/util/color";
     import ColorPicker from "@/components/ui/inputs/color-picker.svelte";
     import PlannerEditor from "@/components/ui/planner/planner-editor.svelte";
@@ -116,14 +116,8 @@
 
             <ColorPicker 
                 bind:value={newPlanner.color}
-                position="top"
-            >
-                <div class="flex items-center rounded-lg h-full px-2 hover:opacity-90 text-center gap-x-2 cursor-pointer transition-all bg-{colors[newPlanner.color]}">
-                    <PaintBucket class="size-4"/>
-
-                    <p>{newPlanner.color.charAt(0).toUpperCase()}{newPlanner.color.slice(1)}</p>
-                </div>
-            </ColorPicker>
+                onChangeFn={(newColor) => newPlanner.color = newColor as ColorKey}
+            />
         </form>
     </section>
 
