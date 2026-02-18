@@ -5,6 +5,7 @@
     import { getLocalTimeZone, Time, toCalendarDateTime, today } from "@internationalized/date";
     import { X } from "@lucide/svelte";
     import DatePicker from "../inputs/date-picker.svelte";
+    import TaskPlannersPicker from "../inputs/task-planners-picker.svelte";
 
     // The component receives the selected task id with a function that 
     // handles the behavior of the open and close state of the editor. 
@@ -82,6 +83,11 @@
                     bind:value={inputs.dueDate}
                     buttonClass="border border-background-300 rounded-lg p-1 px-1.5 w-full"
                 />
+            </div>
+
+            <div>
+                <p class="font-bold">Planners</p>
+                <TaskPlannersPicker task={task}/>
             </div>
         </div>
     </section>
