@@ -1,6 +1,9 @@
 import { db } from "@/lib/config/firebase.ts"
-import { collection, query, orderBy, onSnapshot, QuerySnapshot, doc, Unsubscribe, updateDoc, addDoc } from "firebase/firestore";
+import { collection, query, orderBy, onSnapshot, QuerySnapshot, doc, Unsubscribe, updateDoc, addDoc, where, getDocs, deleteDoc } from "firebase/firestore";
 import { createPlannerConverter, NewPlannerData, Planner } from "./type";
+import { ColorKey } from "@/components/util/color";
+import { createTaskConverter, Task } from "../task/type";
+import { taskRepo } from "../task/repository";
 
 export class PlannerRepository {
     // This returns a listeners that returns the list of planners that are related to the user.
@@ -17,8 +20,75 @@ export class PlannerRepository {
         })            
     }
 
+
+    // This adds a new planner into the planners database
+    public async createPlanner(newPlanner: NewPlannerData): Promise<void> {
+        // A guard clause to prevent a new task being added if there is no name
+        // or planners attached to the task.
+        if (newPlanner.name.trim() == "") {
+            return 
+        }
+        
+        // Grabs the planner collection from Firestore and adds a new document using the converter. 
+        const newPlannerRef = collection(db, "planners").withConverter(createPlannerConverter())
+        
+        console.log(newPlanner.users)
+        await addDoc(newPlannerRef, {
+            name: newPlanner.name,
+            users: newPlanner.users,
+            color: newPlanner.color            
+        });
+    }
+
+    // This removes a planner from the planners database
+    public async deletePlanner(plannerId: string): Promise<void> {
+        // A guard clause to stop the function when there is no planner id.
+        if (plannerId.trim() == "") {
+            return
+        }
+
+        // Since the planners ids are placed in the tasks, the task repo handles the removal of the planner
+        // from the task's planners array 
+        taskRepo.removePlannerFromAllTasks(plannerId)
+
+        // Using the planner id, the document is deleted of the tasks collection. 
+        const plannerRef = doc(db, "planners", plannerId)
+
+        await deleteDoc(plannerRef)
+    }
+
+    // This changes a planner's title
+    public async editName(plannerId: string, newName: string): Promise<void> {
+        // A guard clause to stop the function when there is no planner id or new name.
+        if (plannerId.trim() == "" || newName.trim() == "") {
+            return
+        }
+
+        // This updates the planner to have a new name.
+        const plannerRef = doc(db, "planners", plannerId)
+        
+        await updateDoc(plannerRef, {
+            name: newName
+        })
+    }
+
+    // This changes a planner's title
+    public async editColor(plannerId: string, newColor: ColorKey): Promise<void> {
+        // A guard clause to stop the function when there is no planner id or new name.
+        if (plannerId.trim() == "") {
+            return
+        }
+
+        // This updates the planner to have a new color.
+        const plannerRef = doc(db, "planners", plannerId)
+
+        await updateDoc(plannerRef, {
+            color: newColor
+        })
+    }
+
     // This changes a users' planner visible status through the "user" field.
-    public async setVisibility(uid: string, plannerId: string, newValue: boolean): Promise<void> {
+    public async editUserVisibility(uid: string, plannerId: string, newValue: boolean): Promise<void> {
         // A guard clause to stop the function when there is no user id or planner id.
         if (uid.trim() == "" || plannerId.trim() == "") {
             return
@@ -31,25 +101,6 @@ export class PlannerRepository {
             [`users.${uid}`]: newValue
         })
     }
-
-    // This adds a new planner into the planners database
-    public async createPlanner(newPlanner: NewPlannerData): Promise<void> {
-        // A guard clause to prevent a new task being added if there is no name
-        // or planners attached to the task.
-        if (newPlanner.name.trim() == "") {
-            return 
-        }
-
-        // Grabs the planner collection from Firestore and adds a new document using the converter. 
-        const newPlannerRef = collection(db, "planners").withConverter(createPlannerConverter())
-                
-        console.log(newPlanner.users)
-        await addDoc(newPlannerRef, {
-            name: newPlanner.name,
-            users: newPlanner.users,
-            color: newPlanner.color            
-        });
-    }
 }
-
-export const plannerRepo = new PlannerRepository()
+    
+    export const plannerRepo = new PlannerRepository()

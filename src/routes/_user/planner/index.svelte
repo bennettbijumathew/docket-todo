@@ -6,7 +6,8 @@
     import { plannerRepo } from "@/lib/planner/repository";
     import { Plus } from "@lucide/svelte";
     import { type ColorKey, colors } from "@/components/util/color";
-    import ColorPicker from "@/components/ui/color-picker.svelte";
+    import ColorPicker from "@/components/ui/inputs/color-picker.svelte";
+    import PlannerEditor from "@/components/ui/planner/planner-editor.svelte";
 
     let newPlanner: NewPlannerData = $state({
         name: "",
@@ -29,25 +30,28 @@
             color: "red" as ColorKey
         }
     }
+
+    let selectedPlanner: Planner | null = $state(null)
 </script>
 
 
 <!-- COMPONENT: This is planner tile snippet that is used to show a single planner -->
 {#snippet plannerTile(planner: Planner)}
-    <div
+    <button
         class="flex justify-between items-center h-13 border-b border-dotted border-background-300 hover:bg-background-50 cursor-pointer p-2"
+        onclick={() => selectedPlanner = planner}
     >
         <section class="flex items-center gap-x-1 text-left">
             <input 
                 type="checkbox" 
                 class="m-2 ml-0 size-4 accent-content-900"
                 checked={planner.visible}
-                onclick={() => plannerRepo.setVisibility(authStore.getUserId(), planner.id, !planner.visible)}
+                onclick={() => plannerRepo.editUserVisibility(authStore.getUserId(), planner.id, !planner.visible)}
             >   
 
             <div>
                 <h3 class="font-bold"> {planner.name} </h3>
-                <p class="truncate max-w-150">
+                <p class="truncate text-sm max-w-150">
                     Users: 
                     {#each Object.entries(planner.users) as [id]}
                         {id}
@@ -61,7 +65,7 @@
                 <div class="text-sm font-light bg-{colors[planner.color]} h-4 w-16"> </div>
             </span>
         </div>
-    </div>
+    </button>
 {/snippet}
 
 <!-- COMPONENT: This is the snippet used to show a list of planners -->
@@ -110,7 +114,14 @@
                 >
             </div>
 
-            <ColorPicker bind:value={newPlanner.color}/>
+            <ColorPicker 
+                value={newPlanner.color}
+                onChangeFn={(newColor) => newPlanner.color = newColor as ColorKey}
+            />
         </form>
     </section>
+
+    {#if selectedPlanner !== null}
+        <PlannerEditor plannerId={selectedPlanner.id}/>
+    {/if}
 </main>

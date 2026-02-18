@@ -8,9 +8,9 @@
     import PlannerSelect from "@/components/planner/planner-select.svelte";
     import { ChevronDown, ChevronRight, Plus, Trash } from "@lucide/svelte";
     import { type Planner } from "@/lib/planner/type";
-    import DatePicker from "@/components/ui/date-picker.svelte";
+    import DatePicker from "@/components/ui/inputs/date-picker.svelte";
     import { getLocalTimeZone, Time, toCalendarDateTime, today } from "@internationalized/date";
-    import PlannerPicker from "@/components/ui/planner-picker.svelte";
+    import PlannerPicker from "@/components/ui/inputs/planner-picker.svelte";
     import { formatLongDate } from "@/components/util/date";
     import { taskRepo } from "@/lib/task/repository";
     import { plannerRepo } from "@/lib/planner/repository";
@@ -94,7 +94,7 @@
 {#snippet plannerTile(planner: Planner)}
     <button 
         class={`flex min-h-13 justify-between items-center border-l-10 border-${colors[planner.color]} hover:bg-background-50 transition-colors cursor-pointer`}
-        onclick={() => plannerRepo.setVisibility(authStore.getUserId(), planner.id, !planner.users[authStore.getUserId()])}
+        onclick={() => plannerRepo.editUserVisibility(authStore.getUserId(), planner.id, !planner.users[authStore.getUserId()])}
     >
         <p class="ml-2"> {planner.name} </p>
 
