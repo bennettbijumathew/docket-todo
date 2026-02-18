@@ -6,7 +6,12 @@
     import { type ColorKey } from "@/components/util/color";
     import { plannerStore } from "@/lib/planner/store.svelte";
 
-    let { plannerId }: { plannerId: string } = $props()
+    interface EditorProps {
+        plannerId: string | null, 
+        toggleFn: () => void
+    }
+
+    let { plannerId, toggleFn }: EditorProps = $props()
 
     const planner: Planner | null = $derived(plannerStore.getList().find(p => p.id === plannerId) || null);
     
@@ -15,6 +20,7 @@
         color: "red" as ColorKey
     })
 
+    // Effect used to ensure that inputs are
     $effect(() => {
         if (planner) {
             inputs.name = planner.name
@@ -42,9 +48,9 @@
         plannerRepo.editColor(planner.id, inputs.color) 
     }
 
-    function submitDeletionOfPlanner(plannerId: string) {
+    function submitDeletionOfPlanner(plannerId: string | null) {
         // // Doesn't delete the planner if planner doesn't exist
-        if (planner === null) {
+        if (planner === null || plannerId == null) {
             return 
         }
 
@@ -61,6 +67,7 @@
 
                 <button 
                     class="p-2 border border-background-300 hover:bg-background-100 rounded-lg cursor-pointer"
+                    onclick={toggleFn}
                 >   
                     <X class="size-4"/>
                 </button>
@@ -101,7 +108,7 @@
         <div class="text-center">
             <button 
                 class="p-2 border border-background-300 hover:bg-background-100 rounded-lg cursor-pointer"
-                onclick={() => submitDeletionOfPlanner(planner.id)}
+                onclick={() => submitDeletionOfPlanner(planner?.id ?? null)}
             >   
                 <Trash class="size-4"/>
             </button>

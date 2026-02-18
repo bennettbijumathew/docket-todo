@@ -9,14 +9,14 @@
     import ColorPicker from "@/components/ui/inputs/color-picker.svelte";
     import PlannerEditor from "@/components/ui/planner/planner-editor.svelte";
 
+    // This variable represents the input data used to create a new planner
     let newPlanner: NewPlannerData = $state({
         name: "",
         users: {},
         color: "red" as ColorKey
     })
-
-    
-    // This is a function for adding a new task and resetting the inputs
+   
+    // This is a function for adding a new planner and resetting the inputs
     function addNewPlanner(): void {
         newPlanner.users = {
             [authStore.getUserId()]:  false
@@ -31,7 +31,26 @@
         }
     }
 
+
+    // These variables represent the current planner that is open on the modal
+    // and the state of the edit modal being open
     let selectedPlanner: Planner | null = $state(null)
+    let isEditModalOpen: boolean = $state(false)
+
+    // This function open and closes the edit modal.
+    function toggleEditModal(newPlanner: Planner | null) {
+        // If the user clicks on the same planner or the planner doesn't exist
+        // Then the modal is hidden from the users' view 
+        if (newPlanner === selectedPlanner) {
+            isEditModalOpen = false
+            selectedPlanner = null
+            return; 
+        }
+
+        // If the guard clauses are passed, then the new planner is set with the view being open.
+        selectedPlanner = newPlanner
+        isEditModalOpen = true
+    }
 </script>
 
 
@@ -39,7 +58,7 @@
 {#snippet plannerTile(planner: Planner)}
     <button
         class="flex justify-between items-center h-13 border-b border-dotted border-background-300 hover:bg-background-50 cursor-pointer p-2"
-        onclick={() => selectedPlanner = planner}
+        onclick={() => toggleEditModal(planner)}
     >
         <section class="flex items-center gap-x-1 text-left">
             <input 
@@ -121,7 +140,5 @@
         </form>
     </section>
 
-    {#if selectedPlanner !== null}
-        <PlannerEditor plannerId={selectedPlanner.id}/>
-    {/if}
+    <PlannerEditor plannerId={selectedPlanner?.id ?? null} toggleFn={() => toggleEditModal(selectedPlanner)}/>
 </main>
