@@ -5,8 +5,7 @@
     import { plannerStore } from "@/lib/planner/store.svelte";
     import { type NewTaskData, type Task } from "@/lib/task/type";
     import { colors } from "@/components/util/color";
-    import PlannerSelect from "@/components/planner/planner-select.svelte";
-    import { ChevronDown, ChevronRight, Plus, Trash } from "@lucide/svelte";
+    import { ChevronDown, ChevronRight, Plus } from "@lucide/svelte";
     import { type Planner } from "@/lib/planner/type";
     import DatePicker from "@/components/ui/inputs/date-picker.svelte";
     import { getLocalTimeZone, Time, toCalendarDateTime, today } from "@internationalized/date";
@@ -14,6 +13,7 @@
     import { formatLongDate } from "@/components/util/date";
     import { taskRepo } from "@/lib/task/repository";
     import { plannerRepo } from "@/lib/planner/repository";
+    import TaskEditor from "@/components/ui/task/task-editor.svelte";
 
     // These variables are used to show the tasks of the user.
     const completeTasks: Task[] = $derived(taskStore.getList().filter((item) => item.completed === true))
@@ -23,30 +23,14 @@
     let isIncompleteTasksShown: boolean = $state(true)
     let isCompleteTasksShown: boolean = $state(false)
 
-    // These variables are used for handling the state of the task editing modal.
-    let isEditModalOpen: boolean = $state(true)
-    let editedTask: Task | null = $state(null)
 
-    // This function toggles the task editing modal.
-    function showTask(task: Task | null) {
-        // Exits the modal if the user has pressed on the same task of 
-        if (editedTask === task || task === null) {
-            isEditModalOpen = false
-            editedTask = null
-            return; 
-        }
-
-        editedTask = task
-        isEditModalOpen = true
-    }
-    
     // This variable is used to handle new tasks that come in from the inputs
     let newTask: NewTaskData = $state({
         name: "",
         planners: [],
         dueDate: toCalendarDateTime(today(getLocalTimeZone()), new Time(0, 0))
     })
-
+    
     // This is a function for adding a new task and resetting the inputs
     function addNewTask(): void {
         taskRepo.createTask(newTask)
@@ -57,13 +41,34 @@
             dueDate: toCalendarDateTime(today(getLocalTimeZone()), new Time(0, 0))
         }
     }
+
+
+    // These variables represent the current planner that is open on the modal
+    // and the state of the edit modal being open
+    let isEditModalOpen: boolean = $state(true)
+    let selectedTask: Task | null = $state(null)
+
+    // This function toggles the task editing modal.
+    function toggleEditModal(task: Task | null) {
+        // If the user clicks on the same task or the task doesn't exist
+        // Then the modal is hidden from the users' view 
+        if (selectedTask === task || task === null) {
+            isEditModalOpen = false
+            selectedTask = null
+            return; 
+        }
+
+        // If the guard clauses are passed, then the new task is set with the view being open.
+        selectedTask = task
+        isEditModalOpen = true
+    }
 </script>
 
 
 <!-- COMPONENT: This is task tile snippet that is used to show a single task -->
 {#snippet taskTile(task: Task)}
     <button
-        onclick={() => showTask(task)} 
+        onclick={() => toggleEditModal(task)} 
         class="flex justify-between items-center h-13 border-b border-dotted border-background-300 hover:bg-background-50 cursor-pointer p-2"
     >
         <section class="flex items-center gap-x-1 text-left">
@@ -189,33 +194,5 @@
         </form>
     </section>
 
-    {#if isEditModalOpen == true && editedTask !== null}
-        <section class="flex-1 flex flex-col gap-y-4 border border-background-300 rounded-xl p-4">
-            <h2 class="font-default font-semibold text-xl text-center pb-4">Edit Task</h2>
-
-            <div>
-                <p class="font-bold">Title</p>
-                <input 
-                    type="text" 
-                    value={editedTask.name}
-                    class="border border-background-300 rounded-lg p-1 w-full"
-                >
-            </div>
-
-            <div>
-                <p class="font-bold">Planner</p>
-
-                <PlannerSelect task={editedTask}/>
-            </div>
-
-            <div class="text-center">
-                <button 
-                    class="p-2 border border-background-300 hover:bg-background-100 rounded-lg cursor-pointer"
-                    onclick={() => taskRepo.deleteTask(editedTask?.id ?? "")}
-                >   
-                    <Trash class="size-4"/>
-                </button>
-            </div>
-        </section>
-    {/if}
+    <TaskEditor taskId={selectedTask?.id ?? null} toggleFn={() => toggleEditModal(selectedTask)}/>
 </main>
