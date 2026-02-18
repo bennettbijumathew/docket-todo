@@ -3,29 +3,35 @@
     import { DatePicker, TimeField } from "bits-ui";
     import { today, getLocalTimeZone, CalendarDateTime } from "@internationalized/date";
  
-    const todayDate = today(getLocalTimeZone());
+    interface PickerProps {
+        value: CalendarDateTime,
+        buttonClass?: string
+    }
 
-     let { value = $bindable() }: { value: CalendarDateTime } = $props()
+    let { 
+        value = $bindable(), 
+        buttonClass = "px-2",
+    }: PickerProps = $props()
 </script>
  
 <DatePicker.Root 
     bind:value={value} 
-    minValue={todayDate} 
+    minValue={today(getLocalTimeZone())} 
     fixedWeeks={true}
     required
 >
     <!-- Input Selector for the Date Picker.$props -->
-    <DatePicker.Input class="flex items-center hover:bg-background-100 rounded-lg px-2 text-center">
+    <DatePicker.Input>
         {#snippet children({ segments })}
             <!-- Button to open the Calendar Picker. -->
-            <DatePicker.Trigger class="cursor-pointer pr-1 flex items-center">
+            <DatePicker.Trigger class="{buttonClass} h-full bg-background-50 hover:bg-background-100 rounded-lg flex items-center cursor-pointer">
                 <Calendar class="size-4 mr-2"/>
                 
-                <div class="border-b hover:border-0 border-background-100">
+                <p>
                     {#each segments as { value }}
                         {value.toUpperCase()}
                     {/each}
-                </div>
+                </p>
             </DatePicker.Trigger>
         {/snippet}
     </DatePicker.Input>
