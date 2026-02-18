@@ -1,4 +1,4 @@
-<!-- CODE: -->
+<!-- CODE -->
 <script lang="ts">
     import { authStore } from "@/lib/auth/store.svelte";
     import { plannerStore } from "@/lib/planner/store.svelte";
@@ -8,6 +8,7 @@
     import { type ColorKey, colors } from "@/components/util/color";
     import ColorPicker from "@/components/ui/inputs/color-picker.svelte";
     import PlannerEditor from "@/components/ui/planner/planner-editor.svelte";
+
 
     // This variable represents the input data used to create a new planner
     let newPlanner: NewPlannerData = $state({

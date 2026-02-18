@@ -6,27 +6,35 @@
     import { type ColorKey } from "@/components/util/color";
     import { plannerStore } from "@/lib/planner/store.svelte";
 
+
+    // The component receives the selected planner id with a function that 
+    // handles the behavior of the open and close state of the editor. 
     interface EditorProps {
         plannerId: string | null, 
         toggleFn: () => void
     }
-
+    
     let { plannerId, toggleFn }: EditorProps = $props()
 
+
+    // Gets the planner from the planner id. Through this method, changes in the state is updated properly
     const planner: Planner | null = $derived(plannerStore.getList().find(p => p.id === plannerId) || null);
-    
+
+
+    // Inputs of this editor are initialized with effect used to 
+    // ensure that inputs are synced with the state variables.
     let inputs = $state({
         name: "", 
         color: "red" as ColorKey
     })
 
-    // Effect used to ensure that inputs are
     $effect(() => {
         if (planner) {
             inputs.name = planner.name
             inputs.color = planner.color
         }
     })
+
 
     // Functions to update the planners' name
     function submitNameChange() {
@@ -48,6 +56,7 @@
         plannerRepo.editColor(planner.id, inputs.color) 
     }
 
+    // Functions to delete the planner
     function submitDeletionOfPlanner(plannerId: string | null) {
         // // Doesn't delete the planner if planner doesn't exist
         if (planner === null || plannerId == null) {
