@@ -76,7 +76,7 @@
                 type="checkbox" 
                 class="m-2 ml-0 size-4 accent-content-900"
                 bind:checked={task.completed}
-                onclick={() => taskRepo.setTaskComplete(task.id, !task.completed)}
+                onclick={() => taskRepo.editComplete(task.id, !task.completed)}
             >   
 
             <div>

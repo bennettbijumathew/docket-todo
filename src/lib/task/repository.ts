@@ -94,8 +94,24 @@ export class TaskRepository {
         }
     }
 
+    
+    // This changes a task's title
+    public async editName(taskId: string, newName: string): Promise<void> {
+        // A guard clause to stop the function when there is no title id or new name.
+        if (taskId.trim() == "" || newName.trim() == "") {
+            return
+        }
+
+        // This updates the task to have a new name.
+        const taskRef = doc(db, "tasks", taskId)
+        
+        await updateDoc(taskRef, {
+            name: newName
+        })
+    } 
+
     // This changes a task to be complete status
-    public async setTaskComplete(taskId: string, newValue: boolean): Promise<void> {
+    public async editComplete(taskId: string, newValue: boolean): Promise<void> {
         // A guard clause to stop the function when there is no task id.
         if (taskId.trim() == "") {
             return

@@ -82,7 +82,7 @@
                 </button>
             </div>
 
-            <!-- Form to update name changes for the task -->
+            <!-- Form to update name changes for the planner -->
             <form 
                 onsubmit={(e) => { 
                     e.preventDefault(); 
@@ -94,7 +94,7 @@
                     type="text" 
                     class="border border-background-300 rounded-lg p-1 w-full"
                     bind:value={inputs.name}
-                    onblur={() => submitNameChange}
+                    onblur={submitNameChange}
                 >
             </form>
 
