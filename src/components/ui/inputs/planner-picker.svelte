@@ -39,14 +39,12 @@
             clearOnDeselect={true}
             autocomplete="off"
             required
-        >
-        
-        </Combobox.Input>   
+        />
     </Combobox.Trigger>
     
     <Combobox.Portal>
         <Combobox.Content 
-            sideOffset={15}
+            sideOffset={20}
             side="top" 
             class="border border-background-300 bg-background-50 rounded-lg mx-8"
         >
