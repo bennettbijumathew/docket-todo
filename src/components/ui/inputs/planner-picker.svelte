@@ -43,7 +43,7 @@
     </Combobox.Trigger>
 
     <Combobox.Content 
-        sideOffset={15} 
+        sideOffset={25} 
         class="border border-background-300 rounded-lg w-full max-h-60 overflow-y-auto"
         side="top"
     >

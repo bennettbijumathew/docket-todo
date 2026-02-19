@@ -69,7 +69,7 @@
 {#snippet taskTile(task: Task)}
     <button
         onclick={() => toggleEditModal(task)} 
-        class="flex justify-between items-center h-13 border-b border-dotted border-background-300 hover:bg-background-50 cursor-pointer p-2"
+        class="flex justify-between items-center h-13 hover:bg-background-100 cursor-pointer p-2"
     >
         <section class="flex items-center gap-x-1 text-left">
             <input 
@@ -129,7 +129,7 @@
         </button>
 
         <!-- Shows a list of complete tasks -->
-        <main class="flex flex-col">
+        <main class="flex flex-col divide-y-2 divide-background-100">
             {#if isTaskShown === true}  
                 {#each list as task}
                     {@render taskTile(task)}
