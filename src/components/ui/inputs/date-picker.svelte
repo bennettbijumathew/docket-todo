@@ -3,6 +3,8 @@
     import { DatePicker, TimeField } from "bits-ui";
     import { today, getLocalTimeZone, CalendarDateTime } from "@internationalized/date";
  
+    // The picker receives the a bound date meaning that changes on one end leads to changes in the other side
+    // Alongside this, a style modifier is given with a function that runs on the change of the date.
     interface PickerProps {
         value: CalendarDateTime,
         buttonClass?: string
@@ -14,6 +16,18 @@
         buttonClass = "px-2",
         onChangeFn
     }: PickerProps = $props()
+
+
+    // To limit writes, debouncing is used to ensure that the function is only called after a small duration.
+    let timer: ReturnType<typeof setTimeout>;
+
+    function handleSubmit() {
+        clearTimeout(timer);
+
+        timer = setTimeout(() => {
+            onChangeFn?.()
+        }, 600)
+    }
 </script>
  
 <DatePicker.Root 
@@ -21,7 +35,7 @@
     minValue={today(getLocalTimeZone())} 
     fixedWeeks={true}
     required
-    onValueChange={() => onChangeFn?.()}
+    onValueChange={handleSubmit}
     locale="en-AU"
 >
     <!-- Input Selector for the Date Picker.$props -->
@@ -101,7 +115,10 @@
             {/snippet}
         </DatePicker.Calendar>
 
-        <TimeField.Root bind:value={value}>
+        <TimeField.Root 
+            bind:value={value}
+            onValueChange={handleSubmit}
+        >
             <TimeField.Label class="text-sm pt-2">Time:</TimeField.Label>
             
             <TimeField.Input class="flex items-center">

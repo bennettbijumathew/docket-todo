@@ -36,7 +36,7 @@
         }
     })
 
-    
+
     // Functions to update the task' name
     function submitNameChange() {
         // Doesn't edit the name if task doesn't exist or if input and task names are the same
@@ -67,6 +67,8 @@
             return 
         }
 
+        console.log(inputs.dueDate)
+        
         taskRepo.editDate(task.id, inputs.dueDate) 
     }
 
