@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { colors } from "@/components/util/color";
+    import { colors, type ColorKey } from "@/components/util/color";
     import { plannerStore } from "@/lib/planner/store.svelte";
     import { type Planner } from "@/lib/planner/type";
-    import { Check, FolderTree } from "@lucide/svelte";
+    import { ArrowDown, ArrowUp, Check, FolderTree } from "@lucide/svelte";
     import { Combobox } from "bits-ui";
   
     // This receives an array of planners id as a prop, updates from the component update the caller's array.
@@ -41,44 +41,49 @@
             required
         />
     </Combobox.Trigger>
-    
-    <Combobox.Portal>
-        <Combobox.Content 
-            sideOffset={20}
-            side="top" 
-            class="border border-background-300 bg-background-50 rounded-lg mx-8"
-        >
-            <Combobox.Viewport class="flex flex-col items-center p-3 w-50 max-h-50 overflow-y-auto">
-                {#if searchedPlanners.length > 0}
-                    {#each searchedPlanners as planner, i (i + planner.id)}
-                        <Combobox.Item
-                            value={planner.id}
-                            label={planner.name}
-                            class="flex items-center justify-between w-full border-l-4 first:rounded-tl-sm last:rounded-bl-sm border-{colors[planner.color]} items-center hover:bg-background-50 transition-colors cursor-pointer"
-                            
-                        >
-                            {#snippet children({ selected })}
-                                <p class="ml-2"> {planner.name} </p>
 
-                                {#if selected}
-                                    <div class="bg-content-900 size-4 flex justify-center items-center rounded-xs">
-                                        <Check 
-                                            class="size-3 text-background-100"
-                                            strokeWidth={5}
-                                        />
-                                    </div>
-                                {:else}
-                                    <div class="border border-content-900 size-4 rounded-xs"></div>
-                                {/if}
-                            {/snippet}
-                        </Combobox.Item>
-                    {/each}
-                {:else}
-                    <div class="flex items-center justify-center w-full">
-                        <p> No results found </p>
-                    </div>
-                {/if}
-            </Combobox.Viewport>
-        </Combobox.Content>
-    </Combobox.Portal>
+    <Combobox.Content 
+        sideOffset={15} 
+        class="border border-background-300 rounded-lg w-full max-h-60 overflow-y-auto"
+        side="top"
+    >
+        <!-- Scroll up button for the menu -->    
+        <Combobox.ScrollUpButton class="flex justify-center p-2 pb-0 bg-background-50 rounded-lg">
+            <ArrowUp class="size-6 hover:bg-background-100 p-1 rounded-lg"/>
+        </Combobox.ScrollUpButton>
+
+        <Combobox.Viewport class="bg-background-50 p-2 w-60 min-w-(--bits-combobox-anchor-width)">
+            {#each searchedPlanners as planner (planner.id)}
+                <Combobox.Item
+                    value={planner.id}
+                    label={planner.name}
+                    class="flex justify-between items-center hover:bg-background-100 p-1 px-2 cursor-pointer rounded-lg gap-x-2"
+                >
+                    {#snippet children({ selected })}
+                        <p class="truncate"> {planner.name} </p> 
+
+                        <!-- Shows a checked checkbox -->
+                        {#if selected === true}
+                            <div class="bg-{colors[planner.color as ColorKey]} size-4 flex justify-center items-center rounded-xs">
+                                <Check 
+                                    class="size-3 text-content-900"
+                                    strokeWidth={5}
+                                />
+                            </div>
+                        <!-- Showcases a unchecked checkbox  -->
+                        {:else}
+                            <div class="border-2 border-{colors[planner.color as ColorKey]} size-4 flex justify-center items-center rounded-xs"></div>
+                        {/if} 
+                    {/snippet}
+                </Combobox.Item>
+            {:else}
+                <p class="text-sm text-content-400 p-1">No planners found.</p>
+            {/each}
+        </Combobox.Viewport>
+
+        <!-- Scroll down button for the menu -->
+        <Combobox.ScrollDownButton class="flex justify-center p-2 pt-0 bg-background-50 rounded-lg">
+            <ArrowDown class="size-6 hover:bg-background-100 p-1 rounded-lg"/>
+        </Combobox.ScrollDownButton>
+    </Combobox.Content>
 </Combobox.Root>
