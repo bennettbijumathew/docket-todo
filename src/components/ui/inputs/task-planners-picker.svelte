@@ -6,7 +6,7 @@
     import { type TaskPlanner } from "@/lib/planner/type";
     import { taskRepo } from "@/lib/task/repository";
     import { Combobox } from "bits-ui";
-    import { ArrowDown, ArrowUp, Check } from "@lucide/svelte";
+    import { ArrowDown, ArrowUp, Check, X } from "@lucide/svelte";
 
     const { task: initialTask }: { task: Task } = $props();
     let searchInput: string = $state("");
@@ -45,19 +45,37 @@
     type="multiple"
     open={true}
 >
-    <Combobox.Input
-        placeholder="Search for Planners"
-        class="flex w-full border border-background-300 p-1 rounded-lg"
-        oninput={(e) => (searchInput = e.currentTarget.value)}
-    />
+    <Combobox.Trigger class="border border-background-300 rounded-lg w-full"> 
+        <div class="w-full flex flex-wrap gap-1 p-1.5">   
+            {#each taskPlanners.filter(p => p.selected) as planner}
+                <span class="flex items-center gap-x-3 bg-{colors[planner.color]} rounded-sm px-1.5 py-0.5 text-sm font">                    
+                    {planner.name}
 
-    <Combobox.ContentStatic class="border border-background-300 rounded-lg w-(--bits-select-anchor-width) mt-2 max-h-60 overflow-y-auto">
+                    <button 
+                        onclick={() => taskRepo.removePlannerFromTask(task.id, planner.id)} 
+                        class="hover:opacity-50 rounded-full p-0.5 cursor-pointer"
+                    >
+                        <X class="size-3"/>
+                    </button>
+                </span>
+            {/each}
+        </div>
+        
+        <Combobox.Input
+            placeholder="Search for Planners"
+            class="flex w-full px-2 py-1 focus:outline-none border-t border-background-300"
+            oninput={(e) => (searchInput = e.currentTarget.value)}
+            autocomplete="off"
+        />
+    </Combobox.Trigger>
+
+    <Combobox.Content sideOffset={15} class="border border-background-300 rounded-lg w-full max-h-60 overflow-y-auto">
         <!-- Scroll up button for the menu -->    
         <Combobox.ScrollUpButton class="flex justify-center p-2 pb-0 bg-background-50 rounded-lg">
             <ArrowUp class="size-6 hover:bg-background-100 p-1 rounded-lg"/>
         </Combobox.ScrollUpButton>
 
-        <Combobox.Viewport class="p-2">
+        <Combobox.Viewport class="p-2 w-(--bits-combobox-anchor-width)">
             {#each searchedPlanners as planner (planner.id)}
                 <Combobox.Item
                     value={planner.id}
@@ -89,6 +107,6 @@
         <Combobox.ScrollDownButton class="flex justify-center p-2 pt-0 bg-background-50 rounded-lg">
             <ArrowDown class="size-6 hover:bg-background-100 p-1 rounded-lg"/>
         </Combobox.ScrollDownButton>
-    </Combobox.ContentStatic>
+    </Combobox.Content>
 </Combobox.Root>
 
