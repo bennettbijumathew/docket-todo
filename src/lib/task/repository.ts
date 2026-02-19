@@ -1,6 +1,8 @@
 import { db } from "@/lib/config/firebase.ts"
 import { collection, query, onSnapshot, QuerySnapshot, where, orderBy, doc, updateDoc, arrayRemove, DocumentReference, Query, getDoc, arrayUnion, addDoc, deleteDoc, getDocs } from "firebase/firestore";
 import { type NewTaskData, Task, createTaskConverter } from "./type";
+import { CalendarDateTime } from "@internationalized/date";
+import { dateToTimestamp } from "@/components/util/date";
 
 export class TaskRepository {
     // This function is a listener that checks for tasks that are associated to the given planner ids. 
@@ -95,9 +97,9 @@ export class TaskRepository {
     }
 
     
-    // This changes a task's title
+    // This changes a task's name
     public async editName(taskId: string, newName: string): Promise<void> {
-        // A guard clause to stop the function when there is no title id or new name.
+        // A guard clause to stop the function when there is no task id or new name.
         if (taskId.trim() == "" || newName.trim() == "") {
             return
         }
@@ -107,6 +109,21 @@ export class TaskRepository {
         
         await updateDoc(taskRef, {
             name: newName
+        })
+    } 
+
+    // This changes a task's date
+    public async editDate(taskId: string, newDate: CalendarDateTime): Promise<void> {
+        // A guard clause to stop the function when there is no task id.
+        if (taskId.trim() == "") {
+            return
+        }
+
+        // This updates the task to have a new name.
+        const taskRef = doc(db, "tasks", taskId)
+        
+        await updateDoc(taskRef, {
+            dueDate: dateToTimestamp(newDate)
         })
     } 
 

@@ -36,14 +36,24 @@
     })
 
     
-    // Functions to update the planners' name
+    // Functions to update the task' name
     function submitNameChange() {
-        // Doesn't edit the name if planner doesn't exist or if input and planner names are the same
+        // Doesn't edit the name if task doesn't exist or if input and task names are the same
         if (task === null || task.name === inputs.name || inputs.name.trim() === "" ) {
             return 
         }
 
         taskRepo.editName(task.id, inputs.name) 
+    }
+
+    // Functions to update the planners' name
+    function submitDateChange() {
+        // Doesn't edit the name if planner doesn't exist or if input and planner names are the same
+        if (task === null) {
+            return 
+        }
+
+        taskRepo.editDate(task.id, inputs.dueDate) 
     }
 
     // Functions to delete the planner
@@ -93,6 +103,7 @@
                 <DatePicker 
                     bind:value={inputs.dueDate}
                     buttonClass="border border-background-300 rounded-lg p-1 px-1.5 w-full"
+                    onChangeFn={() => submitDateChange()}
                 />
             </div>
 

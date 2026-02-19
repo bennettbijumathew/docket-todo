@@ -6,11 +6,13 @@
     interface PickerProps {
         value: CalendarDateTime,
         buttonClass?: string
+        onChangeFn?: () => void
     }
 
     let { 
         value = $bindable(), 
         buttonClass = "px-2",
+        onChangeFn
     }: PickerProps = $props()
 </script>
  
@@ -19,6 +21,8 @@
     minValue={today(getLocalTimeZone())} 
     fixedWeeks={true}
     required
+    onValueChange={() => onChangeFn?.()}
+    locale="en-AU"
 >
     <!-- Input Selector for the Date Picker.$props -->
     <DatePicker.Input>
