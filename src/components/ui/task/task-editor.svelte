@@ -3,7 +3,7 @@
     import { taskStore } from "@/lib/task/store.svelte";
     import { type Task } from "@/lib/task/type";
     import { getLocalTimeZone, Time, toCalendarDateTime, today } from "@internationalized/date";
-    import { X } from "@lucide/svelte";
+    import { Trash, X } from "@lucide/svelte";
     import DatePicker from "../inputs/date-picker.svelte";
     import TaskPlannersPicker from "../inputs/task-planners-picker.svelte";
 
@@ -45,6 +45,17 @@
 
         taskRepo.editName(task.id, inputs.name) 
     }
+
+    // Functions to delete the planner
+    function submitDeletionOfTask(taskId: string | null) {
+        // // Doesn't delete the planner if planner doesn't exist
+        if (task === null || taskId == null) {
+            return 
+        }
+
+        taskRepo.deleteTask(taskId) 
+    }
+
 </script>
 
 {#if task != null}
@@ -89,6 +100,15 @@
                 <p class="font-bold">Planners</p>
                 <TaskPlannersPicker task={task}/>
             </div>
+        </div>
+
+        <div class="text-center">
+            <button 
+                class="p-2 border border-background-300 hover:bg-background-100 rounded-lg cursor-pointer"
+                onclick={() => submitDeletionOfTask(task?.id ?? null)}
+            >   
+                <Trash class="size-4"/>
+            </button>
         </div>
     </section>
 {/if}
