@@ -32,10 +32,10 @@
     <Select.Portal>
         <Select.Content 
             sideOffset={offset}
-            class="bg-background-50 border border-background-300 rounded-lg max-h-70"
+            class="bg-background border border-background-300 rounded-lg max-h-70"
         >
             <!-- Scroll up button for the menu -->
-            <Select.ScrollUpButton class="flex justify-center p-2 pb-0 bg-background-50 rounded-lg">
+            <Select.ScrollUpButton class="flex justify-center p-2 pb-0 bg-background rounded-lg">
                 <ArrowUp class="size-6 hover:bg-background-100 p-1 rounded-lg"/>
             </Select.ScrollUpButton>
             
@@ -68,7 +68,7 @@
             </Select.Viewport>
 
             <!-- Scroll down button for the menu -->
-            <Select.ScrollDownButton class="flex justify-center p-2 pt-0 bg-background-50 rounded-lg">
+            <Select.ScrollDownButton class="flex justify-center p-2 pt-0 bg-background rounded-lg">
                 <ArrowDown class="size-6 hover:bg-background-100 p-1 rounded-lg"/>
             </Select.ScrollDownButton>
         </Select.Content>

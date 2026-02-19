@@ -58,7 +58,7 @@
 <!-- COMPONENT: This is planner tile snippet that is used to show a single planner -->
 {#snippet plannerTile(planner: Planner)}
     <button
-        class="flex justify-between items-center h-13 border-b border-dotted border-background-300 hover:bg-background-50 cursor-pointer p-2"
+        class="flex justify-between items-center h-13 hover:bg-background-50 cursor-pointer p-2"
         onclick={() => toggleEditModal(planner)}
     >
         <section class="flex items-center gap-x-1 text-left">
@@ -90,7 +90,7 @@
 
 <!-- COMPONENT: This is the snippet used to show a list of planners -->
 {#snippet listOfPlanners(list: Planner[])}
-    <main class="flex flex-col">
+    <main class="flex flex-col divide-y divide-background-100">
         {#each list as planner}
             {@render plannerTile(planner)}
         {/each}
@@ -99,7 +99,7 @@
 
 
 <!-- VIEW: This is what is shown on the arrival of the page -->
-<main class="flex-1 flex p-4 pt-0 gap-x-4 min-h-0 bg-background-50">
+<main class="flex-1 flex p-4 pt-0 gap-x-4 min-h-0 bg-background">
     <section class="flex flex-col gap-y-4 flex-4 border border-background-300 rounded-xl p-4">
         <h2 class="font-default font-semibold text-xl text-center">Planner</h2>
 

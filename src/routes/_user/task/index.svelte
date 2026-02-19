@@ -69,7 +69,7 @@
 {#snippet taskTile(task: Task)}
     <button
         onclick={() => toggleEditModal(task)} 
-        class="flex justify-between items-center h-13 hover:bg-background-100 cursor-pointer p-2"
+        class="flex justify-between items-center h-13 hover:bg-background-50 cursor-pointer p-2"
     >
         <section class="flex items-center gap-x-1 text-left">
             <input 
@@ -141,7 +141,7 @@
 
 
 <!-- VIEW: This is what is shown on the arrival of the page -->
-<main class="flex-1 flex p-4 pt-0 gap-x-4 min-h-0 bg-background-50">
+<main class="flex-1 flex p-4 pt-0 gap-x-4 min-h-0 bg-background">
     <section class="flex-1 border border-background-300 rounded-xl p-4 flex flex-col min-h-0">
         <h2 class="font-default font-semibold text-xl text-center pb-4">Planner</h2>
 

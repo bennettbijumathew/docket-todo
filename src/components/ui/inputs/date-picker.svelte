@@ -42,7 +42,7 @@
     <DatePicker.Input>
         {#snippet children({ segments })}
             <!-- Button to open the Calendar Picker. -->
-            <DatePicker.Trigger class="{buttonClass} h-full bg-background-50 hover:bg-background-100 rounded-lg flex items-center cursor-pointer">
+            <DatePicker.Trigger class="{buttonClass} h-full bg-background hover:bg-background-100 rounded-lg flex items-center cursor-pointer">
                 <Calendar class="size-4 mr-2"/>
                 
                 <p>
@@ -57,7 +57,7 @@
     <DatePicker.Content 
         side="top" 
         sideOffset={20} 
-        class="flex flex-col items-center border border-background-300 bg-background-50 rounded-lg p-3"
+        class="flex flex-col items-center border border-background-300 bg-background rounded-lg p-3"
     >
         <DatePicker.Calendar>
             {#snippet children({ months, weekdays })}

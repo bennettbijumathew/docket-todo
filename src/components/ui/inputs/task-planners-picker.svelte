@@ -75,7 +75,7 @@
 
     <Combobox.Content sideOffset={15} class="border border-background-300 rounded-lg w-full max-h-60 overflow-y-auto">
         <!-- Scroll up button for the menu -->    
-        <Combobox.ScrollUpButton class="flex justify-center p-2 pb-0 bg-background-50 rounded-lg">
+        <Combobox.ScrollUpButton class="flex justify-center p-2 pb-0 bg-background rounded-lg">
             <ArrowUp class="size-6 hover:bg-background-100 p-1 rounded-lg"/>
         </Combobox.ScrollUpButton>
 
@@ -108,7 +108,7 @@
         </Combobox.Viewport>
 
         <!-- Scroll down button for the menu -->
-        <Combobox.ScrollDownButton class="flex justify-center p-2 pt-0 bg-background-50 rounded-lg">
+        <Combobox.ScrollDownButton class="flex justify-center p-2 pt-0 bg-background rounded-lg">
             <ArrowDown class="size-6 hover:bg-background-100 p-1 rounded-lg"/>
         </Combobox.ScrollDownButton>
     </Combobox.Content>
