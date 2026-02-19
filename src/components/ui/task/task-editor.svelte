@@ -6,6 +6,7 @@
     import { Trash, X } from "@lucide/svelte";
     import DatePicker from "../inputs/date-picker.svelte";
     import TaskPlannersPicker from "../inputs/task-planners-picker.svelte";
+    import { type TaskPlanner } from "@/lib/planner/type";
 
     // The component receives the selected task id with a function that 
     // handles the behavior of the open and close state of the editor. 
@@ -46,6 +47,19 @@
         taskRepo.editName(task.id, inputs.name) 
     }
 
+    function submitPlannerChange(taskPlanner: TaskPlanner | null) {
+        if (taskPlanner === null || task === null) { 
+            return;
+        }
+
+        if (taskPlanner.selected) {
+            taskRepo.removePlannerFromTask(task.id, taskPlanner.id);
+        } 
+        else {
+            taskRepo.addPlannerToTask(task.id, taskPlanner.id);
+        }
+    }
+
     // Functions to update the planners' name
     function submitDateChange() {
         // Doesn't edit the name if planner doesn't exist or if input and planner names are the same
@@ -74,6 +88,7 @@
             <div class="flex justify-between items-center pb-1">
                 <h2 class="font-default font-semibold text-xl text-center">Edit Task</h2>
 
+                <!-- Exit button for the editor -->
                 <button 
                     class="p-2 border border-background-300 hover:bg-background-100 rounded-lg cursor-pointer"
                     onclick={toggleFn}
@@ -98,6 +113,7 @@
                 >
             </form>
 
+            <!-- Date picker for the task's due date -->
             <div>
                 <p class="font-bold">Due Date</p>
                 <DatePicker 
@@ -107,13 +123,19 @@
                 />
             </div>
 
+            <!-- Planner picker for the task's connected planner -->
             <div>
                 <p class="font-bold">Planners</p>
-                <TaskPlannersPicker task={task}/>
+                <TaskPlannersPicker 
+                    task={task} 
+                    onChangeFn={(planner) => 
+                    submitPlannerChange(planner)}
+                />
             </div>
         </div>
 
         <div class="text-center">
+            <!-- Delete button for the task -->
             <button 
                 class="p-2 border border-background-300 hover:bg-background-100 rounded-lg cursor-pointer"
                 onclick={() => submitDeletionOfTask(task?.id ?? null)}

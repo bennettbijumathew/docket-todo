@@ -8,7 +8,15 @@
     import { Combobox } from "bits-ui";
     import { ArrowDown, ArrowUp, Check, X } from "@lucide/svelte";
 
-    const { task: initialTask }: { task: Task } = $props();
+    // This picker receives a task as a prop to show planners related to the task
+    // The onchange function determines what changes in input should do
+    interface PickerProps {
+        task: Task,
+        onChangeFn: (taskPlanner: TaskPlanner | null) => void
+    }
+
+    const { task: initialTask, onChangeFn }: PickerProps = $props();
+
     let searchInput: string = $state("");
 
     // Using the task id from the props, the task is fetched from store to ensure proper reactive state.
@@ -31,13 +39,7 @@
     function handleSelect(plannerId: string) {
         const planner = taskPlanners.find(p => p.id === plannerId);
 
-        if (!planner) return;
-
-        if (planner.selected) {
-            taskRepo.removePlannerFromTask(task.id, plannerId);
-        } else {
-            taskRepo.addPlannerToTask(task.id, plannerId);
-        }
+        onChangeFn(planner ?? null)
     }
 </script>
 
@@ -46,6 +48,7 @@
     open={true}
 >
     <Combobox.Trigger class="border border-background-300 rounded-lg w-full"> 
+        <!-- A group of selected Planners -->
         <div class="w-full flex flex-wrap gap-1 p-1.5">   
             {#each taskPlanners.filter(p => p.selected) as planner}
                 <span class="flex items-center gap-x-3 bg-{colors[planner.color]} rounded-sm px-1.5 py-0.5 text-sm font">                    
@@ -61,6 +64,7 @@
             {/each}
         </div>
         
+        <!-- Input for searching the list of planners -->
         <Combobox.Input
             placeholder="Search for Planners"
             class="flex w-full px-2 py-1 focus:outline-none border-t border-background-300"
