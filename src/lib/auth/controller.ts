@@ -34,20 +34,24 @@ export class AuthController {
         this.authStore.setUser(user);
     }
 
-    // This function clears the current user.
+    // This function logs the user out.
     public stop(): void {
-        this.authStore.clearUser();
+        this.logOut()
     }
 
     // This function logs the user into the application.
     public async logInWithEmail(email: string, password: string): Promise<void> {
-        authStore.setLoading(true)
+        this.authStore.setReady(false)
+        this.authStore.setLoading(true)
 
         try {
             await this.authRepo.emailLogIn(email, password)
-        } 
-        finally {
             this.authStore.setLoading(false)
+            this.authStore.setReady(true)
+        } 
+        catch (error) {
+            this.authStore.setLoading(false)
+            this.authStore.setReady(false)
         }
     }
 
