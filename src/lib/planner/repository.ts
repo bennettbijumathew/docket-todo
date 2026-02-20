@@ -1,8 +1,7 @@
 import { db } from "@/lib/config/firebase.ts"
-import { collection, query, orderBy, onSnapshot, QuerySnapshot, doc, Unsubscribe, updateDoc, addDoc, where, getDocs, deleteDoc } from "firebase/firestore";
+import { collection, query, orderBy, onSnapshot, QuerySnapshot, doc, Unsubscribe, updateDoc, addDoc, deleteDoc } from "firebase/firestore";
 import { createPlannerConverter, NewPlannerData, Planner } from "./type";
 import { ColorKey } from "@/components/util/color";
-import { createTaskConverter, Task } from "../task/type";
 import { taskRepo } from "../task/repository";
 
 export class PlannerRepository {
@@ -57,6 +56,7 @@ export class PlannerRepository {
         await deleteDoc(plannerRef)
     }
 
+    
     // This changes a planner's title
     public async editName(plannerId: string, newName: string): Promise<void> {
         // A guard clause to stop the function when there is no planner id or new name.

@@ -6,10 +6,23 @@
     import { type ColorKey } from "@/components/util/color";
     import { plannerStore } from "@/lib/planner/store.svelte";
 
-    let { plannerId }: { plannerId: string } = $props()
 
-    const planner: Planner | null = $derived(plannerStore.getList().find(p => p.id === plannerId) || null);
+    // The component receives the selected planner id with a function that 
+    // handles the behavior of the open and close state of the editor. 
+    interface EditorProps {
+        plannerId: string | null, 
+        toggleFn: () => void
+    }
     
+    let { plannerId, toggleFn }: EditorProps = $props()
+
+
+    // Gets the planner from the planner id. Through this method, changes in the state is updated properly
+    const planner: Planner | null = $derived(plannerStore.getList().find(p => p.id === plannerId) || null);
+
+
+    // Inputs of this editor are initialized with effect used to 
+    // ensure that inputs are synced with the state variables.
     let inputs = $state({
         name: "", 
         color: "red" as ColorKey
@@ -21,6 +34,7 @@
             inputs.color = planner.color
         }
     })
+
 
     // Functions to update the planners' name
     function submitNameChange() {
@@ -42,9 +56,10 @@
         plannerRepo.editColor(planner.id, inputs.color) 
     }
 
-    function submitDeletionOfPlanner(plannerId: string) {
+    // Functions to delete the planner
+    function submitDeletionOfPlanner(plannerId: string | null) {
         // // Doesn't delete the planner if planner doesn't exist
-        if (planner === null) {
+        if (planner === null || plannerId == null) {
             return 
         }
 
@@ -61,12 +76,13 @@
 
                 <button 
                     class="p-2 border border-background-300 hover:bg-background-100 rounded-lg cursor-pointer"
+                    onclick={toggleFn}
                 >   
                     <X class="size-4"/>
                 </button>
             </div>
 
-            <!-- Form to update name changes for the task -->
+            <!-- Form to update name changes for the planner -->
             <form 
                 onsubmit={(e) => { 
                     e.preventDefault(); 
@@ -78,7 +94,7 @@
                     type="text" 
                     class="border border-background-300 rounded-lg p-1 w-full"
                     bind:value={inputs.name}
-                    onblur={() => submitNameChange}
+                    onblur={submitNameChange}
                 >
             </form>
 
@@ -101,7 +117,7 @@
         <div class="text-center">
             <button 
                 class="p-2 border border-background-300 hover:bg-background-100 rounded-lg cursor-pointer"
-                onclick={() => submitDeletionOfPlanner(planner.id)}
+                onclick={() => submitDeletionOfPlanner(planner?.id ?? null)}
             >   
                 <Trash class="size-4"/>
             </button>

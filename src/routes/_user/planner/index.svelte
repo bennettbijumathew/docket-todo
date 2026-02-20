@@ -1,4 +1,4 @@
-<!-- CODE: -->
+<!-- CODE -->
 <script lang="ts">
     import { authStore } from "@/lib/auth/store.svelte";
     import { plannerStore } from "@/lib/planner/store.svelte";
@@ -9,14 +9,15 @@
     import ColorPicker from "@/components/ui/inputs/color-picker.svelte";
     import PlannerEditor from "@/components/ui/planner/planner-editor.svelte";
 
+
+    // This variable represents the input data used to create a new planner
     let newPlanner: NewPlannerData = $state({
         name: "",
         users: {},
         color: "red" as ColorKey
     })
-
-    
-    // This is a function for adding a new task and resetting the inputs
+   
+    // This is a function for adding a new planner and resetting the inputs
     function addNewPlanner(): void {
         newPlanner.users = {
             [authStore.getUserId()]:  false
@@ -31,15 +32,34 @@
         }
     }
 
+
+    // These variables represent the current planner that is open on the modal
+    // and the state of the edit modal being open
     let selectedPlanner: Planner | null = $state(null)
+    let isEditModalOpen: boolean = $state(false)
+
+    // This function open and closes the edit modal.
+    function toggleEditModal(newPlanner: Planner | null) {
+        // If the user clicks on the same planner or the planner doesn't exist
+        // Then the modal is hidden from the users' view 
+        if (newPlanner === selectedPlanner) {
+            isEditModalOpen = false
+            selectedPlanner = null
+            return; 
+        }
+
+        // If the guard clauses are passed, then the new planner is set with the view being open.
+        selectedPlanner = newPlanner
+        isEditModalOpen = true
+    }
 </script>
 
 
 <!-- COMPONENT: This is planner tile snippet that is used to show a single planner -->
 {#snippet plannerTile(planner: Planner)}
     <button
-        class="flex justify-between items-center h-13 border-b border-dotted border-background-300 hover:bg-background-50 cursor-pointer p-2"
-        onclick={() => selectedPlanner = planner}
+        class="flex justify-between items-center h-13 hover:bg-background-50 cursor-pointer p-2"
+        onclick={() => toggleEditModal(planner)}
     >
         <section class="flex items-center gap-x-1 text-left">
             <input 
@@ -70,7 +90,7 @@
 
 <!-- COMPONENT: This is the snippet used to show a list of planners -->
 {#snippet listOfPlanners(list: Planner[])}
-    <main class="flex flex-col">
+    <main class="flex flex-col divide-y divide-background-100">
         {#each list as planner}
             {@render plannerTile(planner)}
         {/each}
@@ -79,7 +99,7 @@
 
 
 <!-- VIEW: This is what is shown on the arrival of the page -->
-<main class="flex-1 flex p-4 pt-0 gap-x-4 min-h-0 bg-background-50">
+<main class="flex-1 flex p-4 pt-0 gap-x-4 min-h-0 bg-background">
     <section class="flex flex-col gap-y-4 flex-4 border border-background-300 rounded-xl p-4">
         <h2 class="font-default font-semibold text-xl text-center">Planner</h2>
 
@@ -121,7 +141,5 @@
         </form>
     </section>
 
-    {#if selectedPlanner !== null}
-        <PlannerEditor plannerId={selectedPlanner.id}/>
-    {/if}
+    <PlannerEditor plannerId={selectedPlanner?.id ?? null} toggleFn={() => toggleEditModal(selectedPlanner)}/>
 </main>
