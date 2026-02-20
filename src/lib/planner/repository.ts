@@ -31,7 +31,6 @@ export class PlannerRepository {
         // Grabs the planner collection from Firestore and adds a new document using the converter. 
         const newPlannerRef = collection(db, "planners").withConverter(createPlannerConverter())
         
-        console.log(newPlanner.users)
         await addDoc(newPlannerRef, {
             name: newPlanner.name,
             users: newPlanner.users,

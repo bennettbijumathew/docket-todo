@@ -66,8 +66,6 @@
         if (task === null) {
             return 
         }
-
-        console.log(inputs.dueDate)
         
         taskRepo.editDate(task.id, inputs.dueDate) 
     }
