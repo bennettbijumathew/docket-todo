@@ -7,7 +7,8 @@
     let password: string = $state(import.meta.env.VITE_ACCOUNT_TEST_PASSWORD ?? "");
 
     async function handleSignUp() {
-        const test = authRepo.createAccount(email, password)
+        const test = authController.createNewAccount(email, password)
+
         console.log(test)
     }
 

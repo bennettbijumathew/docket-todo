@@ -8,7 +8,7 @@
 // session is handled using start() and stop() and these functions handles 
 // the AuthStore and AuthRepository objects.
 
-import { User } from "firebase/auth";
+import { type User } from "firebase/auth";
 import { authRepo, AuthRepository } from "./repository.ts";
 import { authStore, AuthDataStore } from "./store.svelte";
 
@@ -39,17 +39,23 @@ export class AuthController {
         this.logOut()
     }
 
+
     // This function logs the user into the application.
     public async logInWithEmail(email: string, password: string): Promise<void> {
+        // This sets the user interface to an unready and loading state.
         this.authStore.setReady(false)
         this.authStore.setLoading(true)
 
         try {
+            // This logs the user in, issues in the log in are caught and handled.
             await this.authRepo.emailLogIn(email, password)
+
+            // Once user is logged in, the user interface is ready and has stopped loading.
             this.authStore.setLoading(false)
             this.authStore.setReady(true)
         } 
         catch (error) {
+            // If an error was caught, the user interface is stops loading and is set to not ready as user is not logged in.
             this.authStore.setLoading(false)
             this.authStore.setReady(false)
         }
@@ -62,6 +68,17 @@ export class AuthController {
 
         // Logs the user out from Firebase. 
         this.authRepo.logOut()
+    }
+
+
+    public async createNewAccount(email: string, password: string) {
+        try {
+            const newUser = await this.authRepo.createEmailAccount(email, password)
+            console.log(typeof newUser.code == "string" )
+        }
+        catch (error) { 
+            console.log(error)
+        }
     }
 }
 
