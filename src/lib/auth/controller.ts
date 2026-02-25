@@ -11,6 +11,8 @@
 import { type User } from "firebase/auth";
 import { authRepo, AuthRepository } from "./repository.ts";
 import { authStore, AuthDataStore } from "./store.svelte";
+import { AuthError, AuthErrorType } from "./type.ts";
+import { FirebaseError } from "firebase/app";
 
 export class AuthController {
     // The authRepo class is one that provides services from Firebase Authentication, 
@@ -71,13 +73,38 @@ export class AuthController {
     }
 
 
-    public async createNewAccount(email: string, password: string) {
+    // This function creates a new firebase account and returns a status on if the creation is successful
+    public async createEmailAccount(username: string, email: string, password: string): Promise<boolean> {
+        // This is a variable to determine if the account creation is successful.
+        let isSuccessful = false
+
         try {
             const newUser = await this.authRepo.createEmailAccount(email, password)
+
+            // Edits the new account's username and set successful value to true.
+            if (newUser !== null) {
+                await this.authRepo.setUsername(username, newUser)
+                isSuccessful = true
+            }
+            // Returns a false as the creation is unsuccessful.
+            else {
+                isSuccessful = false
+            }
         }
-        catch (error) { 
-            console.log(error)
+        catch (error: any) { 
+            // If an error is encountered, the auth error is updated. 
+            if (error instanceof AuthError) {
+                authStore.setError(error.message)
+            }
+            else {
+                authStore.setError("An unknown error has been encountered.")
+            }
+
+            isSuccessful = false
         }
+
+        // Returns the current success state of the account creation.
+        return isSuccessful
     }
 }
 

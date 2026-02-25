@@ -31,28 +31,37 @@ export class AuthRepository {
     public async createEmailAccount(email: string, password: string): Promise<User | null> {
         // Returns a new user once the account is created.
         try {
-            await createUserWithEmailAndPassword(auth, email, password).then((userCredential) => {
-                return userCredential.user;
-            })
+            const userCredentials = await createUserWithEmailAndPassword(auth, email, password);
+            return userCredentials.user;
         }
-        // If a firebase error is caught, an error code and message is returned
-        catch (error) {
+        // If a firebase error is caught, an auth error is thrown, if not, a default error is thrown.
+        catch (error: any) {
             if (error instanceof FirebaseError) {
-                throw new AuthError(error.code as AuthErrorType, error)
+                throw new AuthError(error.code as AuthErrorType, error);
+            }
+
+            else {
+                throw error;
             }
         }
-        
-        throw new AuthError("auth/network-request-failed")
     }
 
-    public async setUsername(username: string, user: User) {
+    // This sets a username for an account.
+    public async setUsername(username: string, user: User): Promise<void>{
+        // Updates the display name for the account.
         try {
             updateProfile(user, {
                 displayName: username
             })
         }
-        catch(error) {
-            console.log(error)
+        // If a firebase error is caught, an error code and message is returned
+        catch(error: any) {
+            if (error instanceof FirebaseError) {
+                throw new AuthError(error.code as AuthErrorType, error)
+            }
+            else {
+                throw error
+            }
         }
     }
 }

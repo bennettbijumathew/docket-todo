@@ -6,11 +6,11 @@ export class ErrorBase <T extends string> extends Error {
     cause?: unknown
 
     // This class takes a name 
-    constructor(name: T, messages: Record<T, string>, cause?: unknown) {
+    constructor(name: T, listOfMessages: Record<T, string>, cause?: unknown) {
         super(); 
 
         this.name = name
-        this.message = messages[name] 
+        this.message = listOfMessages[name] 
         this.cause = cause
     }
 }

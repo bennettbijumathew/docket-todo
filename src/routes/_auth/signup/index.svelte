@@ -1,15 +1,13 @@
 <script lang="ts">
     import { authController } from "@/lib/auth/controller";
-    import { authRepo } from "@/lib/auth/repository";
-	import { navigate } from "sv-router/generated";
+    import { authStore } from "@/lib/auth/store.svelte";
 
+    let username: string = $state("test");
     let email: string = $state(import.meta.env.VITE_ACCOUNT_TEST_B_EMAIL ?? "");
     let password: string = $state(import.meta.env.VITE_ACCOUNT_TEST_PASSWORD ?? "");
-
+    
     async function handleSignUp() {
-        const test = authController.createNewAccount(email, password)
-
-        console.log(test)
+        const test = authController.createEmailAccount(username, email, password)
     }
 
 </script>
@@ -19,6 +17,11 @@
 
     <section>
         <div class="pb-4">
+            <p>username</p>
+            <input type="text" bind:value={username} class="border-b min-w-50" placeholder="enter your username"/>
+        </div>
+
+        <div class="pb-4">
             <p>email</p>
             <input type="text" bind:value={email} class="border-b min-w-50" placeholder="enter your email"/>
         </div>
@@ -27,7 +30,13 @@
             <p>password</p>
             <input type="text" bind:value={password} class="border-b min-w-50" placeholder="enter your password"/>
         </div>
-    
+        
+        {#if authStore.getError() !== null}
+            <div class="pb-4">
+                <p class="text-red-600"> {authStore.getError()} </p>
+            </div>
+        {/if}
+
         <div class="pb-4">
             <button class="border p-1" onclick={handleSignUp}>sign up</button>
         </div>
