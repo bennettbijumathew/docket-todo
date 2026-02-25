@@ -1,63 +1,34 @@
-// Structured version of errors from the auth side of the application. 
-export interface AuthError {
-    code: string, 
-    message: string
-} 
+import { ErrorBase } from "../shared/errors";
 
-// Using firebase authentication's error code, a message and code is given in a structured format
-export const getAuthError = (error: any | null) => {
-    if (error.code === null) {
-        return {
-            code: "auth/unknown-error",
-            message: "Authentication Error"
-        }
+// AuthError is a authentication related error that uses the ErrorBase as a template.
+// ErrorBase ensures a consistent behavior across all errors  
+export class AuthError extends ErrorBase<AuthErrorType> {
+    constructor(name: AuthErrorType, cause?: unknown) {
+        super(name, authErrorMessages, cause); 
     }
-    
-    switch (error.code) {
-        case "auth/invalid-email":
-            return {
-                code: error.code,
-                message: "Invalid email address."
-            }
-        case "auth/user-disabled":
-            return {
-                code: error.code,
-                message: "This account has been disabled."
-            }
-        case "auth/user-not-found":
-            return {
-                code: error.code,
-                message: "The user could not be found."
-            }
-        case "auth/wrong-password":
-            return {
-                code: error.code,
-                message: "The wrong password has been entered."
-            }
-        case "auth/email-already-in-use":
-            return {
-                code: error.code,
-                message: "The email is already in use."
-            }            
-        case "auth/weak-password":
-            return {
-                code: error.code,
-                message: "Password is too weak."
-            }            
-        case "auth/too-many-requests":
-            return {
-                code: error.code,
-                message: "Too many attempts. Please try again later."
-            }            
-        case "auth/network-request-failed":
-            return {
-                code: error.code,
-                message: "Network error. Check your connection."
-            }            
-        default:
-            return {
-                code: "auth/unknown-error",
-                message: "Authentication Error"
-            }
-    }
+}
+
+// This is a list of error types that are correlated to firebase authentication.
+export type AuthErrorType = 
+    | "auth/unknown-error"
+    | "auth/invalid-email"
+    | "auth/user-disabled"
+    | "auth/user-not-found"
+    | "auth/wrong-password"
+    | "auth/email-already-in-use"
+    | "auth/weak-password"
+    | "auth/too-many-requests"
+    | "auth/network-request-failed";
+
+// The messages for each authentication error codes. 
+export const authErrorMessages: Record<AuthErrorType, string> = {
+    "auth/unknown-error": "Authentication error.",
+    "auth/invalid-email": "Invalid email address.",
+    "auth/user-disabled": "This account has been disabled.",
+    "auth/user-not-found": "The user could not be found.",
+    "auth/wrong-password": "The wrong password has been entered.", 
+    "auth/email-already-in-use": "The email is already in use.", 
+    "auth/weak-password": "Password is too weak.", 
+    "auth/too-many-requests": "There are too many requests at this moment. Try again.",
+    "auth/network-request-failed": "There has been a network failure. Try again."
 }

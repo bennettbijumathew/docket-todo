@@ -74,7 +74,6 @@ export class AuthController {
     public async createNewAccount(email: string, password: string) {
         try {
             const newUser = await this.authRepo.createEmailAccount(email, password)
-            console.log(typeof newUser.code == "string" )
         }
         catch (error) { 
             console.log(error)

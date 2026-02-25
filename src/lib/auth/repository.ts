@@ -5,10 +5,10 @@
 // An AuthStore object is used to create an AuthController object. The AuthRepository object can be used
 // anywhere to handle account management such as sign in and sign out.  
 
-import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, updateProfile, User, type UserCredential } from "firebase/auth";
+import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, updateProfile, User, } from "firebase/auth";
 import { auth } from "../config/firebase";
-import { getAuthError, type AuthError } from "./type";
-import { AppError } from "../shared/errors";
+import { AuthError, AuthErrorType } from "./type";
+import { FirebaseError } from "firebase/app";
 
 export class AuthRepository {
     // This function takes a function and returns Firebase's onAuthStateChanged 
@@ -28,23 +28,21 @@ export class AuthRepository {
     }
 
     // A function that creates an email account.
-    public async createEmailAccount(email: string, password: string): Promise<User | AuthError> {
+    public async createEmailAccount(email: string, password: string): Promise<User | null> {
         // Returns a new user once the account is created.
         try {
             await createUserWithEmailAndPassword(auth, email, password).then((userCredential) => {
                 return userCredential.user;
             })
         }
-        // If an error is caught, an error code and message is returned
+        // If a firebase error is caught, an error code and message is returned
         catch (error) {
-            console.log(new AppError("not really", "that is not good", error))
-            console.log(error instanceof Error ? error.message : "Unknown error")
-
-            throw new Error(error)
-            return getAuthError(error)
+            if (error instanceof FirebaseError) {
+                throw new AuthError(error.code as AuthErrorType, error)
+            }
         }
-
-        return getAuthError(null)
+        
+        throw new AuthError("auth/network-request-failed")
     }
 
     public async setUsername(username: string, user: User) {
