@@ -1,13 +1,18 @@
 <script lang="ts">
     import { authController } from "@/lib/auth/controller";
     import { authStore } from "@/lib/auth/store.svelte";
+    import { navigate } from "sv-router/generated";
 
     let username: string = $state("test");
     let email: string = $state(import.meta.env.VITE_ACCOUNT_TEST_B_EMAIL ?? "");
     let password: string = $state(import.meta.env.VITE_ACCOUNT_TEST_PASSWORD ?? "");
     
     async function handleSignUp() {
-        const test = authController.createEmailAccount(username, email, password)
+        const isAccountCreated = await authController.createEmailAccount(username, email, password)
+
+        if (isAccountCreated === true) {
+            navigate("/login")
+        }
     }
 
 </script>

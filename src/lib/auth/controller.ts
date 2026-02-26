@@ -11,8 +11,7 @@
 import { type User } from "firebase/auth";
 import { authRepo, AuthRepository } from "./repository.ts";
 import { authStore, AuthDataStore } from "./store.svelte";
-import { AuthError, AuthErrorType } from "./type.ts";
-import { FirebaseError } from "firebase/app";
+import { AuthError } from "./type.ts";
 
 export class AuthController {
     // The authRepo class is one that provides services from Firebase Authentication, 
@@ -86,7 +85,7 @@ export class AuthController {
                 await this.authRepo.setUsername(username, newUser)
                 isSuccessful = true
             }
-            // Returns a false as the creation is unsuccessful.
+            // Since user does not exist, the account creation has failed. 
             else {
                 isSuccessful = false
             }
@@ -100,6 +99,7 @@ export class AuthController {
                 authStore.setError("An unknown error has been encountered.")
             }
 
+            // Since an error was encountered, the account creation has failed. 
             isSuccessful = false
         }
 
