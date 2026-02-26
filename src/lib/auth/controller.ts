@@ -42,28 +42,70 @@ export class AuthController {
 
 
     // This function logs the user into the application.
-    public async logInWithEmail(email: string, password: string): Promise<void> {
-        // This sets the user interface to an unready and loading state.
+    public async logInWithEmail(email: string, password: string): Promise<boolean> {
+        // This is a variable to determine if the login is successful.
+        let isSuccessful: boolean = false
+
+        // This sets the user interface to an unready and loading state without an error.
         this.authStore.setReady(false)
         this.authStore.setLoading(true)
+        this.authStore.setError("")
 
         try {
             // This logs the user in, issues in the log in are caught and handled.
-            await this.authRepo.emailLogIn(email, password)
+            const user = await this.authRepo.emailLogIn(email, password)
 
-            // Once user is logged in, the user interface is ready and has stopped loading.
-            this.authStore.setLoading(false)
-            this.authStore.setReady(true)
+            // Runs once the user is logged in with a verified account, 
+            if (user !== null && user.emailVerified === true) {
+                // Sets user interface to be ready.
+                this.authStore.setLoading(false)
+                this.authStore.setReady(true)
+                
+                // Sets successful state to true as user has been logged in and verified.
+                isSuccessful = true 
+            }
+            else {
+                // This sets the user in an unready state as account is not logged in.
+                this.authStore.setLoading(true)
+                this.authStore.setReady(false)
+                
+                // If user doesn't exist, an unknown error is given.
+                if (user === null) {
+                    this.authStore.setError("An unknown error has been encountered. Try to log in or create a new account. ")
+                }
+
+                // If user exists but email doesn't exist, an error is given while sending a verification email.
+                if (user !== null && user.emailVerified === false) {
+                    this.authStore.setError("Your account has not been verified. A link will be sent to your email. ")
+                    await this.authRepo.sendVerifyEmail(user)
+                }
+
+                // Sets successful state to false as user is not logged in or verified.
+                isSuccessful = false
+            }
         } 
         catch (error) {
-            // If an error was caught, the user interface is stops loading and is set to not ready as user is not logged in.
-            this.authStore.setLoading(false)
-            this.authStore.setReady(false)
+            // If an error is encountered, the auth error is updated. 
+            if (error instanceof AuthError) {
+                this.authStore.setError(error.message)
+            }
+            else {
+                this.authStore.setError("An unknown error has been encountered.")
+            }
+
+            // Since an error was encountered, the account creation has failed. 
+            isSuccessful = false
         }
+
+        // Returns the current success state of the user's log in.
+        return isSuccessful
     }
 
     // This functions logs the user out from the authentication session for the UI and Firebase
     public logOut(): void {
+        // Resets error message before account is created.
+        this.authStore.setError("")
+
         // Removes the user from the state, This leads to the UI being updated without any user.
         this.authStore.clearUser()
 
@@ -74,14 +116,18 @@ export class AuthController {
 
     // This function creates a new firebase account and returns a status on if the creation is successful
     public async createEmailAccount(username: string, email: string, password: string): Promise<boolean> {
+        // Resets error message before account is created.
+        this.authStore.setError("")
+
         // This is a variable to determine if the account creation is successful.
-        let isSuccessful = false
+        let isSuccessful: boolean = false
 
         try {
-            const newUser = await this.authRepo.createEmailAccount(email, password)
+            const newUser = await this.authRepo.createNewEmailAccount(email, password)
 
-            // Edits the new account's username and set successful value to true.
+            // Sends a verification link, edits the new account's username and set successful value to true.
             if (newUser !== null) {
+                await this.authRepo.sendVerifyEmail(newUser)
                 await this.authRepo.setUsername(username, newUser)
                 isSuccessful = true
             }
@@ -93,10 +139,10 @@ export class AuthController {
         catch (error: any) { 
             // If an error is encountered, the auth error is updated. 
             if (error instanceof AuthError) {
-                authStore.setError(error.message)
+                this.authStore.setError(error.message)
             }
             else {
-                authStore.setError("An unknown error has been encountered.")
+                this.authStore.setError("An unknown error has been encountered.")
             }
 
             // Since an error was encountered, the account creation has failed. 

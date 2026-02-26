@@ -1,26 +1,16 @@
 <script lang="ts">
-    import { auth } from "@/lib/config/firebase.ts";
 	import { navigate } from "sv-router/generated";
     import { authController } from "@/lib/auth/controller";
+    import { authStore } from "@/lib/auth/store.svelte";
 
     let email: string = $state(import.meta.env.VITE_ACCOUNT_TEST_B_EMAIL ?? "");
     let password: string = $state(import.meta.env.VITE_ACCOUNT_TEST_PASSWORD ?? "");
 
     async function handleLogIn() {
-        try {
-            await authController.logInWithEmail(email, password);
-        }
-        finally {
-            navigate("/planner");
-        }
-    }
+        const logInResult = await authController.logInWithEmail(email, password)
 
-    async function handleLogOut() {
-        try {
-            await auth.signOut()
-        }
-        finally {
-            navigate("/");
+        if (logInResult === true) {
+            navigate("/task")
         }
     }
 </script>
@@ -36,13 +26,18 @@
     
         <div class="pb-4">
             <p>password</p>
-            <input type="text" bind:value={password} class="border-b min-w-50" placeholder="enter your password"/>
+            <input type="password" bind:value={password} class="border-b min-w-50" placeholder="enter your password"/>
         </div>
     
         <div class="pb-4">
             <button class="border p-1" onclick={handleLogIn}>log in</button>
-            <button class="border p-1" onclick={handleLogOut}>sign out</button>
             <button class="border p-1" onclick={() => navigate("/signup")}>sign up</button>
         </div>
+
+        {#if authStore.getError() !== null}
+            <div class="pb-4">
+                <p class="text-red-600"> {authStore.getError()} </p>
+            </div>
+        {/if}
     </section>
 </main>
