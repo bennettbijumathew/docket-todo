@@ -11,14 +11,17 @@ export class AuthDataStore {
     // If logged in, the user variable will use Firebase's "User" Type. If not, then the variable will be null.
     // The loading variable is used to represent the state between loading the account data. 
     // The ready variable is representative of if the user is ready to use. 
+    // The error represents an error state, null = no error.
     private user: User | null;
     private loading: boolean;
     private ready: boolean;
+    private error: string | null
 
     constructor() {
         this.user = $state(null);
         this.loading = $state(true);
         this.ready = $state(false);
+        this.error = $state(null);
     }
 
 
@@ -41,6 +44,17 @@ export class AuthDataStore {
     // Setter function for the ready variable.
     public setReady(state: boolean): void {
         this.ready = state
+    }
+
+
+    // Getter function for the error variable.
+    public getError(): string | null {
+        return this.error
+    }
+
+    // Setter function for the error variable.
+    public setError(error: string | null): void {
+        this.error = error
     }
 
 
