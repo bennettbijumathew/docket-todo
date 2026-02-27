@@ -44,9 +44,6 @@ export class AuthController {
 
     // This function logs the user into the application.
     public async logInWithEmail(email: string, password: string): Promise<boolean> {
-        // This is a variable to determine if the login is successful.
-        let isSuccessful: boolean = false
-
         // This sets the user interface to an unready and loading state without an error.
         this.authStore.setReady(false)
         this.authStore.setLoading(true)
@@ -62,8 +59,8 @@ export class AuthController {
                 this.authStore.setLoading(false)
                 this.authStore.setReady(true)
                 
-                // Sets successful state to true as user has been logged in and verified.
-                isSuccessful = true 
+                // Returns successful state to true as user has been logged in and verified.
+                return true 
             }
             else {
                 // This sets the user in an unready state as account is not logged in.
@@ -81,8 +78,8 @@ export class AuthController {
                     await this.authRepo.sendVerifyEmail(user)
                 }
 
-                // Sets successful state to false as user is not logged in or verified.
-                isSuccessful = false
+                // Returns successful state to false as user is not logged in or verified.
+                return false
             }
         } 
         catch (error) {
@@ -95,11 +92,8 @@ export class AuthController {
             }
 
             // Since an error was encountered, the account creation has failed. 
-            isSuccessful = false
+            return false
         }
-
-        // Returns the current success state of the user's log in.
-        return isSuccessful
     }
 
     // This functions logs the user out from the authentication session for the UI and Firebase
