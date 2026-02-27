@@ -12,6 +12,7 @@ import { type User } from "firebase/auth";
 import { authRepo, AuthRepository } from "./repository.ts";
 import { authStore, AuthDataStore } from "./store.svelte";
 import { AuthError } from "./type.ts";
+import { isEmailValid, isPasswordValid, isUsernameValid } from "../shared/input-validation.ts";
 
 export class AuthController {
     // The authRepo class is one that provides services from Firebase Authentication, 
@@ -115,25 +116,41 @@ export class AuthController {
 
 
     // This function creates a new firebase account and returns a status on if the creation is successful
-    public async createEmailAccount(username: string, email: string, password: string): Promise<boolean> {
+    public async createEmailAccount(username: string, email: string, password: string): Promise<boolean> {        
         // Resets error message before account is created.
         this.authStore.setError("")
 
-        // This is a variable to determine if the account creation is successful.
-        let isSuccessful: boolean = false
-
         try {
-            const newUser = await this.authRepo.createNewEmailAccount(email, password)
+            // Validation the inputs before account is created. If inputs are not valid, then a unsuccessful status is sent.
+            if (isUsernameValid(username).status == false) {
+                this.authStore.setError(isUsernameValid(username).message)
+                
+                return false;
+            }
+            else if (isEmailValid(email).status == false) {
+                this.authStore.setError(isEmailValid(email).message)
 
-            // Sends a verification link, edits the new account's username and set successful value to true.
+                return false;
+            }
+            else if (isPasswordValid(password).status == true) {
+                this.authStore.setError(isPasswordValid(password).message)
+
+                return false;
+            }
+            
+            // A new account is created with the email and password.
+            const newUser = await this.authRepo.createNewEmailAccount(email.trim(), password.trim())
+
+            // Sends a verification link, edits the new account's username and then a successful value is sent.
             if (newUser !== null) {
                 await this.authRepo.sendVerifyEmail(newUser)
                 await this.authRepo.setUsername(username, newUser)
-                isSuccessful = true
+
+                return true;
             }
             // Since user does not exist, the account creation has failed. 
             else {
-                isSuccessful = false
+                return false;
             }
         }
         catch (error: any) { 
@@ -146,11 +163,8 @@ export class AuthController {
             }
 
             // Since an error was encountered, the account creation has failed. 
-            isSuccessful = false
+            return false;
         }
-
-        // Returns the current success state of the account creation.
-        return isSuccessful
     }
 }
 
