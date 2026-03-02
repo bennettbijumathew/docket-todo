@@ -1,4 +1,4 @@
-<!-- CODE: -->
+<!-- CODE -->
 <script lang="ts">
     import { authStore } from "@/lib/auth/store.svelte";
     import { taskStore } from "@/lib/task/store.svelte";
@@ -98,6 +98,7 @@
                 onChangeFn={() => { 
                     taskRepo.editComplete(task.id, !task.completed) 
                 }}
+                stopPropagation={true}
             />
             
             <div>
@@ -198,7 +199,10 @@
         <section class="">
             <h2 class="font-title font-semibold text-lg"> Planners </h2>
 
-            <div class="flex flex-col flex-1 overflow-y-auto gap-y-1">
+            <div class="
+                flex flex-col flex-1 overflow-y-auto gap-y-1 max-h-140
+                scrollbar scrollbar-w-2 scrollbar-thumb-content-900 scrollbar-thumb-rounded-md scrollbar-track-transparent
+            ">
                 {#each plannerStore.getList() as planner}
                     {@render plannerTile(planner)}
                 {/each}

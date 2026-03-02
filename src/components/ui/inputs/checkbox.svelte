@@ -4,12 +4,15 @@
 
     // The checkbox takes a boolean value and a optional onchange function. 
     // The styles variables are used to customize the height and coloring of the checkbox.
+    // The disabled variable controls if the input is disabled.
     interface CheckboxProps {
         value: boolean, 
+        onclick?: () => void
         onChangeFn?: () => void
         checkedStyle?: string
         unCheckedStyle?: string
         disabled?: boolean
+        stopPropagation?: boolean
     }
 
     let { 
@@ -17,7 +20,8 @@
         onChangeFn, 
         checkedStyle = "size-5 bg-content-900 text-background", 
         unCheckedStyle = "size-5 border-content-900",
-        disabled = false
+        disabled = false,
+        stopPropagation = false
     }: CheckboxProps = $props()
 </script>
  
@@ -25,7 +29,7 @@
     class="inline-flex items-center justify-center rounded-sm cursor-pointer data-disabled:cursor-not-allowed data-disabled:bg-red-200"
     checked={value}
     onCheckedChange={onChangeFn}
-    onclick={(event) => event.stopPropagation()}
+    onclick={(event) => stopPropagation === true ? event.stopPropagation() : null}
     disabled={disabled}
 >
     {#if value === true}
