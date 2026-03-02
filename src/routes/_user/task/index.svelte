@@ -120,40 +120,6 @@
             {/each}
         </div>
     </button>
-    <!-- On clicking the container, the task modal is opened. -->
-    <button
-        onclick={() => toggleEditModal(task)} 
-        class="flex justify-between items-center bg-background-50 hover:bg-background-100 cursor-pointer py-2 px-3 rounded-lg"
-    >
-        <div class="flex items-center gap-x-3 text-left">
-            <!-- On clicking the checkbox, the task is toggled to the opposite of its current value -->
-            <Checkbox 
-                value={task.completed}
-                onChangeFn={() => { 
-                    taskRepo.editComplete(task.id, !task.completed) 
-                }}
-            />
-            
-            <div>
-                <h3 class="font-bold"> {task.name} </h3>
-                
-                <span class="flex items-center justify-center gap-x-1">
-                    <Calendar class="size-3"/>
-                    
-                    <p class="text-sm"> Due Date: {formatLongDate(task.dueDate)} </p>
-                </span>
-            </div>
-        </div>
-
-        <!-- This is a list of planners colors related to the task -->
-        <div class="flex items-center">
-            {#each plannerStore.getItemsById(task.planners, false) as taskPlanner}    
-                <div class="inline-flex items-center justify-center w-6 first:rounded-l-md last:rounded-r-md bg-{colors[taskPlanner.color]}"> 
-                    <p class="m-0.5 text-xs font-medium"> {taskPlanner.name[0]} </p>
-                </div>
-            {/each}
-        </div>
-    </button>
 {/snippet}
 
 
@@ -188,7 +154,7 @@
 
 
 <main class="flex-1 flex min-h-0">
-    <aside class="flex flex-col justify-between flex-1 p-4 shadow-xl">
+    <aside class="flex flex-col justify-between flex-1 p-4 shadow-lg">
         <!-- Title and redirection back to the website's home  -->
         <h1 class="font-title text-2xl font-bold text-content-900 hover:text-content-600">
             <a 
@@ -255,7 +221,7 @@
         <!-- This area is the place to add tasks -->
         <!-- class="flex border border-background-300 focus-within:outline focus-within:outline-background-500 rounded-lg p-1.5" -->
         <form
-            class="flex bg-content-900 hover:bg-content-800 text-white border border-background-300 focus-within:outline focus-within:outline-background-500 rounded-lg p-1.5"
+            class="flex bg-background-50 text-content-900 focus-within:bg-background-100 rounded-lg p-1.5 shadow-md"
             onsubmit={(e) => { 
                 e.preventDefault(); 
                 addNewTask() 
@@ -280,7 +246,11 @@
                 >
             </div>
 
-            <DatePicker bind:value={newTask.dueDate}/>
+            <DatePicker 
+                bind:value={newTask.dueDate}
+                buttonStyle="bg-background-100 hover:bg-background-200 px-2 min-w-54 transition-colors justify-between"
+                pickerStyle="bg-background shadow-md"
+            />
 
             <PlannerPicker bind:value={newTask.planners}/>
         </form>

@@ -118,7 +118,7 @@
                 <p class="font-bold">Due Date</p>
                 <DatePicker 
                     bind:value={inputs.dueDate}
-                    buttonClass="border border-background-300 rounded-lg p-1 px-1.5 w-full"
+                    buttonStyle="border border-background-300 rounded-lg p-1 px-1.5 w-full"
                     onChangeFn={() => submitDateChange()}
                 />
             </div>
