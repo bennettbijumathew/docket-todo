@@ -1,6 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 @import "tailwindcss";
 
+@plugin 'tailwind-scrollbar' {
+    nocompatible: true;
+}
+
 @theme {
   --color-background: var(--color-white);
   --color-background-50: var(--color-neutral-50);
@@ -9,6 +13,7 @@
   --color-background-300: var(--color-neutral-300);
   --color-background-500: var(--color-neutral-500);
   --color-content-600: var(--color-neutral-600);
+  --color-content-800: var(--color-neutral-800);
   --color-content-900: var(--color-neutral-900);
   --font-title: "Playfair Display", serif;
   --font-default: "Figtree", sans-serif;;

@@ -15,7 +15,7 @@
     import { plannerRepo } from "@/lib/planner/repository";
     import TaskEditor from "@/components/ui/task/task-editor.svelte";
     import { routes } from "@/components/util/routes";
-    import Checkbox from "@/components/ui/common/checkbox.svelte";
+    import Checkbox from "@/components/ui/inputs/checkbox.svelte";
 
     // These variables are used to show the tasks of the user.
     const completeTasks: Task[] = $derived(taskStore.getList().filter((item) => item.completed === true))
@@ -46,8 +46,6 @@
 
 
     // These variables represent the current planner that is open on the modal
-    // and the state of the edit modal being open
-    let isEditModalOpen: boolean = $state(true)
     let selectedTask: Task | null = $state(null)
 
     // This function toggles the task editing modal.
@@ -55,14 +53,12 @@
         // If the user clicks on the same task or the task doesn't exist
         // Then the modal is hidden from the users' view 
         if (selectedTask === task || task === null) {
-            isEditModalOpen = false
             selectedTask = null
             return; 
         }
 
         // If the guard clauses are passed, then the new task is set with the view being open.
         selectedTask = task
-        isEditModalOpen = true
     }
 </script>
 
@@ -93,6 +89,7 @@
     <button
         onclick={() => toggleEditModal(task)} 
         class="flex justify-between items-center bg-background-50 hover:bg-background-100 cursor-pointer py-2 px-3 rounded-lg"
+        aria-label="Button to open the editor for the task of '{task.name}'" 
     >
         <div class="flex items-center gap-x-3 text-left">
             <!-- On clicking the checkbox, the task is toggled to the opposite of its current value -->
@@ -167,6 +164,7 @@
         <button 
             onclick={setIsTaskShownFn}
             class="flex items-center mb-2 gap-x-2 cursor-pointer hover:border-background-200 border-b border-background-50 transition-colors"
+            aria-label="Button to toggle '{header}'" 
         >
             <h3 class="font-title text-md"> {header} </h3>
 
@@ -246,14 +244,18 @@
         <h2 class="font-title font-semibold text-lg"> Task </h2>
 
         <!-- This area renders a list of planners, toggling planners changes the tasks shown -->
-        <div class="flex-1 flex flex-col min-h-0 gap-y-4 my-6 overflow-y-auto"> 
+        <div class="
+            flex-1 flex flex-col overflow-y-scroll pr-4 my-6 gap-y-4
+            scrollbar scrollbar-w-2 scrollbar-thumb-content-900 scrollbar-thumb-rounded-md scrollbar-track-transparent
+        "> 
             {@render listOfTasks("Incomplete Tasks", incompleteTasks, isIncompleteTasksShown, () => isIncompleteTasksShown = !isIncompleteTasksShown)}
             {@render listOfTasks("Complete Tasks", completeTasks, isCompleteTasksShown, () => isCompleteTasksShown = !isCompleteTasksShown)}
         </div>
 
         <!-- This area is the place to add tasks -->
+        <!-- class="flex border border-background-300 focus-within:outline focus-within:outline-background-500 rounded-lg p-1.5" -->
         <form
-            class="flex border border-background-300 focus-within:outline focus-within:outline-background-500 rounded-lg p-1.5"
+            class="flex bg-content-900 hover:bg-content-800 text-white border border-background-300 focus-within:outline focus-within:outline-background-500 rounded-lg p-1.5"
             onsubmit={(e) => { 
                 e.preventDefault(); 
                 addNewTask() 
@@ -261,7 +263,8 @@
         >
             <div class="flex-1 flex items-center">
                 <button 
-                    class="py-2 px-2 hover:bg-background-100 rounded-lg cursor-pointer mr-1" 
+                    class="py-2 px-2 hover:bg-background-100 rounded-lg cursor-pointer mr-1"
+                    aria-label="Add New Task" 
                     type="submit"
                 >
                     <Plus class="size-4"/>
@@ -283,7 +286,5 @@
         </form>
     </section>
 
-    <aside class="flex-1">
-        <TaskEditor taskId={selectedTask?.id ?? null} toggleFn={() => toggleEditModal(selectedTask)}/>
-    </aside>
+    <TaskEditor taskId={selectedTask?.id ?? null} toggleFn={() => toggleEditModal(selectedTask)}/>
 </main>
