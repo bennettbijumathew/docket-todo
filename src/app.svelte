@@ -3,18 +3,7 @@
 	import "sv-router/generated";
     import { getCurrentWindow } from '@tauri-apps/api/window';
     import { X, Maximize2, Minimize2, Minus } from '@lucide/svelte';
-
-    interface Route {
-        name: string,
-        link: string
-    }
-
-    const routes: Route[] = [
-        { name: "Home", link: "/" },
-        { name: "Login", link: "/login" },
-        { name: "Task", link: "/task" },
-        { name: "Planner", link: "/planner" }
-    ]
+    import { routes } from "./components/util/routes";
     
     let maximizedState: boolean = $state(false) 
 
@@ -34,9 +23,9 @@
         <div class="flex gap-x-2 ml-4">
             <p class="text-xs select-none"> Logo </p>
 
-            {#each routes as route}
-                <a href={route.link} class="text-xs pl-2 select-none">
-                    {route.name}
+            {#each routes as [name, link]}
+                <a href={link} class="text-xs pl-2 select-none">
+                    {name}
                 </a>
             {/each}
         </div>

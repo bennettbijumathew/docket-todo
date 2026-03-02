@@ -5,7 +5,7 @@
     import { plannerStore } from "@/lib/planner/store.svelte";
     import { type NewTaskData, type Task } from "@/lib/task/type";
     import { colors } from "@/components/util/color";
-    import { ChevronDown, ChevronRight, Plus } from "@lucide/svelte";
+    import { ChevronDown, ChevronRight, ClipboardCheck, Notebook, Plus } from "@lucide/svelte";
     import { type Planner } from "@/lib/planner/type";
     import DatePicker from "@/components/ui/inputs/date-picker.svelte";
     import { getLocalTimeZone, Time, toCalendarDateTime, today } from "@internationalized/date";
@@ -14,6 +14,7 @@
     import { taskRepo } from "@/lib/task/repository";
     import { plannerRepo } from "@/lib/planner/repository";
     import TaskEditor from "@/components/ui/task/task-editor.svelte";
+    import { routes } from "@/components/util/routes";
 
     // These variables are used to show the tasks of the user.
     const completeTasks: Task[] = $derived(taskStore.getList().filter((item) => item.completed === true))
@@ -138,6 +139,66 @@
         </main>
     </div>
 {/snippet}
+
+
+<main class="flex-1 flex min-h-0">
+    <aside class="flex flex-col justify-between border flex-1 p-4">
+        <!-- Title and redirection back to the website's home  -->
+        <h1 class="font-title text-2xl font-bold text-content-900 hover:text-content-600">
+            <a 
+                aria-label="Link to Docket's Homepage"
+                href={routes.get("Home")}
+            >
+                Docket
+            </a>
+        </h1>
+
+        <!-- Panel for navigating to different sections of the application.   -->
+        <section>
+            <h2 class="font-title font-semibold text-lg">
+                Navigation
+            </h2>
+
+            <nav class="flex flex-col gap-y-0.5">
+                <a 
+                    class="flex items-center gap-x-2 p-1 rounded-md transition-colors bg-background-100 hover:cursor-default"
+                    aria-label="Link to Tasks Page"
+                    href={routes.get("Task")}
+                > 
+                    <ClipboardCheck class="size-4"/>
+
+                    <p>Tasks</p>
+                </a>
+
+                <a 
+                    class="flex items-center gap-x-2 p-1 rounded-md transition-colors bg-background hover:bg-background-50 hover:cursor-pointer"
+                    aria-label="Link to Planners Page"
+                    href={routes.get("Planner")}
+                >
+                    <Notebook class="size-4"/>
+                    
+                    <p>Planners</p>
+                </a>
+            </nav>
+        </section>
+
+        <section>
+            <h2 class="font-title font-semibold text-lg">
+                Planners
+            </h2>
+        </section>
+    </aside>
+
+    <section class="border flex-3">
+        <p> test </p>
+    </section>
+
+    <aside class="border flex-1">
+        <p> test </p>
+    </aside>
+</main>
+
+
 
 
 <!-- VIEW: This is what is shown on the arrival of the page -->
