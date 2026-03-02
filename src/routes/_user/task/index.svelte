@@ -112,9 +112,9 @@
         </div>
 
         <!-- This is a list of planners colors related to the task -->
-        <div class="flex items-center">
+        <div class="flex items-center rounded-sm overflow-hidden">
             {#each plannerStore.getItemsById(task.planners, false) as taskPlanner}    
-                <div class="inline-flex items-center justify-center w-6 first:rounded-l-md last:rounded-r-md bg-{colors[taskPlanner.color]}"> 
+                <div class="inline-flex items-center justify-center w-6 bg-{colors[taskPlanner.color]}"> 
                     <p class="m-0.5 text-xs font-medium"> {taskPlanner.name[0]} </p>
                 </div>
             {/each}
@@ -221,7 +221,7 @@
         <!-- This area is the place to add tasks -->
         <!-- class="flex border border-background-300 focus-within:outline focus-within:outline-background-500 rounded-lg p-1.5" -->
         <form
-            class="flex bg-background-50 text-content-900 focus-within:bg-background-100 rounded-lg p-1.5 shadow-md"
+            class="flex gap-x-2 bg-background-50 text-content-900 focus-within:bg-background-100 rounded-lg p-1.5 shadow-md"
             onsubmit={(e) => { 
                 e.preventDefault(); 
                 addNewTask() 
@@ -248,11 +248,15 @@
 
             <DatePicker 
                 bind:value={newTask.dueDate}
-                buttonStyle="bg-background-100 hover:bg-background-200 px-2 min-w-54 transition-colors justify-between"
+                buttonStyle="bg-background-100 hover:bg-background-200 px-2 min-w-54 justify-between"
                 pickerStyle="bg-background shadow-md"
             />
 
-            <PlannerPicker bind:value={newTask.planners}/>
+            <PlannerPicker 
+                bind:value={newTask.planners}
+                buttonStyle="bg-background-100 hover:bg-background-200 px-2 justify-between"
+                pickerStyle="bg-background shadow-md"
+            />
         </form>
     </section>
 
