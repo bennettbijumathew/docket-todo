@@ -100,7 +100,7 @@
 {#snippet plannerTile(planner: Planner)}
     <button 
         class={`flex min-h-13 justify-between items-center border-l-10 border-${colors[planner.color]} hover:bg-background-50 transition-colors cursor-pointer`}
-        onclick={() => plannerRepo.editUserVisibility(authStore.getUserId(), planner.id, !planner.users[authStore.getUserId()])}
+        onclick={() => plannerRepo.editVisibility(authStore.getUserId(), planner.id, !planner.users[authStore.getUserId()])}
     >
         <p class="ml-2"> {planner.name} </p>
 
@@ -142,7 +142,7 @@
 
 
 <main class="flex-1 flex min-h-0">
-    <aside class="flex flex-col justify-between border flex-1 p-4">
+    <aside class="flex flex-col justify-between flex-1 p-4">
         <!-- Title and redirection back to the website's home  -->
         <h1 class="font-title text-2xl font-bold text-content-900 hover:text-content-600">
             <a 
@@ -182,10 +182,17 @@
             </nav>
         </section>
 
+        <!-- Panel for managing planners -->
         <section>
             <h2 class="font-title font-semibold text-lg">
                 Planners
             </h2>
+
+            <div class="flex flex-col flex-1 overflow-y-auto">
+                {#each plannerStore.getList() as planner}
+                    {@render plannerTile(planner)}
+                {/each}
+            </div>
         </section>
     </aside>
 
