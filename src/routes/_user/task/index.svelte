@@ -15,6 +15,7 @@
     import { plannerRepo } from "@/lib/planner/repository";
     import TaskEditor from "@/components/ui/task/task-editor.svelte";
     import { routes } from "@/components/util/routes";
+    import Checkbox from "@/components/ui/common/checkbox.svelte";
 
     // These variables are used to show the tasks of the user.
     const completeTasks: Task[] = $derived(taskStore.getList().filter((item) => item.completed === true))
@@ -98,18 +99,20 @@
 
 <!-- COMPONENT: This is planner tile snippet that is used to show a single task in a list -->
 {#snippet plannerTile(planner: Planner)}
-    <button 
-        class={`flex min-h-13 justify-between items-center border-l-10 border-${colors[planner.color]} hover:bg-background-50 transition-colors cursor-pointer`}
+    <!-- Since visibility is tracked in the users field, the user id is used to alter the user's visible status of the planner. -->
+    <button
         onclick={() => plannerRepo.editVisibility(authStore.getUserId(), planner.id, !planner.users[authStore.getUserId()])}
+        aria-label="Checkbox for hiding / showing the planner '{planner.name}'"
+        class="inline-flex gap-x-2 p-1 rounded-md transition-colors bg-background hover:bg-background-50 hover:cursor-pointer"
     >
-        <p class="ml-2"> {planner.name} </p>
+        <!-- Value of the checkbox updates on pressing the outer button. This works due to the planner being used a svelte state variable  -->
+        <Checkbox 
+            value={planner.users[authStore.getUserId()]} 
+            checkedStyle="size-5 cursor-pointer bg-{colors[planner.color]}"
+            unCheckedStyle="size-5 cursor-pointer border-{colors[planner.color]}"
+        />
 
-        <input 
-            type="checkbox" 
-            id={planner.id} 
-            checked={planner.users[authStore.getUserId()]} 
-            class="m-2 size-4 accent-content-900"
-        >   
+        <p> {planner.name} </p>
     </button>
 {/snippet}
 
@@ -142,7 +145,7 @@
 
 
 <main class="flex-1 flex min-h-0">
-    <aside class="flex flex-col justify-between flex-1 p-4">
+    <aside class="flex flex-col justify-between flex-1 p-4 shadow-2xl">
         <!-- Title and redirection back to the website's home  -->
         <h1 class="font-title text-2xl font-bold text-content-900 hover:text-content-600">
             <a 
@@ -188,7 +191,7 @@
                 Planners
             </h2>
 
-            <div class="flex flex-col flex-1 overflow-y-auto">
+            <div class="flex flex-col flex-1 overflow-y-auto gap-y-1">
                 {#each plannerStore.getList() as planner}
                     {@render plannerTile(planner)}
                 {/each}
@@ -196,11 +199,11 @@
         </section>
     </aside>
 
-    <section class="border flex-3">
+    <section class="flex-3">
         <p> test </p>
     </section>
 
-    <aside class="border flex-1">
+    <aside class="flex-1">
         <p> test </p>
     </aside>
 </main>
