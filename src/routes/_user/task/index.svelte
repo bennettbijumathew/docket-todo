@@ -23,7 +23,7 @@
 
     // These variables are responsible for showing the incomplete and complete tasks.
     let isIncompleteTasksShown: boolean = $state(true)
-    let isCompleteTasksShown: boolean = $state(false)
+    let isCompleteTasksShown: boolean = $state(true)
 
 
     // This variable is used to handle new tasks that come in from the inputs
@@ -89,36 +89,72 @@
 
 <!-- COMPONENT: This is task tile snippet that is used to show a single task -->
 {#snippet taskTile(task: Task)}
+    <!-- On clicking the container, the task modal is opened. -->
     <button
         onclick={() => toggleEditModal(task)} 
         class="flex justify-between items-center bg-background-50 hover:bg-background-100 cursor-pointer py-2 px-3 rounded-lg"
     >
-        <section class="flex items-center gap-x-3 text-left">
+        <div class="flex items-center gap-x-3 text-left">
+            <!-- On clicking the checkbox, the task is toggled to the opposite of its current value -->
             <Checkbox 
                 value={task.completed}
                 onChangeFn={() => { 
                     taskRepo.editComplete(task.id, !task.completed) 
                 }}
-            >
-
-            </Checkbox>
+            />
             
             <div>
                 <h3 class="font-bold"> {task.name} </h3>
+                
                 <span class="flex items-center justify-center gap-x-1">
                     <Calendar class="size-3"/>
                     
                     <p class="text-sm"> Due Date: {formatLongDate(task.dueDate)} </p>
                 </span>
             </div>
-        </section>
+        </div>
 
-        <div class="flex gap-x-2">
-            <span class="flex items-center">
-                {#each plannerStore.getItemsById(task.planners, false) as taskPlanner}    
-                    <div class="text-sm font-light bg-{colors[taskPlanner.color]} h-4 w-6"> </div>
-                {/each}
-            </span>
+        <!-- This is a list of planners colors related to the task -->
+        <div class="flex items-center">
+            {#each plannerStore.getItemsById(task.planners, false) as taskPlanner}    
+                <div class="inline-flex items-center justify-center w-6 first:rounded-l-md last:rounded-r-md bg-{colors[taskPlanner.color]}"> 
+                    <p class="m-0.5 text-xs font-medium"> {taskPlanner.name[0]} </p>
+                </div>
+            {/each}
+        </div>
+    </button>
+    <!-- On clicking the container, the task modal is opened. -->
+    <button
+        onclick={() => toggleEditModal(task)} 
+        class="flex justify-between items-center bg-background-50 hover:bg-background-100 cursor-pointer py-2 px-3 rounded-lg"
+    >
+        <div class="flex items-center gap-x-3 text-left">
+            <!-- On clicking the checkbox, the task is toggled to the opposite of its current value -->
+            <Checkbox 
+                value={task.completed}
+                onChangeFn={() => { 
+                    taskRepo.editComplete(task.id, !task.completed) 
+                }}
+            />
+            
+            <div>
+                <h3 class="font-bold"> {task.name} </h3>
+                
+                <span class="flex items-center justify-center gap-x-1">
+                    <Calendar class="size-3"/>
+                    
+                    <p class="text-sm"> Due Date: {formatLongDate(task.dueDate)} </p>
+                </span>
+            </div>
+        </div>
+
+        <!-- This is a list of planners colors related to the task -->
+        <div class="flex items-center">
+            {#each plannerStore.getItemsById(task.planners, false) as taskPlanner}    
+                <div class="inline-flex items-center justify-center w-6 first:rounded-l-md last:rounded-r-md bg-{colors[taskPlanner.color]}"> 
+                    <p class="m-0.5 text-xs font-medium"> {taskPlanner.name[0]} </p>
+                </div>
+            {/each}
         </div>
     </button>
 {/snippet}
@@ -127,17 +163,18 @@
 <!-- COMPONENT: This is the snippet used to show a list of tasks -->
 {#snippet listOfTasks(header: string, list: Task[], isTaskShown: boolean, setIsTaskShownFn: () => void)}
     <div>
+        <!-- This toggles the list of tasks from the users' view -->
         <button 
             onclick={setIsTaskShownFn}
-            class="mb-2 flex w-fit px-2 gap-x-2 items-center border-b-2 border-background-100 hover:border-background-300 transition-colors cursor-pointer"
+            class="flex items-center mb-2 gap-x-2 cursor-pointer hover:border-background-200 border-b border-background-50 transition-colors"
         >
+            <h3 class="font-title text-md"> {header} </h3>
+
             {#if isTaskShown == true}
                 <ChevronDown class="size-4"/>
             {:else}
                 <ChevronRight class="size-4"/>
             {/if}
-            
-            {header}
         </button>
 
         <!-- Shows a list of complete tasks -->
@@ -153,7 +190,7 @@
 
 
 <main class="flex-1 flex min-h-0">
-    <aside class="flex flex-col justify-between flex-1 p-4 shadow-2xl">
+    <aside class="flex flex-col justify-between flex-1 p-4 shadow-xl">
         <!-- Title and redirection back to the website's home  -->
         <h1 class="font-title text-2xl font-bold text-content-900 hover:text-content-600">
             <a 
@@ -206,10 +243,10 @@
     </aside>
 
     <section class="flex flex-col flex-3 py-6 px-8">
-        <h2 class="font-title font-semibold text-lg mb-6"> Task </h2>
+        <h2 class="font-title font-semibold text-lg"> Task </h2>
 
         <!-- This area renders a list of planners, toggling planners changes the tasks shown -->
-        <div class="flex-1 flex flex-col min-h-0 gap-y-4 overflow-y-auto"> 
+        <div class="flex-1 flex flex-col min-h-0 gap-y-4 my-6 overflow-y-auto"> 
             {@render listOfTasks("Incomplete Tasks", incompleteTasks, isIncompleteTasksShown, () => isIncompleteTasksShown = !isIncompleteTasksShown)}
             {@render listOfTasks("Complete Tasks", completeTasks, isCompleteTasksShown, () => isCompleteTasksShown = !isCompleteTasksShown)}
         </div>
