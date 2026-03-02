@@ -90,7 +90,7 @@
 <!-- COMPONENT: This is task tile snippet that is used to show a single task -->
 {#snippet taskTile(task: Task)}
     <button
-        onclick={(e) => { e.stopPropagation(); toggleEditModal(task)} } 
+        onclick={() => toggleEditModal(task)} 
         class="flex justify-between items-center bg-background-50 hover:bg-background-100 cursor-pointer py-2 px-3 rounded-lg"
     >
         <section class="flex items-center gap-x-3 text-left">

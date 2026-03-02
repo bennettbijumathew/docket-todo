@@ -23,6 +23,7 @@
     class="inline-flex items-center justify-center rounded-md"
     checked={value}
     onCheckedChange={onChangeFn}
+    onclick={(event) => event.stopPropagation()}
 >
     {#if value === true}
         <div class="{checkedStyle} cursor-pointer inline-flex items-center justify-center rounded-md hover:opacity-90">
