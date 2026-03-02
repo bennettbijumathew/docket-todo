@@ -5,7 +5,7 @@
     import { plannerStore } from "@/lib/planner/store.svelte";
     import { type NewTaskData, type Task } from "@/lib/task/type";
     import { colors } from "@/components/util/color";
-    import { ChevronDown, ChevronRight, ClipboardCheck, Notebook, Plus } from "@lucide/svelte";
+    import { Calendar, ChevronDown, ChevronRight, ClipboardCheck, Notebook, Plus } from "@lucide/svelte";
     import { type Planner } from "@/lib/planner/type";
     import DatePicker from "@/components/ui/inputs/date-picker.svelte";
     import { getLocalTimeZone, Time, toCalendarDateTime, today } from "@internationalized/date";
@@ -67,23 +67,49 @@
 </script>
 
 
+<!-- COMPONENT: This is planner tile snippet that is used to show a single task in a list -->
+{#snippet plannerTile(planner: Planner)}
+    <!-- Since visibility is tracked in the users field, the user id is used to alter the user's visible status of the planner. -->
+    <button
+        onclick={() => plannerRepo.editVisibility(authStore.getUserId(), planner.id, !planner.users[authStore.getUserId()])}
+        aria-label="Checkbox for hiding / showing the planner '{planner.name}'"
+        class="inline-flex gap-x-2 p-1 rounded-md transition-colors bg-background hover:bg-background-50 hover:cursor-pointer"
+    >
+        <!-- Value of the checkbox updates on pressing the outer button. This works due to the planner being used a svelte state variable  -->
+        <Checkbox 
+            value={planner.users[authStore.getUserId()]} 
+            checkedStyle="size-5 bg-{colors[planner.color]}"
+            unCheckedStyle="size-5 border-{colors[planner.color]}"
+        />
+
+        <p> {planner.name} </p>
+    </button>
+{/snippet}
+
+
 <!-- COMPONENT: This is task tile snippet that is used to show a single task -->
 {#snippet taskTile(task: Task)}
     <button
-        onclick={() => toggleEditModal(task)} 
-        class="flex justify-between items-center h-13 hover:bg-background-50 cursor-pointer p-2"
+        onclick={(e) => { e.stopPropagation(); toggleEditModal(task)} } 
+        class="flex justify-between items-center bg-background-50 hover:bg-background-100 cursor-pointer py-2 px-3 rounded-lg"
     >
-        <section class="flex items-center gap-x-1 text-left">
-            <input 
-                type="checkbox" 
-                class="m-2 ml-0 size-4 accent-content-900"
-                bind:checked={task.completed}
-                onclick={() => taskRepo.editComplete(task.id, !task.completed)}
-            >   
+        <section class="flex items-center gap-x-3 text-left">
+            <Checkbox 
+                value={task.completed}
+                onChangeFn={() => { 
+                    taskRepo.editComplete(task.id, !task.completed) 
+                }}
+            >
 
+            </Checkbox>
+            
             <div>
                 <h3 class="font-bold"> {task.name} </h3>
-                <p class="text-sm"> Due Date: {formatLongDate(task.dueDate)} </p>
+                <span class="flex items-center justify-center gap-x-1">
+                    <Calendar class="size-3"/>
+                    
+                    <p class="text-sm"> Due Date: {formatLongDate(task.dueDate)} </p>
+                </span>
             </div>
         </section>
 
@@ -97,24 +123,6 @@
     </button>
 {/snippet}
 
-<!-- COMPONENT: This is planner tile snippet that is used to show a single task in a list -->
-{#snippet plannerTile(planner: Planner)}
-    <!-- Since visibility is tracked in the users field, the user id is used to alter the user's visible status of the planner. -->
-    <button
-        onclick={() => plannerRepo.editVisibility(authStore.getUserId(), planner.id, !planner.users[authStore.getUserId()])}
-        aria-label="Checkbox for hiding / showing the planner '{planner.name}'"
-        class="inline-flex gap-x-2 p-1 rounded-md transition-colors bg-background hover:bg-background-50 hover:cursor-pointer"
-    >
-        <!-- Value of the checkbox updates on pressing the outer button. This works due to the planner being used a svelte state variable  -->
-        <Checkbox 
-            value={planner.users[authStore.getUserId()]} 
-            checkedStyle="size-5 cursor-pointer bg-{colors[planner.color]}"
-            unCheckedStyle="size-5 cursor-pointer border-{colors[planner.color]}"
-        />
-
-        <p> {planner.name} </p>
-    </button>
-{/snippet}
 
 <!-- COMPONENT: This is the snippet used to show a list of tasks -->
 {#snippet listOfTasks(header: string, list: Task[], isTaskShown: boolean, setIsTaskShownFn: () => void)}
@@ -133,13 +141,13 @@
         </button>
 
         <!-- Shows a list of complete tasks -->
-        <main class="flex flex-col divide-y-2 divide-background-100">
-            {#if isTaskShown === true}  
+        {#if isTaskShown === true}  
+            <main class="flex flex-col gap-y-2">
                 {#each list as task}
                     {@render taskTile(task)}
                 {/each}
-            {/if}
-        </main>
+            </main>
+        {/if}
     </div>
 {/snippet}
 
@@ -170,7 +178,7 @@
                 > 
                     <ClipboardCheck class="size-4"/>
 
-                    <p>Tasks</p>
+                    <p> Tasks </p>
                 </a>
 
                 <a 
@@ -180,16 +188,14 @@
                 >
                     <Notebook class="size-4"/>
                     
-                    <p>Planners</p>
+                    <p> Planners </p>
                 </a>
             </nav>
         </section>
 
         <!-- Panel for managing planners -->
-        <section>
-            <h2 class="font-title font-semibold text-lg">
-                Planners
-            </h2>
+        <section class="">
+            <h2 class="font-title font-semibold text-lg"> Planners </h2>
 
             <div class="flex flex-col flex-1 overflow-y-auto gap-y-1">
                 {#each plannerStore.getList() as planner}
@@ -199,33 +205,8 @@
         </section>
     </aside>
 
-    <section class="flex-3">
-        <p> test </p>
-    </section>
-
-    <aside class="flex-1">
-        <p> test </p>
-    </aside>
-</main>
-
-
-
-
-<!-- VIEW: This is what is shown on the arrival of the page -->
-<main class="flex-1 flex p-4 pt-0 gap-x-4 min-h-0 bg-background">
-    <section class="flex-1 border border-background-300 rounded-xl p-4 flex flex-col min-h-0">
-        <h2 class="font-default font-semibold text-xl text-center pb-4">Planner</h2>
-
-        <!-- This area renders a list of planners, toggling planners changes the tasks shown -->
-        <div class="flex flex-col flex-1 overflow-y-auto">
-            {#each plannerStore.getList() as planner}
-                {@render plannerTile(planner)}
-            {/each}
-        </div>
-    </section>
-
-    <section class="flex flex-col gap-y-4 flex-4 border border-background-300 rounded-xl p-4">
-        <h2 class="font-default font-semibold text-xl text-center">Task</h2>
+    <section class="flex flex-col flex-3 py-6 px-8">
+        <h2 class="font-title font-semibold text-lg mb-6"> Task </h2>
 
         <!-- This area renders a list of planners, toggling planners changes the tasks shown -->
         <div class="flex-1 flex flex-col min-h-0 gap-y-4 overflow-y-auto"> 
@@ -265,5 +246,7 @@
         </form>
     </section>
 
-    <TaskEditor taskId={selectedTask?.id ?? null} toggleFn={() => toggleEditModal(selectedTask)}/>
+    <aside class="flex-1">
+        <TaskEditor taskId={selectedTask?.id ?? null} toggleFn={() => toggleEditModal(selectedTask)}/>
+    </aside>
 </main>
