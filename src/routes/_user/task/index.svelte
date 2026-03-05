@@ -155,7 +155,7 @@
 
 
 <main class="flex-1 flex min-h-0">
-    <aside class="flex flex-col justify-between flex-1 p-4 shadow-lg">
+    <aside class="flex flex-col justify-between flex-1 p-4 inset-shadow-l-md">
         <!-- Title and redirection back to the website's home  -->
         <h1 class="font-title text-2xl font-bold text-content-900 hover:text-content-600">
             <a 
@@ -196,7 +196,7 @@
         </section>
 
         <!-- Panel for managing planners -->
-        <section class="">
+        <section>
             <h2 class="font-title font-semibold text-lg"> Planners </h2>
 
             <div class="
@@ -210,7 +210,7 @@
         </section>
     </aside>
 
-    <section class="flex flex-col flex-3 py-6 px-8">
+    <section class="flex flex-col flex-3 py-6 px-8 inset-shadow-l-md">
         <h2 class="font-title font-semibold text-lg"> Task </h2>
 
         <!-- This area renders a list of planners, toggling planners changes the tasks shown -->
@@ -223,7 +223,6 @@
         </div>
 
         <!-- This area is the place to add tasks -->
-        <!-- class="flex border border-background-300 focus-within:outline focus-within:outline-background-500 rounded-lg p-1.5" -->
         <form
             class="flex gap-x-2 bg-background-50 text-content-900 focus-within:bg-background-100 rounded-lg p-1.5 shadow-md"
             onsubmit={(e) => { 
@@ -264,5 +263,9 @@
         </form>
     </section>
 
-    <TaskEditor taskId={selectedTask?.id ?? null} toggleFn={() => toggleEditModal(selectedTask)}/>
+    <TaskEditor 
+        taskId={selectedTask?.id ?? null} 
+        toggleFn={() => toggleEditModal(selectedTask)}
+        editorStyle="bg-background p-6 inset-shadow-l-md"
+    />
 </main>
