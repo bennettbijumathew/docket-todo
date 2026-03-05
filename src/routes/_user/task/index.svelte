@@ -1,21 +1,18 @@
 <!-- CODE -->
 <script lang="ts">
-    import { authStore } from "@/lib/auth/store.svelte";
     import { taskStore } from "@/lib/task/store.svelte";
     import { plannerStore } from "@/lib/planner/store.svelte";
     import { type NewTaskData, type Task } from "@/lib/task/type";
     import { colors } from "@/components/util/color";
-    import { Calendar, ChevronDown, ChevronRight, ClipboardCheck, Notebook, Plus } from "@lucide/svelte";
-    import { type Planner } from "@/lib/planner/type";
+    import { Calendar, ChevronDown, ChevronRight, Plus } from "@lucide/svelte";
     import DatePicker from "@/components/ui/inputs/date-picker.svelte";
     import { getLocalTimeZone, Time, toCalendarDateTime, today } from "@internationalized/date";
     import PlannerPicker from "@/components/ui/inputs/planner-picker.svelte";
     import { formatLongDate } from "@/components/util/date";
     import { taskRepo } from "@/lib/task/repository";
-    import { plannerRepo } from "@/lib/planner/repository";
     import TaskEditor from "@/components/ui/task/task-editor.svelte";
-    import { routes } from "@/components/util/routes";
     import Checkbox from "@/components/ui/inputs/checkbox.svelte";
+    import TaskSidebar from "@/components/ui/task/task-sidebar.svelte";
 
     // These variables are used to show the tasks of the user.
     const completeTasks: Task[] = $derived(taskStore.getList().filter((item) => item.completed === true))
@@ -61,27 +58,6 @@
         selectedTask = task
     }
 </script>
-
-
-<!-- COMPONENT: This is planner tile snippet that is used to show a single task in a list -->
-{#snippet plannerTile(planner: Planner)}
-    <!-- Since visibility is tracked in the users field, the user id is used to alter the user's visible status of the planner. -->
-    <button
-        onclick={() => plannerRepo.editVisibility(authStore.getUserId(), planner.id, !planner.users[authStore.getUserId()])}
-        aria-label="Checkbox for hiding / showing the planner '{planner.name}'"
-        class="inline-flex gap-x-2 p-1 rounded-md transition-colors bg-background hover:bg-background-50 hover:cursor-pointer"
-    >
-        <!-- Value of the checkbox updates on pressing the outer button. This works due to the planner being used a svelte state variable  -->
-        <Checkbox 
-            value={planner.users[authStore.getUserId()]} 
-            checkedStyle="size-5 bg-{colors[planner.color]}"
-            unCheckedStyle="size-5 border-{colors[planner.color]}"
-        />
-
-        <p> {planner.name} </p>
-    </button>
-{/snippet}
-
 
 <!-- COMPONENT: This is task tile snippet that is used to show a single task -->
 {#snippet taskTile(task: Task)}
@@ -154,61 +130,9 @@
 {/snippet}
 
 
-<main class="flex-1 flex min-h-0">
-    <aside class="flex flex-col justify-between flex-1 p-4 inset-shadow-l-md">
-        <!-- Title and redirection back to the website's home  -->
-        <h1 class="font-title text-2xl font-bold text-content-900 hover:text-content-600">
-            <a 
-                aria-label="Link to Docket's Homepage"
-                href={routes.get("Home")}
-            >
-                Docket
-            </a>
-        </h1>
-
-        <!-- Panel for navigating to different sections of the application.   -->
-        <section>
-            <h2 class="font-title font-semibold text-lg">
-                Navigation
-            </h2>
-
-            <nav class="flex flex-col gap-y-0.5">
-                <a 
-                    class="flex items-center gap-x-2 p-1 rounded-md transition-colors bg-background-100 hover:cursor-default"
-                    aria-label="Link to Tasks Page"
-                    href={routes.get("Task")}
-                > 
-                    <ClipboardCheck class="size-4"/>
-
-                    <p> Tasks </p>
-                </a>
-
-                <a 
-                    class="flex items-center gap-x-2 p-1 rounded-md transition-colors bg-background hover:bg-background-50 hover:cursor-pointer"
-                    aria-label="Link to Planners Page"
-                    href={routes.get("Planner")}
-                >
-                    <Notebook class="size-4"/>
-                    
-                    <p> Planners </p>
-                </a>
-            </nav>
-        </section>
-
-        <!-- Panel for managing planners -->
-        <section>
-            <h2 class="font-title font-semibold text-lg"> Planners </h2>
-
-            <div class="
-                flex flex-col flex-1 overflow-y-auto gap-y-1 max-h-140
-                scrollbar scrollbar-w-2 scrollbar-thumb-content-900 scrollbar-thumb-rounded-md scrollbar-track-transparent
-            ">
-                {#each plannerStore.getList() as planner}
-                    {@render plannerTile(planner)}
-                {/each}
-            </div>
-        </section>
-    </aside>
+<main class="flex flex-1 min-h-0">
+    <!-- This shows a sidebar with a navigation bar and a planner list that can be toggled. -->
+    <TaskSidebar/>
 
     <section class="flex flex-col flex-3 py-6 px-8 inset-shadow-l-md">
         <h2 class="font-title font-semibold text-lg"> Task </h2>
