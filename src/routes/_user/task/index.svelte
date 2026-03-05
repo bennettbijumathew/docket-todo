@@ -130,11 +130,11 @@
 {/snippet}
 
 
-<main class="flex flex-1 min-h-0">
+<main class="flex flex-col flex-1 sm:min-h-0 sm:flex-row inset-shadow-b-md sm:inset-shadow-none">
     <!-- This shows a sidebar with a navigation bar and a planner list that can be toggled. -->
     <TaskSidebar/>
 
-    <section class="flex flex-col flex-3 py-6 px-8 inset-shadow-l-md">
+    <section class="flex flex-col flex-3 py-6 px-8 inset-shadow-b-md sm:inset-shadow-l-md">
         <h2 class="font-title font-semibold text-lg"> Task </h2>
 
         <!-- This area renders a list of planners, toggling planners changes the tasks shown -->

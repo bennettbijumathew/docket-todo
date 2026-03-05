@@ -10,7 +10,7 @@
     let { children }: SidebarProps = $props()
 </script>
 
-<aside class="flex flex-col justify-between flex-1 p-4 inset-shadow-l-md">
+<aside class="flex flex-col justify-between flex-1 p-4 gap-y-4 inset-shadow-b-md sm:inset-shadow-b-none">
     <!-- Title and redirection back to the website's home  -->
     <h1 class="font-title text-2xl font-bold text-content-900 hover:text-content-600">
         <a 

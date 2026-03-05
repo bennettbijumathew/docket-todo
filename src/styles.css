@@ -21,7 +21,10 @@
   --font-title: "Playfair Display", serif;
   --font-default: "Figtree", sans-serif;
 
-  --inset-shadow-l-md: inset 8px 0 12px -4px  rgba(0 0 0 / 0.1); 
+  --inset-shadow-l-md: inset 8px 0 12px -4px rgba(0 0 0 / 0.1); 
+
+  --inset-shadow-b-md: inset 0 -8px 12px -4px rgba(0 0 0 / 0.1); 
+  --inset-shadow-b-none: inset 0 0 0 0 rgba(0 0 0 / 0.1); 
 }
 
 .firebase-emulator-warning {
