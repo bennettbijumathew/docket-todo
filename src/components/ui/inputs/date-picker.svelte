@@ -7,13 +7,15 @@
     // Alongside this, a style modifier is given with a function that runs on the change of the date.
     interface PickerProps {
         value: CalendarDateTime,
-        buttonClass?: string
+        pickerStyle?: string
+        buttonStyle?: string
         onChangeFn?: () => void
     }
 
     let { 
         value = $bindable(), 
-        buttonClass = "px-2",
+        buttonStyle = "bg-background hover:bg-background-100 px-2",
+        pickerStyle = "bg-background",
         onChangeFn
     }: PickerProps = $props()
 
@@ -42,8 +44,8 @@
     <DatePicker.Input>
         {#snippet children({ segments })}
             <!-- Button to open the Calendar Picker. -->
-            <DatePicker.Trigger class="{buttonClass} h-full bg-background hover:bg-background-100 rounded-lg flex items-center cursor-pointer">
-                <Calendar class="size-4 mr-2"/>
+            <DatePicker.Trigger class="{buttonStyle} h-full rounded-lg flex items-center gap-x-2 cursor-pointer">
+                <Calendar class="size-4"/>
                 
                 <p>
                     {#each segments as { value }}
@@ -57,7 +59,7 @@
     <DatePicker.Content 
         side="top" 
         sideOffset={20} 
-        class="flex flex-col items-center border border-background-300 bg-background rounded-lg p-3"
+        class="{pickerStyle} flex flex-col items-center border border-background-100 rounded-lg p-3"
     >
         <DatePicker.Calendar>
             {#snippet children({ months, weekdays })}

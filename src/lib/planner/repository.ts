@@ -87,7 +87,7 @@ export class PlannerRepository {
     }
 
     // This changes a users' planner visible status through the "user" field.
-    public async editUserVisibility(uid: string, plannerId: string, newValue: boolean): Promise<void> {
+    public async editVisibility(uid: string, plannerId: string, newValue: boolean): Promise<void> {
         // A guard clause to stop the function when there is no user id or planner id.
         if (uid.trim() == "" || plannerId.trim() == "") {
             return

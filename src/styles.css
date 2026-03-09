@@ -1,16 +1,30 @@
 @import url('https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 @import "tailwindcss";
 
+@plugin 'tailwind-scrollbar' {
+    nocompatible: true;
+}
+
 @theme {
   --color-background: var(--color-white);
   --color-background-50: var(--color-neutral-50);
   --color-background-100: var(--color-neutral-100);
+  --color-background-200: var(--color-neutral-200);
   --color-background-300: var(--color-neutral-300);
   --color-background-500: var(--color-neutral-500);
+
   --color-content-600: var(--color-neutral-600);
+  --color-content-700: var(--color-neutral-700);
+  --color-content-800: var(--color-neutral-800);
   --color-content-900: var(--color-neutral-900);
+
   --font-title: "Playfair Display", serif;
-  --font-default: "Figtree", sans-serif;;
+  --font-default: "Figtree", sans-serif;
+
+  --inset-shadow-l-md: inset 8px 0 12px -4px rgba(0 0 0 / 0.1); 
+
+  --inset-shadow-b-md: inset 0 -8px 12px -4px rgba(0 0 0 / 0.1); 
+  --inset-shadow-b-none: inset 0 0 0 0 rgba(0 0 0 / 0.1); 
 }
 
 .firebase-emulator-warning {
