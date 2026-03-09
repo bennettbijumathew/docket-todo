@@ -1,6 +1,6 @@
 <script lang="ts">
     import { type Planner } from "@/lib/planner/type";
-    import ColorPicker from "../inputs/color-picker.svelte";
+    import ColorPicker from "../../inputs/color-picker.svelte";
     import { Trash, X } from "@lucide/svelte";
     import { plannerRepo } from "@/lib/planner/repository";
     import { type ColorKey } from "@/components/util/color";
