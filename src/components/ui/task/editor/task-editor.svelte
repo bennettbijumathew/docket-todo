@@ -4,8 +4,8 @@
     import { type Task } from "@/lib/task/type";
     import { getLocalTimeZone, Time, toCalendarDateTime, today } from "@internationalized/date";
     import { Trash, X } from "@lucide/svelte";
-    import DatePicker from "../inputs/date-picker.svelte";
-    import TaskPlannersPicker from "../inputs/task-planners-picker.svelte";
+    import DatePicker from "../../inputs/date-picker.svelte";
+    import TaskPlannersPicker from "../../inputs/task-planners-picker.svelte";
     import { type TaskPlanner } from "@/lib/planner/type";
 
     // The component receives the selected task id with a function that 

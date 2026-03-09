@@ -1,10 +1,10 @@
 <script lang="ts">
     import type { Planner } from '@/lib/planner/type';
-    import Checkbox from '../inputs/checkbox.svelte';
+    import Checkbox from '../../inputs/checkbox.svelte';
     import { plannerRepo } from '@/lib/planner/repository';
     import { authStore } from '@/lib/auth/store.svelte';
     import { colors } from '@/components/util/color';
-    import SidebarStructure from '../structure/sidebar.svelte';
+    import SidebarStructure from '../../layout/sidebar.svelte';
     import { plannerStore } from '@/lib/planner/store.svelte';
 </script>
 
