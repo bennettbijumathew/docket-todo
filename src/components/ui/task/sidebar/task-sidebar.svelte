@@ -13,7 +13,10 @@
     <button
         onclick={() => plannerRepo.editVisibility(authStore.getUserId(), planner.id, !planner.users[authStore.getUserId()])}
         aria-label="Checkbox for hiding / showing the planner '{planner.name}'"
-        class="inline-flex gap-x-2 p-1 rounded-md transition-colors bg-background hover:bg-background-50 hover:cursor-pointer"
+        class="
+            inline-flex gap-x-2 p-2 rounded-md transition-colors bg-background hover:bg-background-50 hover:cursor-pointer
+            sm:p-1
+        "
     >
         <!-- Value of the checkbox updates on pressing the outer button. This works due to the planner being used a svelte state variable  -->
         <Checkbox 
@@ -30,7 +33,8 @@
 <h2 class="font-title font-semibold text-lg"> Planners </h2>
 
 <div class="
-    flex flex-col flex-1 overflow-y-auto gap-y-1 max-h-140
+    flex flex-col flex-1 overflow-y-auto gap-y-1 max-h-50
+    sm:max-h-80
     scrollbar scrollbar-w-2 scrollbar-thumb-content-900 scrollbar-thumb-rounded-md scrollbar-track-transparent
 ">
     {#each plannerStore.getList() as planner}

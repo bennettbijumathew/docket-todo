@@ -28,8 +28,8 @@
         </h2>
 
         <nav class="
-            flex flex-row gap-2
-            sm:gap-0.5 sm:flex-col
+            grid grid-cols-2 grids-cols-3 gap-2 
+            sm:flex sm:gap-0.5 sm:flex-col
         ">
             {#each routes as [name, {link, icon}]}
                 {@const RouteIcon = icon}
@@ -37,8 +37,8 @@
                 <a 
                     href={link} 
                     class="
-                        flex flex-1 items-center gap-x-2 p-2 rounded-md transition-color
-                        sm:flex-none sm:p-1 
+                        flex items-center gap-x-2 p-2 rounded-md transition-color
+                        sm:flex-none sm:p-1
                         {isActive(link as any) == true ? "bg-background-100" : "bg-background cursor-pointer hover:bg-background-50"}
                     "
                     aria-label="Link to {name} Page"
