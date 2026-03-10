@@ -23,7 +23,7 @@
         <div class="flex gap-x-2 ml-4">
             <p class="text-xs select-none"> Logo </p>
 
-            {#each routes as [name, link]}
+            {#each routes as [name, {link}]}
                 <a href={link} class="text-xs pl-2 select-none">
                     {name}
                 </a>

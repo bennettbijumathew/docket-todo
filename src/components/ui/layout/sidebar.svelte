@@ -1,6 +1,6 @@
 <script lang="ts">
     import { routes } from "@/components/util/routes";
-    import { ClipboardCheck, Notebook } from "@lucide/svelte";
+    import { isActive } from "sv-router/generated";
     import type { Snippet } from "svelte";
 
     interface LayoutProps {
@@ -15,7 +15,7 @@
     <h1 class="font-title text-2xl font-bold text-content-900 hover:text-content-600">
         <a 
             aria-label="Link to Docket's Homepage"
-            href={routes.get("Home")}
+            href={routes.get("Home")?.link}
         >
             Docket
         </a>
@@ -27,26 +27,27 @@
             Navigation
         </h2>
 
-        <nav class="flex flex-col gap-y-0.5">
-            <a 
-                class="flex items-center gap-x-2 p-1 rounded-md transition-colors bg-background-100 hover:cursor-default"
-                aria-label="Link to Tasks Page"
-                href={routes.get("Task")}
-            > 
-                <ClipboardCheck class="size-4"/>
-
-                <p> Tasks </p>
-            </a>
-
-            <a 
-                class="flex items-center gap-x-2 p-1 rounded-md transition-colors bg-background hover:bg-background-50 hover:cursor-pointer"
-                aria-label="Link to Planners Page"
-                href={routes.get("Planner")}
-            >
-                <Notebook class="size-4"/>
+        <nav class="
+            flex flex-row gap-2
+            sm:gap-0.5 sm:flex-col
+        ">
+            {#each routes as [name, {link, icon}]}
+                {@const RouteIcon = icon}
                 
-                <p> Planners </p>
-            </a>
+                <a 
+                    href={link} 
+                    class="
+                        flex flex-1 items-center gap-x-2 p-2 rounded-md transition-color
+                        sm:flex-none sm:p-1 
+                        {isActive(link as any) == true ? "bg-background-100" : "bg-background cursor-pointer hover:bg-background-50"}
+                    "
+                    aria-label="Link to {name} Page"
+                >
+                    <RouteIcon class="size-4"/>
+                    
+                    {name}
+                </a>
+            {/each}
         </nav>
     </section>
 
