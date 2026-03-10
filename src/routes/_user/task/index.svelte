@@ -25,31 +25,30 @@
     }
 </script>
 
-<main class="
-    flex flex-col flex-1 inset inset-shadow-b-md
-    sm:min-h-0 sm:flex-row *:sm:inset-shadow-l-md
-">
-    <!-- This shows a sidebar with a navigation bar and a planner list that can be toggled. -->
-    <Sidebar>
-        <TaskSidebar/>
-    </Sidebar>
+<!-- VIEW -->
+<!-- This shows a sidebar with a navigation bar and a planner list that can be toggled. -->
+<Sidebar>
+    <TaskSidebar/>
+</Sidebar>
 
-    <Main>
-        <h2 class="font-title font-semibold text-lg"> Task List </h2>
+<!-- This shows a header and a list of completed and incomplete tasks -->
+<Main>
+    <h2 class="font-title font-semibold text-lg"> Task List </h2>
 
-        <TaskListByCompleted 
-            onTaskSelect={toggleEditModal}
-        />
-    </Main> 
+    <!-- On selecting the task, the <Editor> opens -->
+    <TaskListByCompleted 
+        onTaskSelect={toggleEditModal}
+    />
+</Main> 
 
-    <Editor 
-        header="Edit Task" 
+<!-- This shows an editor that is opened when a user clicks on a task. -->
+<Editor 
+    header="Edit Task" 
+    onClose={() => toggleEditModal(null)}
+    openState={selectedTask == null ? false : true}
+>
+    <TaskEditor     
+        taskId={selectedTask?.id ?? null} 
         onClose={() => toggleEditModal(null)}
-        openState={selectedTask == null ? false : true}
-    >
-        <TaskEditor     
-            taskId={selectedTask?.id ?? null} 
-            onClose={() => toggleEditModal(null)}
-        />
-    </Editor>
-</main>
+    />
+</Editor>
