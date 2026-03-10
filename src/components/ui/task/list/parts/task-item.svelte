@@ -4,7 +4,7 @@
     import { colors } from "@/components/util/color";
     import { Calendar } from "@lucide/svelte";
     import { formatLongDate } from "@/components/util/date";
-    import { taskRepo } from "@/lib/task/repository";
+    import { taskRepo, MAX_PLANNERS } from "@/lib/task/repository";
     import Checkbox from "@/components/ui/inputs/checkbox.svelte";
 
     // The item receives the task's details and a optional function that can be used by the caller. 
@@ -14,6 +14,12 @@
     }   
 
     let { task, onTaskSelect }: ItemProps = $props() 
+
+    // Gets a list of 10 visible planners that are related to the task
+    let taskPlanners = $derived(plannerStore.getItemsById(task.planners, false).slice(0, MAX_PLANNERS))
+
+    // The minimum number of slots shown on the row of the task's planner grid.
+    let colsInPlannerRow = MAX_PLANNERS / 2
 </script>
 
 <!-- On clicking the container, the task select function is called. -->
@@ -42,19 +48,26 @@
             </span>
         </div>
     </div>
-
-    <!-- This is a list of planners colors related to the task -->
+    
     <div class="
-        rounded-sm overflow-hidden bg-background-200
-        grid grid-cols-5 grid-rows-2
-        lg:flex sm:items-center sm:bg-transperant
+        grid gap-0.5
+        grid-cols-5 grid-rows-1
+        lg:grid-cols-10 lg:grid-rows-1
+        *:rounded-sm *:size-5
     ">
-        {#each plannerStore.getItemsById(task.planners, false) as taskPlanner}    
-            <div class="flex items-center justify-center w-6 bg-{colors[taskPlanner.color]}"> 
-                <p class="m-0.5 text-xs font-medium"> {taskPlanner.name[0]} </p>
-            </div>
-            <div class="flex items-center justify-center w-6 bg-{colors[taskPlanner.color]}"> 
-                <p class="m-0.5 text-xs font-medium"> {taskPlanner.name[0]} </p>
+        {#each {length: MAX_PLANNERS - taskPlanners.length}, slotNum}
+            <!-- This logic ensures that multiple rows aren't shown beyond the amount that is required -->
+            {#if slotNum < colsInPlannerRow && taskPlanners.length <= colsInPlannerRow}
+                <!-- The styling hides slots based on the user using medias such as phones or tablets -->
+                <div class="hidden lg:block border border-background-300 border-dotted"> </div>
+            {:else}
+                <div class="border border-background-300 border-dotted"> </div>
+            {/if}
+        {/each}
+
+        {#each taskPlanners as taskPlanner}    
+            <div class="flex items-center justify-center bg-{colors[taskPlanner.color]}"> 
+                <p class="text-xs font-medium leading-none"> {taskPlanner.name[0]} </p>
             </div>
         {/each}
     </div>

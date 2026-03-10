@@ -156,3 +156,7 @@ export class TaskRepository {
 }
 
 export const taskRepo = new TaskRepository()
+
+// This variable is the maximum amount of planners that can be added to a task. The limit is placed as
+// as there is a limit of items for Firebase's array-contains-any query.
+export const MAX_PLANNERS = 10
