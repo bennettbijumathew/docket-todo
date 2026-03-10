@@ -9,12 +9,13 @@
     import { type TaskPlanner } from "@/lib/planner/type";
 
     // The component receives the selected task id with a function that 
-    // handles the behavior of the open and close state of the editor. 
+    // closes the editor. 
     interface EditorProps {
         taskId: string | null, 
+        onClose?: () => void,
     }
     
-    let { taskId }: EditorProps = $props()
+    let { taskId, onClose }: EditorProps = $props()
 
 
     // Gets the task from the task id. Through this method, changes in the state is updated properly
@@ -77,7 +78,11 @@
             return 
         }
 
+        // Deletes the task using the task id.
         taskRepo.deleteTask(taskId) 
+
+        // Closes the sidebar using the 
+        onClose?.()
     }
 
 </script>

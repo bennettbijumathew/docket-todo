@@ -1,8 +1,8 @@
 <!-- CODE -->
 <script lang="ts">
     import { type Task } from "@/lib/task/type";
-    import TaskEditor from "@/components/ui/task/editor/task-editor.svelte";
     import TaskSidebar from "@/components/ui/task/sidebar/task-sidebar.svelte";
+    import TaskEditor from "@/components/ui/task/editor/task-editor.svelte";
     import TaskListByCompleted from "@/components/ui/task/list/task-list-by-completed.svelte";
     import Main from "@/components/ui/layout/main.svelte";
     import Sidebar from "@/components/ui/layout/sidebar.svelte";
@@ -23,8 +23,6 @@
         // If the guard clauses are passed, then the new task is set with the view being open.
         selectedTask = task
     }
-
-    $inspect(selectedTask)
 </script>
 
 <main class="
@@ -44,14 +42,14 @@
         />
     </Main> 
 
-
     <Editor 
         header="Edit Task" 
-        onToggle={() => toggleEditModal(null)}
-        showEditor={selectedTask === null ? false : true}
+        onClose={() => toggleEditModal(null)}
+        openState={selectedTask == null ? false : true}
     >
         <TaskEditor     
             taskId={selectedTask?.id ?? null} 
+            onClose={() => toggleEditModal(null)}
         />
     </Editor>
 </main>
