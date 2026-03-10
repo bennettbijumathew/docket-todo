@@ -88,7 +88,7 @@
 </script>
 
 {#if task != null}
-    <div class="flex flex-col gap-y-4">
+    <div class="flex flex-col gap-y-4 min-h-140">
         <!-- Form to update name changes for the task -->
         <form 
             onsubmit={(e) => { 
