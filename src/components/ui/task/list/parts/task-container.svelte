@@ -34,8 +34,6 @@
     }
 </script>
 
-<h2 class="font-title font-semibold text-lg"> Task </h2>
-
 <!-- This area renders the children element that is given by the caller -->
 <!-- This would usually hold a group of tasks -->
 <div class="

@@ -3,7 +3,7 @@
     import { taskStore } from "@/lib/task/store.svelte";
     import { type Task } from "@/lib/task/type";
     import { getLocalTimeZone, Time, toCalendarDateTime, today } from "@internationalized/date";
-    import { Trash, X } from "@lucide/svelte";
+    import { Trash } from "@lucide/svelte";
     import DatePicker from "../../inputs/date-picker.svelte";
     import TaskPlannersPicker from "../../inputs/task-planners-picker.svelte";
     import { type TaskPlanner } from "@/lib/planner/type";
@@ -12,13 +12,9 @@
     // handles the behavior of the open and close state of the editor. 
     interface EditorProps {
         taskId: string | null, 
-        toggleFn: () => void,
     }
     
-    let { 
-        taskId, 
-        toggleFn,
-    }: EditorProps = $props()
+    let { taskId }: EditorProps = $props()
 
 
     // Gets the task from the task id. Through this method, changes in the state is updated properly
@@ -50,6 +46,7 @@
         taskRepo.editName(task.id, inputs.name) 
     }
 
+    // Function to update a change in the task's planners
     function submitPlannerChange(taskPlanner: TaskPlanner | null) {
         if (taskPlanner === null || task === null) { 
             return;
@@ -86,67 +83,58 @@
 </script>
 
 {#if task != null}
-    <section class="bg-background p-6 flex flex-col justify-between flex-1 transition-colors">
-        <div class="flex flex-col gap-y-4">
-            <div class="flex justify-between items-center pb-1">
-                <h2 class="font-default font-semibold text-xl text-center">Edit Task</h2>
-
-                <!-- Exit button for the editor -->
-                <button 
-                    class="p-2 bg-background-50 hover:bg-background-100 shadow-md rounded-lg cursor-pointer"
-                    onclick={toggleFn}
-                >   
-                    <X class="size-4"/>
-                </button>
-            </div>
-
-            <!-- Form to update name changes for the task -->
-            <form 
-                onsubmit={(e) => { 
-                    e.preventDefault(); 
-                    submitNameChange();
-                }}
+    <div class="flex flex-col gap-y-4">
+        <!-- Form to update name changes for the task -->
+        <form 
+            onsubmit={(e) => { 
+                e.preventDefault(); 
+                submitNameChange();
+            }}
+        >
+            <p class="font-bold">Title</p>
+            <input 
+                type="text" 
+                class="bg-background-50 hover:bg-background-100 focus:bg-background-200 outline-none rounded-lg p-1 px-1.5 w-full shadow-md"
+                bind:value={inputs.name}
+                onblur={submitNameChange}
             >
-                <p class="font-bold">Title</p>
-                <input 
-                    type="text" 
-                    class="bg-background-50 hover:bg-background-100 focus:bg-background-200 outline-none rounded-lg p-1 px-1.5 w-full shadow-md"
-                    bind:value={inputs.name}
-                    onblur={submitNameChange}
-                >
-            </form>
+        </form>
 
-            <!-- Date picker for the task's due date -->
-            <div>
-                <p class="font-bold">Due Date</p>
-                <DatePicker 
-                    bind:value={inputs.dueDate}
-                    buttonStyle="bg-background-50 hover:bg-background-100 shadow-md rounded-lg p-1 px-1.5 w-full"
-                    pickerStyle="bg-background shadow-md"
-                    onChangeFn={() => submitDateChange()}
-                />
-            </div>
-
-            <!-- Planner picker for the task's connected planner -->
-            <div>
-                <p class="font-bold">Planners</p>
-                <TaskPlannersPicker 
-                    task={task} 
-                    onChangeFn={(planner) => submitPlannerChange(planner)}
-                    buttonStyle="bg-background-50 hover:bg-background-100 shadow-md"
-                    pickerStyle="bg-background shadow-md"
-                />
-            </div>
+        <!-- Date picker for the task's due date -->
+        <div>
+            <p class="font-bold">Due Date</p>
+            <DatePicker 
+                bind:value={inputs.dueDate}
+                buttonStyle="bg-background-50 hover:bg-background-100 shadow-md rounded-lg p-1 px-1.5 w-full"
+                pickerStyle="bg-background shadow-md"
+                onChangeFn={() => submitDateChange()}
+            />
         </div>
 
-        <div class="text-center">
-            <!-- Delete button for the task -->
-            <button 
-                class="p-2 bg-background-50 hover:bg-background-100 shadow-md rounded-lg cursor-pointer"
-                onclick={() => submitDeletionOfTask(task?.id ?? null)}
-            >   
-                <Trash class="size-4"/>
-            </button>
+        <!-- Planner picker for the task's connected planner -->
+        <div>
+            <p class="font-bold">Planners</p>
+            <TaskPlannersPicker 
+                task={task} 
+                onChangeFn={(planner) => submitPlannerChange(planner)}
+                buttonStyle="bg-background-50 hover:bg-background-100 shadow-md"
+                pickerStyle="bg-background shadow-md"
+            />
         </div>
-    </section>
+    </div>
+
+    <div class="text-center">
+        <!-- Delete button for the task -->
+        <button 
+            class="p-2 bg-background-50 hover:bg-background-100 shadow-md rounded-lg cursor-pointer"
+            onclick={() => submitDeletionOfTask(task?.id ?? null)}
+        >   
+            <Trash class="size-4"/>
+        </button>
+    </div>
+{:else}
+    <div class="flex flex-col flex-1 justify-center items-center">
+        <h2 class="font-title font-semibold text-md"> Error Found </h2>
+        <p> Can't edit the selected item.</p>
+    </div>
 {/if}

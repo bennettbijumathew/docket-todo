@@ -4,6 +4,9 @@
     import TaskEditor from "@/components/ui/task/editor/task-editor.svelte";
     import TaskSidebar from "@/components/ui/task/sidebar/task-sidebar.svelte";
     import TaskListByCompleted from "@/components/ui/task/list/task-list-by-completed.svelte";
+    import Main from "@/components/ui/layout/main.svelte";
+    import Sidebar from "@/components/ui/layout/sidebar.svelte";
+    import Editor from "@/components/ui/layout/editor.svelte";
 
     // These variables represent the current planner that is open on the modal
     let selectedTask: Task | null = $state(null)
@@ -20,6 +23,8 @@
         // If the guard clauses are passed, then the new task is set with the view being open.
         selectedTask = task
     }
+
+    $inspect(selectedTask)
 </script>
 
 <main class="
@@ -27,14 +32,26 @@
     sm:min-h-0 sm:flex-row *:sm:inset-shadow-l-md
 ">
     <!-- This shows a sidebar with a navigation bar and a planner list that can be toggled. -->
-    <TaskSidebar/>
+    <Sidebar>
+        <TaskSidebar/>
+    </Sidebar>
 
-    <TaskListByCompleted 
-        onTaskSelect={toggleEditModal}
-    />
+    <Main>
+        <h2 class="font-title font-semibold text-lg"> Task List </h2>
 
-    <TaskEditor     
-        taskId={selectedTask?.id ?? null} 
-        toggleFn={() => toggleEditModal(null)}
-    />
+        <TaskListByCompleted 
+            onTaskSelect={toggleEditModal}
+        />
+    </Main> 
+
+
+    <Editor 
+        header="Edit Task" 
+        onToggle={() => toggleEditModal(null)}
+        showEditor={selectedTask === null ? false : true}
+    >
+        <TaskEditor     
+            taskId={selectedTask?.id ?? null} 
+        />
+    </Editor>
 </main>

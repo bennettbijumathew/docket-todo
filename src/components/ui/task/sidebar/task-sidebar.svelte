@@ -4,7 +4,6 @@
     import { plannerRepo } from '@/lib/planner/repository';
     import { authStore } from '@/lib/auth/store.svelte';
     import { colors } from '@/components/util/color';
-    import SidebarStructure from '../../layout/sidebar.svelte';
     import { plannerStore } from '@/lib/planner/store.svelte';
 </script>
 
@@ -28,15 +27,13 @@
 {/snippet}
 
 <!-- VIEW: The sidebar structure has the website's logo and navigation links -->
-<SidebarStructure>
-    <h2 class="font-title font-semibold text-lg"> Planners </h2>
+<h2 class="font-title font-semibold text-lg"> Planners </h2>
 
-    <div class="
-        flex flex-col flex-1 overflow-y-auto gap-y-1 max-h-140
-        scrollbar scrollbar-w-2 scrollbar-thumb-content-900 scrollbar-thumb-rounded-md scrollbar-track-transparent
-    ">
-        {#each plannerStore.getList() as planner}
-            {@render plannerTile(planner)}
-        {/each}
-    </div>
-</SidebarStructure>
+<div class="
+    flex flex-col flex-1 overflow-y-auto gap-y-1 max-h-140
+    scrollbar scrollbar-w-2 scrollbar-thumb-content-900 scrollbar-thumb-rounded-md scrollbar-track-transparent
+">
+    {#each plannerStore.getList() as planner}
+        {@render plannerTile(planner)}
+    {/each}
+</div>
