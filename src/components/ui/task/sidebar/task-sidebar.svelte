@@ -33,7 +33,7 @@
 <h2 class="font-title font-semibold text-lg"> Planners </h2>
 
 <div class="
-    flex flex-col flex-1 overflow-y-auto gap-y-1 max-h-50
+    flex flex-col flex-1 overflow-y-scroll pr-4 gap-y-1 max-h-50 
     sm:max-h-80
     scrollbar scrollbar-w-2 scrollbar-thumb-content-900 scrollbar-thumb-rounded-md scrollbar-track-transparent
 ">

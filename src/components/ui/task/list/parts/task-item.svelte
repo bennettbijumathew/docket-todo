@@ -19,7 +19,7 @@
 <!-- On clicking the container, the task select function is called. -->
 <button
     onclick={() => onTaskSelect?.(task)} 
-    class="flex justify-between items-center bg-background-50 hover:bg-background-100 cursor-pointer py-2 px-3 rounded-lg"
+    class="flex justify-between items-center bg-background-50 hover:bg-background-100 cursor-pointer py-2 px-3 rounded-lg gap-x-2"
     aria-label="Button to open the editor for the task of '{task.name}'" 
 >
     <div class="flex items-center gap-x-3 text-left">
@@ -44,9 +44,16 @@
     </div>
 
     <!-- This is a list of planners colors related to the task -->
-    <div class="flex items-center rounded-sm overflow-hidden">
+    <div class="
+        rounded-sm overflow-hidden bg-background-200
+        grid grid-cols-5 grid-rows-2
+        lg:flex sm:items-center sm:bg-transperant
+    ">
         {#each plannerStore.getItemsById(task.planners, false) as taskPlanner}    
-            <div class="inline-flex items-center justify-center w-6 bg-{colors[taskPlanner.color]}"> 
+            <div class="flex items-center justify-center w-6 bg-{colors[taskPlanner.color]}"> 
+                <p class="m-0.5 text-xs font-medium"> {taskPlanner.name[0]} </p>
+            </div>
+            <div class="flex items-center justify-center w-6 bg-{colors[taskPlanner.color]}"> 
                 <p class="m-0.5 text-xs font-medium"> {taskPlanner.name[0]} </p>
             </div>
         {/each}
