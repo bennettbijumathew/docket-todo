@@ -22,7 +22,10 @@
     }
 </script>
 
-<main class="flex flex-col flex-1 sm:min-h-0 sm:flex-row inset-shadow-b-md sm:inset-shadow-none">
+<main class="
+    flex flex-col flex-1 inset inset-shadow-b-md
+    sm:min-h-0 sm:flex-row *:sm:inset-shadow-l-md
+">
     <!-- This shows a sidebar with a navigation bar and a planner list that can be toggled. -->
     <TaskSidebar/>
 

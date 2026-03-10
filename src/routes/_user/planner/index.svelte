@@ -7,7 +7,7 @@
     import { Plus } from "@lucide/svelte";
     import { type ColorKey, colors } from "@/components/util/color";
     import ColorPicker from "@/components/ui/inputs/color-picker.svelte";
-    import PlannerEditor from "@/components/ui/planner/planner-editor.svelte";
+    import PlannerEditor from "@/components/ui/planner/editor/planner-editor.svelte";
 
 
     // This variable represents the input data used to create a new planner

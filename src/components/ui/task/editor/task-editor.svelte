@@ -86,7 +86,7 @@
 </script>
 
 {#if task != null}
-    <section class="bg-background p-6 inset-shadow-l-md flex flex-col justify-between flex-1 transition-colors">
+    <section class="bg-background p-6 flex flex-col justify-between flex-1 transition-colors">
         <div class="flex flex-col gap-y-4">
             <div class="flex justify-between items-center pb-1">
                 <h2 class="font-default font-semibold text-xl text-center">Edit Task</h2>

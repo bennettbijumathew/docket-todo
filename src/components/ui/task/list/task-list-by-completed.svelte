@@ -18,22 +18,24 @@
     const incompleteTasks: Task[] = $derived(taskStore.getList().filter((item) => item.completed === false))
 </script>
 
-<TaskContainer>
-    <TaskGroup header="Complete Tasks">
-        {#each completeTasks as task}
-            <TaskItem 
-                task={task}
-                onTaskSelect={onTaskSelect}
-            />
-        {/each}
-    </TaskGroup>
+<section class="flex flex-col flex-3 p-8">
+    <TaskContainer>
+        <TaskGroup header="Complete Tasks">
+            {#each completeTasks as task}
+                <TaskItem 
+                    task={task}
+                    onTaskSelect={onTaskSelect}
+                />
+            {/each}
+        </TaskGroup>
 
-    <TaskGroup header="Incomplete Tasks">
-        {#each incompleteTasks as task}
-            <TaskItem 
-                task={task} 
-                onTaskSelect={onTaskSelect}
-            />
-        {/each}
-    </TaskGroup>
-</TaskContainer>
+        <TaskGroup header="Incomplete Tasks">
+            {#each incompleteTasks as task}
+                <TaskItem 
+                    task={task} 
+                    onTaskSelect={onTaskSelect}
+                />
+            {/each}
+        </TaskGroup>
+    </TaskContainer>
+</section>
