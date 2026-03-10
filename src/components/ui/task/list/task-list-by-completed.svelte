@@ -19,19 +19,19 @@
 </script>
 
 <TaskContainer>
-    <TaskGroup header="Complete Tasks">
-        {#each completeTasks as task}
+    <TaskGroup header="Incomplete Tasks">
+        {#each incompleteTasks as task}
             <TaskItem 
-                task={task}
+                task={task} 
                 onTaskSelect={onTaskSelect}
             />
         {/each}
     </TaskGroup>
 
-    <TaskGroup header="Incomplete Tasks">
-        {#each incompleteTasks as task}
+    <TaskGroup header="Complete Tasks">
+        {#each completeTasks as task}
             <TaskItem 
-                task={task} 
+                task={task}
                 onTaskSelect={onTaskSelect}
             />
         {/each}

@@ -30,7 +30,7 @@
         class="flex items-center mb-2 gap-x-2 cursor-pointer hover:border-background-200 border-b border-background-50 transition-colors"
         aria-label="Button to toggle '{header}'" 
     >
-        <h3 class="font-title text-md"> {header} </h3>
+        <h3 class="font-title text-md font-medium"> {header} </h3>
 
         {#if isGroupShown == true}
             <ChevronDown class="size-4"/>
