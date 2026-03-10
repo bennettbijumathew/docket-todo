@@ -30,7 +30,13 @@
 {/snippet}
 
 <!-- VIEW: The sidebar structure has the website's logo and navigation links -->
-<h2 class="font-title font-semibold text-lg"> Planners </h2>
+<h2 class="
+    font-title font-semibold text-lg
+    text-center
+    sm:text-left
+"> 
+    Planners 
+</h2>
 
 <div class="
     flex flex-col flex-1 overflow-y-scroll pr-4 gap-y-1 max-h-50 

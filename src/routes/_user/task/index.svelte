@@ -33,7 +33,13 @@
 
 <!-- This shows a header and a list of completed and incomplete tasks -->
 <Main>
-    <h2 class="font-title font-semibold text-lg"> Task List </h2>
+    <h2 class="
+        font-title font-semibold text-lg
+        text-center
+        sm:text-left
+    "> 
+        Task List 
+    </h2>
 
     <!-- On selecting the task, the <Editor> opens -->
     <TaskListByCompleted 
