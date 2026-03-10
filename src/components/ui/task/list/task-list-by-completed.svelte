@@ -20,7 +20,7 @@
 
 <TaskContainer>
     <TaskGroup header="Incomplete Tasks">
-        {#each incompleteTasks as task}
+        {#each incompleteTasks as task (task.id)}
             <TaskItem 
                 task={task} 
                 onTaskSelect={onTaskSelect}
@@ -29,7 +29,7 @@
     </TaskGroup>
 
     <TaskGroup header="Complete Tasks">
-        {#each completeTasks as task}
+        {#each completeTasks as task (task.id)}
             <TaskItem 
                 task={task}
                 onTaskSelect={onTaskSelect}

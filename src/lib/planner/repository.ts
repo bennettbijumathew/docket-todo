@@ -9,7 +9,7 @@ export class PlannerRepository {
     public onChange(userId: string, callbackFn: (planner: Planner[]) => void): Unsubscribe {
         // Gets a list of planners ordered by name and the current user of the planner. 
         // Applies a converter to help transition from Firestore to code.
-        const q = query(collection(db, "planners"), orderBy("name"), orderBy(`users.${userId}`)).withConverter(createPlannerConverter(userId));
+        const q = query(collection(db, "planners"), orderBy(`users.${userId}`)).withConverter(createPlannerConverter(userId));
         
         // This snapshot sets the planner list while adding a visible attribute for each user 
         return onSnapshot(q, (querySnapshot: QuerySnapshot) => {

@@ -15,7 +15,7 @@ export class TaskRepository {
         }
 
         // The query gets a list of tasks that are related to the planners. It is then ordered by name and converted to the Task type.
-        const q: Query = query(collection(db, "tasks"), where("planners", "array-contains-any", plannerIds), orderBy("name")).withConverter(createTaskConverter())
+        const q: Query = query(collection(db, "tasks"), where("planners", "array-contains-any", plannerIds)).withConverter(createTaskConverter())
         
         // This snapshot sets the planner list while adding a visible attribute for each user 
         return onSnapshot(q, (querySnapshot: QuerySnapshot) => {
