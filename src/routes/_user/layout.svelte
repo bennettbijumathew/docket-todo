@@ -45,7 +45,7 @@
 <!-- This is the rendered page for if the user is authenticated -->
 {:else if authStore.getReady() === true && authStore.getLoading() === false}
     <main class="
-        flex flex-col flex-1 inset inset-shadow-b-md
+        flex flex-col flex-1 inset *:inset-shadow-b-md
         sm:min-h-0 sm:flex-row *:sm:inset-shadow-l-md
     ">
         {@render children()}

@@ -37,7 +37,8 @@
 <!-- This area renders the children element that is given by the caller -->
 <!-- This would usually hold a group of tasks -->
 <div class="
-    flex-1 flex flex-col overflow-y-scroll pr-4 my-6 gap-y-4
+    flex-1 flex flex-col overflow-y-scroll pr-4 my-6 gap-y-4 max-h-180
+    sm:max-h-none
     scrollbar scrollbar-w-2 scrollbar-thumb-content-900 scrollbar-thumb-rounded-md scrollbar-track-transparent
 ">      
     {@render taskGroup()}
@@ -45,13 +46,16 @@
 
 <!-- This area is the place to add tasks -->
 <form
-    class="flex gap-x-2 bg-background-50 text-content-900 focus-within:bg-background-100 rounded-lg p-1.5 shadow-md"
+    class="flex flex-wrap gap-2 bg-background-50 text-content-900 focus-within:bg-background-100 rounded-lg p-1.5 shadow-md"
     onsubmit={(e) => { 
         e.preventDefault(); 
         addNewTask() 
     }}
 >
-    <div class="flex-1 flex items-center">
+    <div class="
+        flex-1 flex items-center basis-full 
+        lg:basis-auto
+    ">
         <button 
             class="py-2 px-2 hover:bg-background-100 rounded-lg cursor-pointer mr-1"
             aria-label="Add New Task" 
