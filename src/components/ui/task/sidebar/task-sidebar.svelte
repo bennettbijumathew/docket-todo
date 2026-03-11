@@ -25,22 +25,16 @@
             unCheckedStyle="size-5 border-{colors[planner.color]}"
         />
 
-        <p> {planner.name} </p>
+        <p class="truncate text-left"> {planner.name} </p>
     </button>
 {/snippet}
 
 <!-- VIEW: The sidebar structure has the website's logo and navigation links -->
-<h2 class="
-    font-title font-semibold text-lg
-    text-center
-    sm:text-left
-"> 
-    Planners 
-</h2>
+<h2 class="font-title font-semibold text-lg"> Planners </h2>
 
 <div class="
-    flex flex-col flex-1 overflow-y-scroll pr-4 gap-y-1 max-h-50 
-    sm:max-h-80
+    flex flex-col flex-1 overflow-y-scroll pr-4 gap-y-1 max-h-90 
+    sm:max-h-120
     scrollbar scrollbar-w-2 scrollbar-thumb-content-900 scrollbar-thumb-rounded-md scrollbar-track-transparent
 ">
     {#each plannerStore.getList() as planner}
