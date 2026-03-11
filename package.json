@@ -17,6 +17,7 @@
         "@tailwindcss/vite": "^4.1.18",
         "@tauri-apps/api": "^2",
         "@tauri-apps/plugin-opener": "^2",
+        "@tauri-apps/plugin-os": "^2.3.2",
         "bits-ui": "^2.15.5",
         "firebase": "^12.7.0",
         "sv-router": "^0.12.0",

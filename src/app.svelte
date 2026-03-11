@@ -4,21 +4,29 @@
     import { getCurrentWindow } from '@tauri-apps/api/window';
     import { X, Maximize2, Minimize2, Minus } from '@lucide/svelte';
     import { routes } from "./components/util/routes";
+    import { platform, type Platform } from '@tauri-apps/plugin-os';
     
+    // This tracks the state of the application's window maximized state.
     let maximizedState: boolean = $state(false) 
-
-    function isTauri(): boolean {
-        return typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
-    }
-
+    
     function isWindowMaximized() {
         getCurrentWindow().isMaximized().then((item => {
             maximizedState = item
         }));
     }
+
+    // This function returns the current platform of the application. 
+    function tauriPlatform(): Platform | "website" {
+        // Returns "website" based on if the platform is not Tauri related (such as a website)
+        if (typeof window !== "undefined" && "__TAURI_INTERNALS__" in window === false) {
+            return "website"
+        }
+        
+        return platform()
+    }
 </script>
 
-{#if isTauri() === true}
+{#if tauriPlatform() === "windows"}
     <header data-tauri-drag-region class="flex items-center justify-between bg-background mb-4">
         <div class="flex gap-x-2 ml-4">
             <p class="text-xs select-none"> Logo </p>
