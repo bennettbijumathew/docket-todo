@@ -25,7 +25,10 @@
 <!-- On clicking the container, the task select function is called. -->
 <button
     onclick={() => onTaskSelect?.(task)} 
-    class="flex justify-between items-center bg-background-50 hover:bg-background-100 cursor-pointer py-2 px-3 rounded-lg gap-x-2"
+    class="
+        flex justify-between items-center bg-background-50 hover:bg-background-100 cursor-pointer py-1 px-3 rounded-lg gap-x-1
+        sm:py-2 sm:px-3 sm:gap-x-2
+    "
     aria-label="Button to open the editor for the task of '{task.name}'" 
 >
     <div class="flex items-center gap-x-3 text-left">
@@ -36,13 +39,16 @@
                 taskRepo.editComplete(task.id, !task.completed) 
             }}
             stopPropagation={true}
+            checkedStyle="size-6 bg-content-900 text-background"
+            unCheckedStyle="size-6 border-content-900"
+
         />
         
         <div>
             <h3 class="font-bold"> {task.name} </h3>
             
             <span class="flex items-center justify-center gap-x-1">
-                <Calendar class="size-3"/>
+                <Calendar class="size-3 hidden sm:block"/>
                 
                 <p class="text-sm"> Due Date: {formatLongDate(task.dueDate)} </p>
             </span>
@@ -50,16 +56,18 @@
     </div>
     
     <div class="
-        grid gap-0.5
-        grid-cols-5 grid-rows-1
+        grid grid-cols-5 grid-rows-1 *:rounded-xs *:size-2.5 gap-x-2 gap-y-1
+        sm:*:size-5 sm:*:rounded-sm sm:w-auto sm:gap-0.5
         lg:grid-cols-10 lg:grid-rows-1
-        *:rounded-sm *:size-5
     ">
         {#each {length: MAX_PLANNERS - taskPlanners.length}, slotNum}
             <!-- This logic ensures that multiple rows aren't shown beyond the amount that is required -->
             {#if slotNum < colsInPlannerRow && taskPlanners.length <= colsInPlannerRow}
                 <!-- The styling hides slots based on the user using medias such as phones or tablets -->
-                <div class="hidden lg:block border border-background-300 border-dotted"> </div>
+                <div class="
+                    hidden border border-background-300 border-dotted
+                    lg:block
+                "> </div>
             {:else}
                 <div class="border border-background-300 border-dotted"> </div>
             {/if}
@@ -67,7 +75,12 @@
 
         {#each taskPlanners as taskPlanner}    
             <div class="flex items-center justify-center bg-{colors[taskPlanner.color]}"> 
-                <p class="text-xs font-medium leading-none"> {taskPlanner.name[0]} </p>
+                <p class="
+                    hidden text-xs font-medium leading-none
+                    sm:block
+                "> 
+                    {taskPlanner.name[0]} 
+                </p>
             </div>
         {/each}
     </div>

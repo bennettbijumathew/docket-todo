@@ -38,8 +38,7 @@
 <!-- This would usually hold a group of tasks -->
 <div class="
     flex-1 flex flex-col overflow-y-scroll gap-y-4 my-6
-    sm:max-h-none
-    scrollbar-thin scrollbar-track-background
+    sm:max-h-none sm:scrollbar-thin sm:scrollbar-track-background
 ">      
     {@render taskGroup()}
 </div>
@@ -47,8 +46,7 @@
 <!-- This area is the place to add tasks -->
 <form
     class="
-        sticky bottom-6 shadow-lg/20 text-content-900 rounded-lg bg-background
-        block 
+        block sticky bottom-6 shadow-lg/20 text-content-900 rounded-lg bg-background
         sm:flex
     "
     onsubmit={(e) => { 
