@@ -17,7 +17,7 @@
 </script>
 
 {#if getPlatform() === "windows"}
-    <header data-tauri-drag-region class="flex items-center justify-between bg-background mb-4">
+    <header data-tauri-drag-region class="flex items-center justify-between bg-background">
         <div class="flex gap-x-2 ml-4">
             <p class="text-xs select-none"> Logo </p>
 

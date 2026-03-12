@@ -37,7 +37,7 @@
 <!-- This area renders the children element that is given by the caller -->
 <!-- This would usually hold a group of tasks -->
 <div class="
-    flex-1 flex flex-col overflow-y-scroll pr-4 my-6 gap-y-4 max-h-180
+    flex-1 flex flex-col overflow-y-scroll gap-y-4 my-6
     sm:max-h-none
     scrollbar scrollbar-w-2 scrollbar-thumb-content-900 scrollbar-thumb-rounded-md scrollbar-track-transparent
 ">      
@@ -46,18 +46,22 @@
 
 <!-- This area is the place to add tasks -->
 <form
-    class="flex flex-wrap gap-2 bg-background-50 text-content-900 focus-within:bg-background-100 rounded-lg p-1.5 shadow-md"
+    class="
+        sticky bottom-6 shadow-lg/20 text-content-900 rounded-lg bg-background
+        block 
+        sm:flex
+    "
     onsubmit={(e) => { 
         e.preventDefault(); 
         addNewTask() 
     }}
 >
-    <div class="
-        flex-1 flex items-center basis-full 
-        lg:basis-auto
-    ">
+    <div class="flex-1 flex flex-row-reverse sm:flex-row items-center basis-full p-1.5">
         <button 
-            class="py-2 px-2 hover:bg-background-100 rounded-lg cursor-pointer mr-1"
+            class="
+                p-3 bg-background-50 hover:bg-background-200 rounded-lg cursor-pointer
+                sm:p-1.5
+            "
             aria-label="Add New Task" 
             type="submit"
         >
@@ -66,7 +70,7 @@
 
         <input 
             type="text" 
-            class="outline-none flex-1"
+            class="outline-none flex-1 pl-1.5 py-1.5 sm:py-0.5"
             placeholder="Enter a new task.."
             bind:value={newTask.name}
             aria-required="true"
@@ -74,15 +78,26 @@
         >
     </div>
 
-    <DatePicker 
-        bind:value={newTask.dueDate}
-        buttonStyle="bg-background-100 hover:bg-background-200 px-2 min-w-54 justify-between"
-        pickerStyle="bg-background shadow-md"
-    />
+    <div class="flex overflow-x-scroll sm:overflow-x-visible p-1.5 gap-1.5">
+        <DatePicker 
+            bind:value={newTask.dueDate}
+            buttonStyle="
+                bg-background-100 hover:bg-background-200 justify-between
+                min-w-60 py-1 px-2  
+                sm:min-w-54 sm:px-2 sm:py-0
+            "
+            pickerStyle="bg-background shadow-md"
+        />
 
-    <PlannerPicker 
-        bind:value={newTask.planners}
-        buttonStyle="bg-background-100 hover:bg-background-200 px-2 justify-between"
-        pickerStyle="bg-background shadow-md"
-    />
+        <PlannerPicker 
+            bind:value={newTask.planners}
+            buttonStyle="
+                bg-background-100 hover:bg-background-200 justify-between
+                min-w-60 py-1 px-2
+                sm:min-w-54 sm:px-2 sm:py-0
+            "
+            pickerStyle="bg-background shadow-md"
+        />
+    </div>
+
 </form>
