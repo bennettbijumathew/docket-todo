@@ -16,6 +16,7 @@
         class="
             inline-flex gap-x-2 p-2 rounded-md transition-colors bg-background hover:bg-background-50 hover:cursor-pointer
             sm:p-1
+            scrollbar-hover:bg-red-500
         "
     >
         <!-- Value of the checkbox updates on pressing the outer button. This works due to the planner being used a svelte state variable  -->
@@ -33,11 +34,10 @@
 <h2 class="font-title font-semibold text-lg"> Planners </h2>
 
 <div class="
-    flex flex-col flex-1 overflow-y-scroll pr-4 gap-y-1 max-h-90 
-    sm:max-h-120
-    scrollbar scrollbar-w-2 scrollbar-thumb-content-900 scrollbar-thumb-rounded-md scrollbar-track-transparent
+    flex flex-col flex-1 overflow-y-scroll gap-y-1 max-h-85 
+    scrollbar-thin scrollbar-track-background
 ">
-    {#each plannerStore.getList() as planner}
+    {#each plannerStore.getList() as planner, index (index)}
         {@render plannerTile(planner)}
     {/each}
 </div>

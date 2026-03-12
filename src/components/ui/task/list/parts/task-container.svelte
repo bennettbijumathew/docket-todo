@@ -39,7 +39,7 @@
 <div class="
     flex-1 flex flex-col overflow-y-scroll gap-y-4 my-6
     sm:max-h-none
-    scrollbar scrollbar-w-2 scrollbar-thumb-content-900 scrollbar-thumb-rounded-md scrollbar-track-transparent
+    scrollbar-thin scrollbar-track-background
 ">      
     {@render taskGroup()}
 </div>
