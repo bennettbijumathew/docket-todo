@@ -54,7 +54,7 @@
         addNewTask() 
     }}
 >
-    <div class="flex-1 flex flex-row-reverse sm:flex-row items-center basis-full p-1.5">
+    <div class="flex-1 flex flex-row-reverse sm:flex-row items-center basis-full sm:p-2">
         <button 
             class="
                 p-3 bg-background-50 hover:bg-background-200 rounded-lg cursor-pointer
@@ -80,7 +80,7 @@
         <DatePicker 
             bind:value={newTask.dueDate}
             buttonStyle="
-                bg-background-100 hover:bg-background-200 justify-between
+                bg-background-100 hover:bg-background-200 justify-between h-full
                 min-w-60 py-1 px-2  
                 sm:min-w-54 sm:px-2 sm:py-0
             "
@@ -90,9 +90,9 @@
         <PlannerPicker 
             bind:value={newTask.planners}
             buttonStyle="
-                bg-background-100 hover:bg-background-200 justify-between
-                min-w-60 py-1 px-2
-                sm:min-w-54 sm:px-2 sm:py-0
+                bg-background-100 hover:bg-background-200 h-full min-w-60
+                py-1 px-2
+                sm:px-2 sm:py-0
             "
             pickerStyle="bg-background shadow-md"
         />

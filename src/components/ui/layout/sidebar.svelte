@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { getPlatform } from "@/components/util/platform";
     import { routes } from "@/components/util/routes";
     import { PanelRightClose, PanelRightOpen } from "@lucide/svelte";
     import { isActive } from "sv-router/generated";
@@ -20,9 +19,10 @@
 </script>
 
 <aside class="
-    bg-background top-0 left-0 right-0 p-6 flex flex-col justify-between
-    sm:max-w-50 lg:max-w-90 
-    {isSidebarCollapsed ? "absolute sm:static w-full h-full sm:w-auto" : "sticky flex-none sm:flex-1"}
+    bg-background top-0 left-0 right-0 px-6 pb-4 pt-10 flex flex-col justify-between
+    sm:max-w-50 sm:mt-0 sm:p-6
+    lg:max-w-90 
+    {isSidebarCollapsed ? "absolute z-50 sm:static w-full h-full sm:w-auto" : "sticky flex-none sm:flex-1"}
 ">
     <div class="flex justify-between items-center gap-x-4">
         <!-- Title and redirection back to the website's home  -->

@@ -23,10 +23,21 @@
     }
 </script>
 
+
 {#if openState == true}
-    <section class="bg-background p-6 flex flex-col flex-1 transition-colors">
+    <section class="
+        bg-background top-0 left-0 right-0 px-6 py-10 flex flex-col justify-between
+        sm:mt-0 sm:p-6
+        {openState ? "absolute z-50 sm:static w-full h-full sm:w-auto" : "sticky flex-none sm:flex-2"}
+    ">
         <div class="flex justify-between items-center mb-6">
-            <h2 class="font-title font-semibold text-lg"> {header} </h2>
+            <h2 class="
+                font-title font-semibold 
+                text-2xl
+                sm:text-lg
+            "> 
+                {header} 
+            </h2>
 
             <!-- Exit button for the editor -->
             <button 

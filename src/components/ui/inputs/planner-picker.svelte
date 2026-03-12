@@ -48,27 +48,28 @@
     }}
 >
     <!-- Input to open the combobox options and triggers the combobox search. -->
-    <div class="{buttonStyle} flex items-center rounded-lg px-2 text-center gap-x-2">
-        <Combobox.Trigger class="cursor-pointer">
-            <Notebook class="size-4"/>
-        </Combobox.Trigger>
+    <div class="{buttonStyle} flex items-center justify-between rounded-lg text-center gap-x-2">
+        <div class="flex items-center gap-x-2">
+            <Combobox.Trigger class="cursor-pointer">
+                <Notebook class="size-4"/>
+            </Combobox.Trigger>
 
-        <!-- Search input to filter through the planners.  -->
-        <Combobox.Input
-            onclick={(e) => e.stopPropagation()}
-            oninput={(e) => searchInput = e.currentTarget.value }
-            placeholder="Select a planner..."
-            aria-label="Select a planner..."
-            class="w-32 border-b hover:border-0 border-background-100 focus:outline-0"
-            autocomplete="off"
-            clearOnDeselect={true}
-            required={value.length <= 0 ? true : false}
-        />
-        
+            <!-- Search input to filter through the planners.  -->
+            <Combobox.Input
+                onclick={(e) => e.stopPropagation()}
+                oninput={(e) => searchInput = e.currentTarget.value }
+                placeholder="Select a planner..."
+                aria-label="Select a planner..."
+                class="w-32 border-background-100 focus:outline-0"
+                autocomplete="off"
+                clearOnDeselect={true}
+                required={value.length <= 0 ? true : false}
+            />
+        </div>
+
         <Combobox.Trigger class="
-            grid gap-0.5
-            grid-cols-5 grid-rows-1
-            *:rounded-xs *:size-2
+            grid gap-2 select-none grid-cols-5 grid-rows-1 *:rounded-xs *:size-2 
+            sm:gap-0.5
         ">
             {#each {length: MAX_PLANNERS - selectedPlanners.length}, slotNum}
                 <!-- This logic ensures that multiple rows aren't shown beyond the amount that is required -->
