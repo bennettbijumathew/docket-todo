@@ -62,7 +62,7 @@
             class="w-32 border-b hover:border-0 border-background-100 focus:outline-0"
             autocomplete="off"
             clearOnDeselect={true}
-            required={true}
+            required={value.length <= 0 ? true : false}
         />
         
         <Combobox.Trigger class="
@@ -90,6 +90,7 @@
     <!-- The content that is shown once the trigger is pressed. -->
     <Combobox.Content 
         sideOffset={25} 
+        collisionPadding={25}
         class="{pickerStyle} rounded-lg w-full max-h-60 overflow-y-auto"
         side="top"
     >
