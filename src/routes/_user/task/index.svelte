@@ -7,6 +7,8 @@
     import Main from "@/components/ui/layout/main.svelte";
     import Sidebar from "@/components/ui/layout/sidebar.svelte";
     import Editor from "@/components/ui/layout/editor.svelte";
+    import { navigate } from 'sv-router/generated';
+	import { route } from 'sv-router/generated';
 
     // These variables represent the current planner that is open on the modal
     let selectedTask: Task | null = $state(null)
@@ -17,11 +19,23 @@
         // Then the modal is hidden from the users' view 
         if (selectedTask === task || task === null) {
             selectedTask = null
+
+            navigate("/task", {
+                hash: ""
+            })
+
             return; 
         }
 
         // If the guard clauses are passed, then the new task is set with the view being open.
         selectedTask = task
+
+        navigate("/task", {
+            hash: "edit"
+        })
+
+        // console.log(isActive('/task' as any, { hash: 'edit' }))
+        console.log(route.hash)
     }
 </script>
 
@@ -47,14 +61,16 @@
     />
 </Main> 
 
-<!-- This shows an editor that is opened when a user clicks on a task. -->
-<Editor 
-    header="Edit Task" 
-    onClose={() => toggleEditModal(null)}
-    openState={selectedTask == null ? false : true}
->
-    <TaskEditor     
-        taskId={selectedTask?.id ?? null} 
+{#if route.hash == "#edit"}
+    <!-- This shows an editor that is opened when a user clicks on a task. -->
+    <Editor 
+        header="Edit Task" 
         onClose={() => toggleEditModal(null)}
-    />
-</Editor>
+        openState={selectedTask == null ? false : true}
+    >
+        <TaskEditor     
+            taskId={selectedTask?.id ?? null} 
+            onClose={() => toggleEditModal(null)}
+        />
+    </Editor>
+{/if}

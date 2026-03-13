@@ -54,7 +54,11 @@
         addNewTask() 
     }}
 >
-    <div class="flex-1 flex flex-row-reverse sm:flex-row items-center basis-full sm:p-2">
+    <div class="
+        flex-1 flex flex-row-reverse sm:flex-row items-center basis-full 
+        p-1.5 pb-0
+        sm:p-2"
+    >
         <button 
             class="
                 p-3 bg-background-50 hover:bg-background-200 rounded-lg cursor-pointer

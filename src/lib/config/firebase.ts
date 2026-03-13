@@ -28,7 +28,7 @@ export const db = getFirestore(firebaseApp)
 export const auth = getAuth(firebaseApp)
 
 // This is used for developer to connect an emulator to the instance. 
-if (import.meta.env.MODE === "development") {
-    connectFirestoreEmulator(db, '127.0.0.1', 8079);
-    connectAuthEmulator(auth, 'http://127.0.0.1:9098');
-}
+// if (import.meta.env.MODE === "development") {
+//     connectFirestoreEmulator(db, '127.0.0.1', 8079);
+//     connectAuthEmulator(auth, 'http://127.0.0.1:9098');
+// }
