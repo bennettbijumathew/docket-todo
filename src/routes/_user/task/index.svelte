@@ -1,7 +1,6 @@
 <!-- CODE -->
 <script lang="ts">
     import { type Task } from "@/lib/task/type";
-    import TaskSidebar from "@/components/ui/task/sidebar/task-sidebar.svelte";
     import TaskEditor from "@/components/ui/task/editor/task-editor.svelte";
     import TaskListByCompleted from "@/components/ui/task/list/task-list-by-completed.svelte";
     import Main from "@/components/ui/layout/main.svelte";
@@ -11,6 +10,7 @@
 	import { route } from 'sv-router/generated';
     import TaskInputs from "@/components/ui/task/list/parts/task-inputs.svelte";
     import TaskContainer from "@/components/ui/task/list/parts/task-container.svelte";
+    import PlannerToggleList from "@/components/ui/task/sidebar/planner-toggle-list.svelte";
 
     // These variables represent the current planner that is open on the modal
     let selectedTask: Task | null = $state(null)
@@ -44,7 +44,7 @@
 <!-- VIEW -->
 <!-- This shows a sidebar with a navigation bar and a planner list that can be toggled. -->
 <Sidebar>
-    <TaskSidebar/>
+    <PlannerToggleList/>
 </Sidebar>
 
 <!-- This shows a header and a list of completed and incomplete tasks -->
