@@ -1,5 +1,4 @@
 <script lang="ts">
-    import TaskContainer from "@/components/ui/task/list/parts/task-container.svelte";
     import TaskGroup from "@/components/ui/task/list/parts/task-group.svelte";
     import TaskItem from "@/components/ui/task/list/parts/task-item.svelte";
     import { taskStore } from "@/lib/task/store.svelte";
@@ -18,22 +17,20 @@
     const incompleteTasks: Task[] = $derived(taskStore.getList().filter((item) => item.completed === false))
 </script>
 
-<TaskContainer>
-    <TaskGroup header="Incomplete Tasks">
-        {#each incompleteTasks as task (task.id)}
-            <TaskItem 
-                task={task} 
-                onTaskSelect={onTaskSelect}
-            />
-        {/each}
-    </TaskGroup>
+<TaskGroup header="Incomplete Tasks">
+    {#each incompleteTasks as task (task.id)}
+        <TaskItem 
+            task={task} 
+            onTaskSelect={onTaskSelect}
+        />
+    {/each}
+</TaskGroup>
 
-    <TaskGroup header="Complete Tasks">
-        {#each completeTasks as task (task.id)}
-            <TaskItem 
-                task={task}
-                onTaskSelect={onTaskSelect}
-            />
-        {/each}
-    </TaskGroup>
-</TaskContainer>
+<TaskGroup header="Complete Tasks">
+    {#each completeTasks as task (task.id)}
+        <TaskItem 
+            task={task}
+            onTaskSelect={onTaskSelect}
+        />
+    {/each}
+</TaskGroup>

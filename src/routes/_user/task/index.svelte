@@ -9,6 +9,8 @@
     import Editor from "@/components/ui/layout/editor.svelte";
     import { navigate } from 'sv-router/generated';
 	import { route } from 'sv-router/generated';
+    import TaskInputs from "@/components/ui/task/list/parts/task-inputs.svelte";
+    import TaskContainer from "@/components/ui/task/list/parts/task-container.svelte";
 
     // These variables represent the current planner that is open on the modal
     let selectedTask: Task | null = $state(null)
@@ -55,10 +57,14 @@
         Task List 
     </h2>
 
-    <!-- On selecting the task, the <Editor> opens -->
-    <TaskListByCompleted 
-        onTaskSelect={toggleEditModal}
-    />
+    <TaskContainer>
+        <!-- On selecting the task, the <Editor> opens -->
+        <TaskListByCompleted 
+            onTaskSelect={toggleEditModal}
+        />
+    </TaskContainer>  
+
+    <TaskInputs/>
 </Main> 
 
 {#if route.hash == "#edit"}
