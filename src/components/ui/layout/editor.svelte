@@ -2,6 +2,7 @@
 	import { route } from 'sv-router/generated';
     import type { Snippet } from "svelte";
     import { X } from '@lucide/svelte';
+    import { getPlatform } from '@/components/util/platform';
 
     interface LayoutProps {
         children?: Snippet,
@@ -18,8 +19,8 @@
 
 {#if route.hash == "#edit"}
     <section class="
-        bg-background top-0 left-0 right-0 px-6 py-10 flex flex-col justify-between
-        absolute z-50 w-full h-full
+        bg-background top-0 left-0 px-6 py-10 flex flex-col justify-between
+        fixed z-50 w-full h-full
         sm:static sm:w-50 sm:mt-0 sm:p-6
         lg:w-90
     ">
@@ -28,6 +29,7 @@
                 font-title font-semibold 
                 text-2xl
                 sm:text-lg
+                {getPlatform() === "windows" ? "pt-6" : ""}
             "> 
                 {header}
             </h2>
