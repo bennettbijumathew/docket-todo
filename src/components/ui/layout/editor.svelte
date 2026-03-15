@@ -19,7 +19,9 @@
 {#if route.hash == "#edit"}
     <section class="
         bg-background top-0 left-0 right-0 px-6 py-10 flex flex-col justify-between
-        sm:mt-0 sm:p-6
+        absolute z-50 w-full h-full
+        sm:static sm:w-50 sm:mt-0 sm:p-6
+        lg:w-90
     ">
         <div class="flex justify-between items-center mb-6">
             <h2 class="
@@ -37,7 +39,7 @@
             >   
                 <X class="size-4"/>
             </button>
-    </div>
+        </div>
 
         {@render children?.()}
     </section>
