@@ -1,6 +1,5 @@
 <script lang="ts">
     import { taskRepo } from "@/lib/task/repository";
-    import { taskStore } from "@/lib/task/store.svelte";
     import { type Task } from "@/lib/task/type";
     import { getLocalTimeZone, Time, toCalendarDateTime, today } from "@internationalized/date";
     import { Trash } from "@lucide/svelte";
@@ -11,15 +10,15 @@
     // The component receives the selected task id with a function that 
     // closes the editor. 
     interface EditorProps {
-        taskId: string | null, 
+        task: Task | null, 
         onClose?: () => void,
     }
     
-    let { taskId, onClose }: EditorProps = $props()
+    let { task: initialTask, onClose }: EditorProps = $props()
 
 
-    // Gets the task from the task id. Through this method, changes in the state is updated properly
-    const task: Task | null = $derived(taskStore.getList().find(t => t.id === taskId) || null);
+    // Gets the task that is derived from the state array.
+    const task: Task | null = $derived(initialTask);
 
 
     // Inputs of this editor are initialized with effect used to 
@@ -81,13 +80,13 @@
         // Deletes the task using the task id.
         taskRepo.deleteTask(taskId) 
 
-        // Closes the sidebar using the 
+        // Closes the sidebar using the sidebar's close function
         onClose?.()
     }
 
 </script>
 
-{#if task != null}
+{#if task !== null}
     <div class="flex flex-col gap-y-4 min-h-140">
         <!-- Form to update name changes for the task -->
         <form 

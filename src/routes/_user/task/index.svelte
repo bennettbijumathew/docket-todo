@@ -1,46 +1,43 @@
 <!-- CODE -->
 <script lang="ts">
     import { type Task } from "@/lib/task/type";
-    import TaskEditor from "@/components/ui/task/editor/task-editor.svelte";
     import TaskListByCompleted from "@/components/ui/task/list/task-list-by-completed.svelte";
     import Main from "@/components/ui/layout/main.svelte";
     import Sidebar from "@/components/ui/layout/sidebar.svelte";
-    import Editor from "@/components/ui/layout/editor.svelte";
     import { navigate } from 'sv-router/generated';
-	import { route } from 'sv-router/generated';
     import TaskInputs from "@/components/ui/task/list/parts/task-inputs.svelte";
     import TaskContainer from "@/components/ui/task/list/parts/task-container.svelte";
     import PlannerToggleList from "@/components/ui/task/sidebar/planner-toggle-list.svelte";
-    import EditorNew from "@/components/ui/layout/editor-new.svelte";
-    import { X } from "@lucide/svelte";
+    import Editor from "@/components/ui/layout/editor.svelte";
+    import TaskEditor from "@/components/ui/task/editor/task-editor.svelte";
 
     // These variables represent the current planner that is open on the modal
     let selectedTask: Task | null = $state(null)
 
-    // This function toggles the task editing modal.
-    function toggleEditModal(task: Task | null) {
-        // If the user clicks on the same task or the task doesn't exist
-        // Then the modal is hidden from the users' view 
-        if (selectedTask === task || task === null) {
-            selectedTask = null
-
-            navigate("/task", {
-                hash: ""
-            })
-
-            return; 
+    // This function opens the task editor. 
+    function openEditor(task: Task | null) {
+        // If the user has clicked on the same task, the editor closes
+        if (selectedTask == task) {
+            closeEditor()
         }
+        // If a different task is selected, the task is opened
+        else if (task !== null) {
+            selectedTask = task
+    
+            navigate("/task", {
+                hash: "edit"
+            })
+        }
+    }
 
-        // If the guard clauses are passed, then the new task is set with the view being open.
-        selectedTask = task
+    // Closes the editor
+    function closeEditor() {
+        selectedTask = null
 
         navigate("/task", {
-            hash: "edit"
+            hash: ""
         })
-
-        // console.log(isActive('/task' as any, { hash: 'edit' }))
-        console.log(route.hash)
-    }
+    }   
 </script>
 
 <!-- VIEW -->
@@ -62,49 +59,21 @@
     <TaskContainer>
         <!-- On selecting the task, the <Editor> opens -->
         <TaskListByCompleted 
-            onTaskSelect={toggleEditModal}
+            onTaskSelect={openEditor}
         />
     </TaskContainer>  
 
     <TaskInputs/>
 </Main> 
 
-<EditorNew         
-    header="Edit Task" 
-    onClose={() => toggleEditModal(null)}
+<Editor         
+    header="Edit Task"
+    onClose={() => closeEditor()}
 >
-    <div class="flex justify-between items-center mb-6">
-        <h2 class="
-            font-title font-semibold 
-            text-2xl
-            sm:text-lg
-        "> 
-            Edit Task
-        </h2>
-
-        <!-- Exit button for the editor -->
-        <button 
-            class="p-2 bg-background-50 hover:bg-background-100 shadow-md rounded-lg cursor-pointer"
-            onclick={() => toggleEditModal(null)}
-        >   
-            <X class="size-4"/>
-        </button>
-    </div>
-
-
-</EditorNew>
-
-
-{#if route.hash == "#edit"}
-    <!-- This shows an editor that is opened when a user clicks on a task. -->
-    <Editor 
-        header="Edit Task" 
-        onClose={() => toggleEditModal(null)}
-        openState={selectedTask == null ? false : true}
+    <TaskEditor 
+        task={selectedTask}
+        onClose={() => closeEditor()}
     >
-        <TaskEditor     
-            taskId={selectedTask?.id ?? null} 
-            onClose={() => toggleEditModal(null)}
-        />
-    </Editor>
-{/if}
+
+    </TaskEditor>
+</Editor>
