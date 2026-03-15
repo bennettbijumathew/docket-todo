@@ -1534,10 +1534,10 @@ style-to-object@^1.0.8:
   dependencies:
     inline-style-parser "0.2.7"
 
-sv-router@^0.12.0:
-  version "0.12.0"
-  resolved "https://registry.yarnpkg.com/sv-router/-/sv-router-0.12.0.tgz#0ba2e0139f892b2ab1105f3c3876b1c786d72143"
-  integrity sha512-wvaQeL3bG2nJHs/NtGTBJ/U7k/iKjq71vt3HRZwoqKapH87VVR32IPryv2YQC8WQe60ojydjc88sjhD/Wmpi4g==
+sv-router@^0.14.0:
+  version "0.14.0"
+  resolved "https://registry.yarnpkg.com/sv-router/-/sv-router-0.14.0.tgz#a6a8a40dc659d78830e5e20353b2927d075b6dc1"
+  integrity sha512-zzi2k2ZG2UbTgBOjYmXWMv3XdXFCBpABD7vUsoL2XLvlnannXXLvieY9wGKMIvHIeocXOq4l47PXYtHPI23qgA==
   dependencies:
     esm-env "^1.2.2"
 

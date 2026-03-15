@@ -1,4 +1,4 @@
-import { Home, Library, Cog, type Icon, House, DoorOpen, UserPlus, ClipboardCheck, Notebook } from '@lucide/svelte';
+import { type Icon, House, DoorOpen, UserPlus, ClipboardCheck, Notebook } from '@lucide/svelte';
 
 type RouteNames =
     | "Home"
@@ -7,8 +7,16 @@ type RouteNames =
     | "Task"
     | "Planner"
 
+export type RoutePath = 
+    | "/"
+    | "/login"
+    | "/signup"
+    | "/task"
+    | "/planner"
+    
+
 interface RouteDetails {
-    link: string, 
+    link: RoutePath, 
     icon: typeof Icon
 }
 

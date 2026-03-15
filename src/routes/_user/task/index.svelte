@@ -11,6 +11,8 @@
     import TaskInputs from "@/components/ui/task/list/parts/task-inputs.svelte";
     import TaskContainer from "@/components/ui/task/list/parts/task-container.svelte";
     import PlannerToggleList from "@/components/ui/task/sidebar/planner-toggle-list.svelte";
+    import EditorNew from "@/components/ui/layout/editor-new.svelte";
+    import { X } from "@lucide/svelte";
 
     // These variables represent the current planner that is open on the modal
     let selectedTask: Task | null = $state(null)
@@ -66,6 +68,32 @@
 
     <TaskInputs/>
 </Main> 
+
+<EditorNew         
+    header="Edit Task" 
+    onClose={() => toggleEditModal(null)}
+>
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="
+            font-title font-semibold 
+            text-2xl
+            sm:text-lg
+        "> 
+            Edit Task
+        </h2>
+
+        <!-- Exit button for the editor -->
+        <button 
+            class="p-2 bg-background-50 hover:bg-background-100 shadow-md rounded-lg cursor-pointer"
+            onclick={() => toggleEditModal(null)}
+        >   
+            <X class="size-4"/>
+        </button>
+    </div>
+
+
+</EditorNew>
+
 
 {#if route.hash == "#edit"}
     <!-- This shows an editor that is opened when a user clicks on a task. -->
