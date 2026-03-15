@@ -73,7 +73,5 @@
     <TaskEditor 
         task={selectedTask}
         onClose={() => closeEditor()}
-    >
-
-    </TaskEditor>
+    />
 </Editor>

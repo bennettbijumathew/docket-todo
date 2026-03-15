@@ -24,12 +24,16 @@
         sm:static sm:w-50 sm:mt-0 sm:p-6
         lg:w-90
     ">
+        <!-- This section adds padding for the windows application -->
+        {#if getPlatform() === "windows"}
+            <div class="h-6"></div>
+        {/if}
+
         <div class="flex justify-between items-center mb-6">
             <h2 class="
                 font-title font-semibold 
                 text-2xl
                 sm:text-lg
-                {getPlatform() === "windows" ? "pt-6" : ""}
             "> 
                 {header}
             </h2>
