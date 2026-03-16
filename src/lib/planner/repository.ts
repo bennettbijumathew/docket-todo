@@ -15,7 +15,8 @@ export class PlannerRepository {
         return onSnapshot(q, (querySnapshot: QuerySnapshot) => {
             const newPlanners: Planner[] = querySnapshot.docs.map((doc) => doc.data()) as Planner[]
 
-            callbackFn(newPlanners)
+            // Sends a alphabetically sorted version of the planners array
+            callbackFn(newPlanners.sort((a, b) => a.name.localeCompare(b.name)))
         })            
     }
 
