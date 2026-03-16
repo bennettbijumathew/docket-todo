@@ -34,7 +34,7 @@
 <h2 class="font-title font-semibold text-lg"> Planners </h2>
 
 <div class="
-    flex flex-col flex-1 overflow-y-scroll gap-y-1 max-h-85 
+    flex flex-col flex-1 overflow-y-scroll gap-y-1 h-fit 
     scrollbar-thin scrollbar-track-background
 ">
     {#each plannerStore.getList() as planner, index (index)}

@@ -1,8 +1,9 @@
 <script lang="ts">
     import { getPlatform } from "@/components/util/platform";
-    import { type RoutePath, routes } from "@/components/util/routes";
+    import { paramKeys, paramValues, routes } from "@/components/util/routes";
     import { PanelRightClose, PanelRightOpen } from "@lucide/svelte";
-    import { isActive, navigate, route } from "sv-router/generated";
+    import { searchParams } from "sv-router";
+    import { isActive, p } from "sv-router/generated";
     import type { Snippet } from "svelte";
 
     interface LayoutProps {
@@ -11,65 +12,55 @@
 
     let { children }: LayoutProps = $props()
 
-    // This variable represents state of opening and closing of the sidebar.
-    let isSidebarCollapsed = $state(false)
+    // These variables represent the sidebar's current state
+    let isSidebarExpanded = $derived(searchParams.get(paramKeys["sidebar"]) == paramValues["sidebar"].expanded)
+    let isSidebarCollapsed = $derived(searchParams.get(paramKeys["sidebar"]) == paramValues["sidebar"].collapsed)
 
-    // This functions opens / closes the sidebar. 
-    function toggleSidebar() {
-        isSidebarCollapsed = !isSidebarCollapsed
-
-        // This adds a hash url for mobile users. This was added as going back on mobile 
-        // goes to the previous page rather than close the overlay. This prevents that behavior. 
-        if (isSidebarCollapsed === true) {
-            navigate(route.pathname as RoutePath, {
-                hash: "sidebar"
-            })
-        }
-        else {
-            navigate(route.pathname as RoutePath, {
-                hash: ""
-            })
-        }
+    // This function opens the sidebar. 
+    function expandSidebar() {
+        searchParams.delete(paramKeys["sidebar"])
     }
+
+    // This function closes the editor
+    function collapseSidebar() {
+        searchParams.delete(paramKeys["sidebar"])
+        searchParams.append(paramKeys["sidebar"], paramValues["sidebar"].collapsed)
+    }   
 </script>
 
-<aside class="
-    bg-background top-0 left-0 right-0 p-6 flex flex-col justify-between
-    sm:max-w-50 sm:mt-0
-    lg:max-w-90 
-    {isSidebarCollapsed ? "fixed z-50 sm:static w-full h-full sm:w-auto" : "sticky flex-none sm:flex-1"}
-    {getPlatform() === "windows" ? "pt-10 sm:pt-12" : ""}
-">
-    <section class="
-        flex justify-between items-center gap-x-4
+{#if isSidebarExpanded}
+    <aside class="
+        bg-background p-6 flex flex-col gap-y-6 z-50
+        fixed w-screen h-screen
+        sm:static sm:w-50 sm:h-auto sm:flex-1
+        {getPlatform() === "windows" ? "pt-10 sm:pt-12" : ""}
     ">
-        <!-- Title and redirection back to the website's home  -->
-        <h1 class="font-title text-2xl font-bold text-content-900 hover:text-content-600">            
-            <a 
-                aria-label="Link to Docket's Homepage"
-                href={routes.get("Home")?.link}
-            >
-                Docket
-            </a>
-        </h1>
+        <section class="flex justify-between items-center gap-x-4">
+            <!-- Title and redirection back to the website's home  -->
+            <h1 class="font-title text-2xl font-bold text-content-900 hover:text-content-800">            
+                <a
+                    aria-label="Link to Docket's Homepage"
+                    href={routes.get("Home")?.link}
+                >
+                    Docket
+                </a>
+            </h1>
 
-        <button 
-            class="p-2 bg-background-50 hover:bg-background-100 shadow-md rounded-lg cursor-pointer block sm:hidden"
-            onclick={toggleSidebar}
-        >      
-            {#if isSidebarCollapsed === true}
+            <button 
+                onclick={collapseSidebar}
+                class="
+                    p-1.5 bg-background-50 hover:bg-background-100 shadow-md rounded-lg cursor-pointer 
+                    rotate-90 
+                    sm:rotate-0
+                "
+            >      
                 <PanelRightOpen class="size-4"/>
-            {:else}
-                <PanelRightClose class="size-4"/>
-            {/if}
-        </button>
-    </section>
+            </button>
+        </section>
 
-    <!-- Panel for navigating to different sections of the application.   -->
-    <section class="{isSidebarCollapsed ? "" : "hidden sm:block"}">
-        <h2 class="font-title font-semibold text-lg"> Navigation </h2>
+        <section class="flex-1 flex flex-col justify-center">
+            <h2 class="font-title font-semibold text-lg h-7"> Navigation </h2>
 
-        <nav class="flex gap-0.5 flex-col">
             {#each routes as [name, {link, icon}]}
                 {@const RouteIcon = icon}
                 
@@ -86,11 +77,63 @@
                     {name}
                 </a>
             {/each}
-        </nav>
-    </section>
+        </section> 
 
-    <!-- Panel for managing planners -->
-    <section class="{isSidebarCollapsed ? "" : "hidden sm:block"}">
-        {@render children?.()}
-    </section>
-</aside>
+        <section class="h-85 max-h-85 overflow-hidden flex flex-col">
+            {@render children?.()}
+        </section>
+    </aside>
+{:else if isSidebarCollapsed}
+    <aside class="
+        bg-background flex flex-col justify-between gap-y-6 py-6 px-5
+        {getPlatform() === "windows" ? "pt-10 sm:pt-12" : ""}
+    ">
+        <section class="flex justify-between items-center gap-x-4">
+            <!-- Title and redirection back to the website's home  -->
+            <h1 class="
+                block font-title text-2xl font-bold text-content-900 hover:text-content-800
+                sm:hidden
+            ">            
+                <a
+                    aria-label="Link to Docket's Homepage"
+                    href={routes.get("Home")?.link}
+                >
+                    Docket
+                </a>
+            </h1>
+
+            <button 
+                onclick={expandSidebar}
+                class="
+                    p-1.5 bg-background-50 hover:bg-background-100 shadow-md rounded-lg cursor-pointer rotate-270 
+                    sm:rotate-0
+                "
+            >      
+                <PanelRightClose class="size-4"/>
+            </button>
+        </section>
+
+        <section class="
+            hidden pt-8
+            sm:flex sm:flex-col sm:gap-y-2
+        ">
+            {#each routes as [name, {link, icon, hasSidebar}]}
+                {@const RouteIcon = icon}
+                
+                <a 
+                    href={hasSidebar ? p(link, {search: {"sidebar": "collapsed"}}) : p(link)} 
+                    class="
+                        p-1.5 shadow-md rounded-lg cursor-pointer 
+                        rotate-90 
+                        sm:rotate-0
+                        {isActive(link as any) == true ? "bg-background-100" : "bg-background cursor-pointer hover:bg-background-50"}
+
+                    "
+                    aria-label="Link to {name} Page"
+                >
+                    <RouteIcon class="size-4"/>
+                </a>
+            {/each}
+        </section>
+    </aside>
+{/if}

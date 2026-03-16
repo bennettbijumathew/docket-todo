@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { route } from 'sv-router/generated';
     import type { Snippet } from "svelte";
     import { X } from '@lucide/svelte';
     import { getPlatform } from '@/components/util/platform';
+    import { searchParams } from 'sv-router';
+    import { paramKeys, paramValues } from "@/components/util/routes";
 
     interface LayoutProps {
         children?: Snippet,
@@ -17,7 +18,8 @@
     }: LayoutProps = $props()
 </script>
 
-{#if route.hash == "#edit"}
+<!-- This editor only opens if an open editor search parameter is included in the url -->
+{#if searchParams.get(paramKeys["editor"]) == paramValues["editor"].open}
     <section class="
         bg-background top-0 left-0 p-6 flex flex-col justify-between
         fixed z-50 w-full h-full
