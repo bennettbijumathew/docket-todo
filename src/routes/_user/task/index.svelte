@@ -10,6 +10,7 @@
     import Editor from "@/components/ui/layout/editor.svelte";
     import TaskEditor from "@/components/ui/task/editor/task-editor.svelte";
     import { searchParams } from "sv-router";
+    import { paramKeys, paramValues } from "@/components/util/routes";
 
     // These variables represent the current planner that is open on the modal
     let selectedTask: Task | null = $state(null)
@@ -25,8 +26,8 @@
             selectedTask = task
             
             // Replaces the "edit" search parameter with a true value.
-            searchParams.delete("edit")
-            searchParams.append("edit", true)
+            searchParams.delete(paramKeys["editor"])
+            searchParams.append(paramKeys["editor"], paramValues["editor"].open)
         }
     }
 
@@ -35,7 +36,7 @@
         selectedTask = null
         
         // Deletes the current "edit" parameter.
-        searchParams.delete("edit")
+        searchParams.delete(paramKeys["editor"])
     }   
 </script>
 
