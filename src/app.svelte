@@ -18,7 +18,7 @@
 </script>
 
 {#if getPlatform() === "windows"}
-    <header data-tauri-drag-region class="bg-transparent absolute top-0 left-0 w-full h-6 flex items-center justify-between z-100">
+    <header data-tauri-drag-region class="bg-transparent fixed top-0 left-0 w-full h-6 flex items-center justify-between z-100">
         <div class="flex items-center transition-colors">
             <button 
                 onclick={() => navigate(-1)} 

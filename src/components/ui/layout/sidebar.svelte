@@ -11,15 +11,23 @@
 
     let { children }: LayoutProps = $props()
 
-    // This handles the opening and closing of the sidebar.
+    // This variable represents state of opening and closing of the sidebar.
     let isSidebarCollapsed = $state(false)
 
+    // This functions opens / closes the sidebar. 
     function toggleSidebar() {
         isSidebarCollapsed = !isSidebarCollapsed
 
-        if (isSidebarCollapsed === false) {
+        // This adds a hash url for mobile users. This was added as going back on mobile 
+        // goes to the previous page rather than close the overlay. This prevents that behavior. 
+        if (isSidebarCollapsed === true) {
             navigate(route.pathname as RoutePath, {
                 hash: "sidebar"
+            })
+        }
+        else {
+            navigate(route.pathname as RoutePath, {
+                hash: ""
             })
         }
     }
@@ -75,7 +83,6 @@
                     aria-label="Link to {name} Page"
                 >
                     <RouteIcon class="size-4"/>
-                    
                     {name}
                 </a>
             {/each}
