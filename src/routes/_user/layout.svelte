@@ -1,21 +1,10 @@
 <script lang="ts">
-    import { appController } from '@/lib/app/controller';
     import { authStore } from '@/lib/auth/store.svelte';
     import { ArrowRight } from '@lucide/svelte';
     import { navigate } from 'sv-router/generated';
-	import { onDestroy, onMount, type Snippet } from 'svelte';  
+	import { type Snippet } from 'svelte';  
     
 	let { children }: { children: Snippet } = $props();
-
-    // On the page being mounted to the DOM, the authentication controller starts.
-    onMount(() => {
-        appController.start()
-    })
-
-    // On the page being unmounted from the DOM, the authentication controller stops.
-    onDestroy(() => {
-        appController.stop()
-    })
 </script>
 
 <!-- This is the loading page -->
@@ -44,5 +33,10 @@
     </main>
 <!-- This is the rendered page for if the user is authenticated -->
 {:else if authStore.getReady() === true && authStore.getLoading() === false}
-    {@render children()}
+    <main class="
+        flex flex-col flex-1 inset *:inset-shadow-b-md
+        sm:min-h-0 sm:flex-row *:sm:inset-shadow-l-md
+    ">
+        {@render children()}
+    </main>
 {/if}

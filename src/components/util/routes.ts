@@ -1,14 +1,29 @@
-export type routeNames =
+import { type Icon, House, DoorOpen, UserPlus, ClipboardCheck, Notebook } from '@lucide/svelte';
+
+type RouteNames =
     | "Home"
     | "Log In"
     | "Sign Up"
     | "Task"
     | "Planner"
 
-export const routes: Map<routeNames, string> = new Map()
+export type RoutePath = 
+    | "/"
+    | "/login"
+    | "/signup"
+    | "/task"
+    | "/planner"
+    
 
-routes.set("Home", "/")
-routes.set("Log In", "/login")
-routes.set("Sign Up", "/signup")
-routes.set("Task", "/task")
-routes.set("Planner", "/planner")
+interface RouteDetails {
+    link: RoutePath, 
+    icon: typeof Icon
+}
+
+export const routes: Map<RouteNames, RouteDetails> = new Map()
+
+routes.set("Home", { link: "/", icon: House })
+routes.set("Log In", { link: "/login", icon: DoorOpen })
+routes.set("Sign Up", { link: "/signup", icon: UserPlus })
+routes.set("Task", { link: "/task", icon: ClipboardCheck })
+routes.set("Planner", { link: "/planner", icon: Notebook })
