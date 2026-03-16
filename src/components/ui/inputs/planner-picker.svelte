@@ -5,6 +5,7 @@
     import { ArrowDown, ArrowUp, Notebook } from "@lucide/svelte";
     import { Combobox } from "bits-ui";
     import Checkbox from "./checkbox.svelte";
+    import { MAX_PLANNERS } from "@/lib/task/repository";
   
     interface PickerProps {
         value: string[],
@@ -19,10 +20,6 @@
         pickerStyle = "bg-background",
     }: PickerProps = $props()
 
-    // This variable is the maximum amount of planners that can be added to a task. The limit is placed as
-    // as there is a limit of items for Firebase's array-contains-any query.
-    const MAX_PLANNERS = 10
-
     // A variable for fetching the list of planners
     const planners: Planner[] = $derived(plannerStore.getList());
     
@@ -32,6 +29,13 @@
     const searchedPlanners: Planner[] = $derived(
         planners.filter((item) => item.name.toLowerCase().includes(searchInput.toLowerCase()))
     );
+
+    const selectedPlanners: Planner[] = $derived(
+        plannerStore.getItemsById(value, true)
+    )
+
+    // The minimum number of slots shown on the row of the task's planner grid.
+    let colsInPlannerRow = MAX_PLANNERS / 2
 </script>
 
 <Combobox.Root
@@ -44,27 +48,42 @@
     }}
 >
     <!-- Input to open the combobox options and triggers the combobox search. -->
-    <div class="{buttonStyle} flex items-center rounded-lg px-2 text-center gap-x-2">
-        <Combobox.Trigger class="cursor-pointer">
-            <Notebook class="size-4"/>
-        </Combobox.Trigger>
+    <div class="{buttonStyle} flex items-center justify-between rounded-lg text-center gap-x-2">
+        <div class="flex items-center gap-x-2">
+            <Combobox.Trigger class="cursor-pointer">
+                <Notebook class="size-4"/>
+            </Combobox.Trigger>
 
-        <!-- Search input to filter through the planners.  -->
-        <Combobox.Input
-            onclick={(e) => e.stopPropagation()}
-            oninput={(e) => searchInput = e.currentTarget.value }
-            placeholder="Select a planner..."
-            aria-label="Select a planner..."
-            class="w-32 border-b hover:border-0 border-background-100 focus:outline-0"
-            autocomplete="off"
-            clearOnDeselect={true}
-            required={true}
-        />
-        
-        <!-- This is a list of planners portrayed as colored dots. -->
-        <Combobox.Trigger class="flex flex-wrap w-10 min-h-2 max-h-4 bg-background-300 rounded-xs overflow-hidden cursor-pointer ml-1">
-            {#each plannerStore.getItemsById(value, true) as planner (planner.id)}
-                <div class="bg-{colors[planner.color]} size-2"> </div>
+            <!-- Search input to filter through the planners.  -->
+            <Combobox.Input
+                onclick={(e) => e.stopPropagation()}
+                oninput={(e) => searchInput = e.currentTarget.value }
+                placeholder="Select a planner..."
+                aria-label="Select a planner..."
+                class="w-32 border-background-100 focus:outline-0"
+                autocomplete="off"
+                clearOnDeselect={true}
+                required={value.length <= 0 ? true : false}
+            />
+        </div>
+
+        <Combobox.Trigger class="
+            grid gap-2 select-none grid-cols-5 grid-rows-1 *:rounded-xs *:size-2 
+            sm:gap-0.5
+        ">
+            {#each {length: MAX_PLANNERS - selectedPlanners.length}, slotNum}
+                <!-- This logic ensures that multiple rows aren't shown beyond the amount that is required -->
+                {#if slotNum < colsInPlannerRow && selectedPlanners.length <= colsInPlannerRow}
+                    <!-- The styling hides slots based on the user using medias such as phones or tablets -->
+                    <div class="hidden"> </div>
+                {:else}
+                    <div class="border border-background-300"> </div>
+                {/if}
+            {/each}
+
+            {#each selectedPlanners as planner}    
+                <div class="flex items-center justify-center bg-{colors[planner.color]}"> 
+                </div>
             {/each}
         </Combobox.Trigger>
     </div>
@@ -72,6 +91,7 @@
     <!-- The content that is shown once the trigger is pressed. -->
     <Combobox.Content 
         sideOffset={25} 
+        collisionPadding={25}
         class="{pickerStyle} rounded-lg w-full max-h-60 overflow-y-auto"
         side="top"
     >
@@ -89,7 +109,7 @@
                     value={planner.id}
                     label={planner.name}
                     class="flex justify-between items-center data-highlighted:bg-background-100 p-1 px-2 cursor-pointer rounded-lg gap-x-2 data-disabled:cursor-not-allowed"
-                    disabled={value.length >= MAX_PLANNERS && !value.includes(planner.id)}
+                    disabled={value.length >= MAX_PLANNERS + 1 && !value.includes(planner.id)}
                 >   
                     {#snippet children({ selected })}
                         <p class="truncate"> {planner.name} </p> 
@@ -98,7 +118,7 @@
                             value={selected}
                             checkedStyle="size-4 bg-{colors[planner.color]}"
                             unCheckedStyle="size-4 border-{colors[planner.color]}"
-                            disabled={value.length >= MAX_PLANNERS && selected == false}
+                            disabled={value.length >= MAX_PLANNERS + 1 && selected == false}
                         />
                     {/snippet}
                 </Combobox.Item>

@@ -4,7 +4,7 @@
     import { plannerStore } from "@/lib/planner/store.svelte";
     import { taskStore } from "@/lib/task/store.svelte";
     import { type TaskPlanner } from "@/lib/planner/type";
-    import { taskRepo } from "@/lib/task/repository";
+    import { MAX_PLANNERS, taskRepo } from "@/lib/task/repository";
     import { Combobox } from "bits-ui";
     import Checkbox from "@/components/ui/inputs/checkbox.svelte";
     import { ArrowDown, ArrowUp, X } from "@lucide/svelte";
@@ -24,10 +24,6 @@
         buttonStyle = "bg-background hover:bg-background-100",
         pickerStyle = "bg-background",
     }: PickerProps = $props();
-
-    // This variable is the maximum amount of planners that can be added to a task. The limit is placed as
-    // as there is a limit of items for Firebase's array-contains-any query.
-    const MAX_PLANNERS = 10
 
     let searchInput: string = $state("");
 
