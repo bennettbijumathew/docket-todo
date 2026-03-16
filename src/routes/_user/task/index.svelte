@@ -4,12 +4,12 @@
     import TaskListByCompleted from "@/components/ui/task/list/task-list-by-completed.svelte";
     import Main from "@/components/ui/layout/main.svelte";
     import Sidebar from "@/components/ui/layout/sidebar.svelte";
-    import { navigate } from 'sv-router/generated';
     import TaskInputs from "@/components/ui/task/list/parts/task-inputs.svelte";
     import TaskContainer from "@/components/ui/task/list/parts/task-container.svelte";
     import PlannerToggleList from "@/components/ui/task/sidebar/planner-toggle-list.svelte";
     import Editor from "@/components/ui/layout/editor.svelte";
     import TaskEditor from "@/components/ui/task/editor/task-editor.svelte";
+    import { searchParams } from "sv-router";
 
     // These variables represent the current planner that is open on the modal
     let selectedTask: Task | null = $state(null)
@@ -23,20 +23,19 @@
         // If a different task is selected, the task is opened
         else if (task !== null) {
             selectedTask = task
-    
-            navigate("/task", {
-                hash: "edit"
-            })
+            
+            // Replaces the "edit" search parameter with a true value.
+            searchParams.delete("edit")
+            searchParams.append("edit", true)
         }
     }
 
     // Closes the editor
     function closeEditor() {
         selectedTask = null
-
-        navigate("/task", {
-            hash: ""
-        })
+        
+        // Deletes the current "edit" parameter.
+        searchParams.delete("edit")
     }   
 </script>
 
@@ -66,6 +65,7 @@
     <TaskInputs/>
 </Main> 
 
+<!-- If the page's "edit" parameter is set to true, the editor is shown. -->
 <Editor         
     header="Edit Task"
     onClose={() => closeEditor()}

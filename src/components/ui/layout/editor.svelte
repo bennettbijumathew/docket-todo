@@ -3,6 +3,7 @@
     import type { Snippet } from "svelte";
     import { X } from '@lucide/svelte';
     import { getPlatform } from '@/components/util/platform';
+    import { searchParams } from 'sv-router';
 
     interface LayoutProps {
         children?: Snippet,
@@ -17,7 +18,7 @@
     }: LayoutProps = $props()
 </script>
 
-{#if route.hash == "#edit"}
+{#if searchParams.get('edit') === true}
     <section class="
         bg-background top-0 left-0 p-6 flex flex-col justify-between
         fixed z-50 w-full h-full
