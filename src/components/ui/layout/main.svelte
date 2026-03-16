@@ -11,13 +11,10 @@
     }: LayoutProps = $props()
 </script>
 
+<!-- Adds padding for the windows application so that window bar has the same background. -->
 <section class="
-    flex flex-col flex-3 p-6
+    flex flex-col flex-3 p-6 
+    {getPlatform() === "windows" ? "sm:pt-12" : ""}
 ">
-    <!-- This section adds padding for the windows application -->
-    {#if getPlatform() === "windows"}
-        <div class="h-6"></div>
-    {/if}
-
     {@render children?.()}
 </section>

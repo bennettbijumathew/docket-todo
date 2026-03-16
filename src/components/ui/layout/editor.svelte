@@ -23,12 +23,8 @@
         fixed z-50 w-full h-full
         sm:static sm:w-50 sm:mt-0 sm:p-6
         lg:w-90
+        {getPlatform() === "windows" ? "sm:pt-12" : ""}
     ">
-        <!-- This section adds padding for the windows application -->
-        {#if getPlatform() === "windows"}
-            <div class="h-6"></div>
-        {/if}
-
         <div class="flex justify-between items-center mb-6">
             <h2 class="
                 font-title font-semibold 

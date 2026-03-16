@@ -1,8 +1,8 @@
 <script lang="ts">
     import { getPlatform } from "@/components/util/platform";
-    import { routes } from "@/components/util/routes";
+    import { type RoutePath, routes } from "@/components/util/routes";
     import { PanelRightClose, PanelRightOpen } from "@lucide/svelte";
-    import { isActive } from "sv-router/generated";
+    import { isActive, navigate, route } from "sv-router/generated";
     import type { Snippet } from "svelte";
 
     interface LayoutProps {
@@ -16,26 +16,27 @@
 
     function toggleSidebar() {
         isSidebarCollapsed = !isSidebarCollapsed
+
+        if (isSidebarCollapsed === false) {
+            navigate(route.pathname as RoutePath, {
+                hash: "sidebar"
+            })
+        }
     }
 </script>
 
 <aside class="
-    b top-0 left-0 right-0 px-6 pb-4 flex flex-col justify-between
-    sm:max-w-50 sm:mt-0 sm:p-6
+    bg-background top-0 left-0 right-0 p-6 flex flex-col justify-between
+    sm:max-w-50 sm:mt-0
     lg:max-w-90 
     {isSidebarCollapsed ? "fixed z-50 sm:static w-full h-full sm:w-auto" : "sticky flex-none sm:flex-1"}
+    {getPlatform() === "windows" ? "pt-10 sm:pt-12" : ""}
 ">
-    <div class="
+    <section class="
         flex justify-between items-center gap-x-4
     ">
-        <!-- This section adds padding for the windows application -->
-        
         <!-- Title and redirection back to the website's home  -->
-        <h1 class="font-title text-2xl font-bold text-content-900 hover:text-content-600">
-            {#if getPlatform() === "windows"}
-                <div class="h-6"></div>
-            {/if}
-            
+        <h1 class="font-title text-2xl font-bold text-content-900 hover:text-content-600">            
             <a 
                 aria-label="Link to Docket's Homepage"
                 href={routes.get("Home")?.link}
@@ -54,7 +55,7 @@
                 <PanelRightClose class="size-4"/>
             {/if}
         </button>
-    </div>
+    </section>
 
     <!-- Panel for navigating to different sections of the application.   -->
     <section class="{isSidebarCollapsed ? "" : "hidden sm:block"}">
