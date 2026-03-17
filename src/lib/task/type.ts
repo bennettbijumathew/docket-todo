@@ -1,7 +1,6 @@
 import { dateToTimestamp, timestampToDate } from "@/components/util/date";
 import { CalendarDateTime } from "@internationalized/date"
 import { QueryDocumentSnapshot } from "firebase/firestore";
-import { Timestamp } from "firebase/firestore";
 
 export interface Task { 
     id: string, 
