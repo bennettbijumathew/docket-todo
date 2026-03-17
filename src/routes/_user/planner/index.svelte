@@ -8,6 +8,7 @@
     import { type ColorKey, colors } from "@/components/util/color";
     import ColorPicker from "@/components/ui/inputs/color-picker.svelte";
     import PlannerEditor from "@/components/ui/planner/editor/planner-editor.svelte";
+    import Sidebar from "@/components/ui/layout/sidebar.svelte";
 
 
     // This variable represents the input data used to create a new planner
@@ -97,6 +98,8 @@
     </main>
 {/snippet}
 
+
+<Sidebar/>
 
 <!-- VIEW: This is what is shown on the arrival of the page -->
 <main class="flex-1 flex p-4 pt-0 gap-x-4 min-h-0 bg-background">
