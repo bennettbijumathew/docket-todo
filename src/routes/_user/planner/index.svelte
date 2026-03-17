@@ -9,6 +9,7 @@
     import ColorPicker from "@/components/ui/inputs/color-picker.svelte";
     import PlannerEditor from "@/components/ui/planner/editor/planner-editor.svelte";
     import Sidebar from "@/components/ui/layout/sidebar.svelte";
+    import PlannerItem from "@/components/ui/planner/list/parts/planner-item.svelte";
 
 
     // This variable represents the input data used to create a new planner
@@ -55,45 +56,11 @@
     }
 </script>
 
-
-<!-- COMPONENT: This is planner tile snippet that is used to show a single planner -->
-{#snippet plannerTile(planner: Planner)}
-    <button
-        class="flex justify-between items-center h-13 hover:bg-background-50 cursor-pointer p-2"
-        onclick={() => toggleEditModal(planner)}
-    >
-        <section class="flex items-center gap-x-1 text-left">
-            <input 
-                type="checkbox" 
-                class="m-2 ml-0 size-4 accent-content-900"
-                checked={planner.visible}
-                onclick={() => plannerRepo.editVisibility(authStore.getUserId(), planner.id, !planner.visible)}
-            >   
-
-            <div>
-                <h3 class="font-bold"> {planner.name} </h3>
-                <p class="truncate text-sm max-w-150">
-                    Users: 
-                    {#each Object.entries(planner.users) as [id]}
-                        {id}
-                    {/each}
-                </p>
-            </div>
-        </section>
-
-        <div class="flex gap-x-2">
-            <span class="flex items-center">
-                <div class="text-sm font-light bg-{colors[planner.color]} h-4 w-16"> </div>
-            </span>
-        </div>
-    </button>
-{/snippet}
-
 <!-- COMPONENT: This is the snippet used to show a list of planners -->
 {#snippet listOfPlanners(list: Planner[])}
     <main class="flex flex-col divide-y divide-background-100">
         {#each list as planner}
-            {@render plannerTile(planner)}
+            <PlannerItem planner={planner}></PlannerItem>
         {/each}
     </main>
 {/snippet}
