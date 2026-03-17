@@ -1,24 +1,26 @@
 <script lang="ts">
     import { type Planner } from "@/lib/planner/type";
     import ColorPicker from "../../inputs/color-picker.svelte";
-    import { Trash, X } from "@lucide/svelte";
+    import { Trash } from "@lucide/svelte";
     import { plannerRepo } from "@/lib/planner/repository";
     import { type ColorKey } from "@/components/util/color";
-    import { plannerStore } from "@/lib/planner/store.svelte";
 
 
     // The component receives the selected planner id with a function that 
     // handles the behavior of the open and close state of the editor. 
     interface EditorProps {
-        plannerId: string | null, 
-        toggleFn: () => void
+        planner: Planner | null, 
+        onClose?: () => void
     }
     
-    let { plannerId, toggleFn }: EditorProps = $props()
+    let { 
+        planner: initialPlanner, 
+        onClose 
+    }: EditorProps = $props()
 
 
-    // Gets the planner from the planner id. Through this method, changes in the state is updated properly
-    const planner: Planner | null = $derived(plannerStore.getList().find(p => p.id === plannerId) || null);
+    // Gets the planner that is derived from the state array.
+    const planner: Planner | null = $derived(initialPlanner);
 
 
     // Inputs of this editor are initialized with effect used to 
@@ -63,64 +65,60 @@
             return 
         }
 
+        // Deletes the planner using the planner's id.
         plannerRepo.deletePlanner(plannerId) 
+
+        // Closes the sidebar using the sidebar's close function
+        onClose?.()
     }
 </script>
 
 <!-- VIEW: A list of inputs that change a planner's details -->
 {#if planner != null}
-    <section class="flex flex-col justify-between flex-1 border border-background-300 rounded-xl p-4">
-        <div class="flex flex-col gap-y-4">
-            <div class="flex justify-between items-center pb-1">
-                <h2 class="font-default font-semibold text-xl text-center">Edit Planner</h2>
-
-                <button 
-                    class="p-2 border border-background-300 hover:bg-background-100 rounded-lg cursor-pointer"
-                    onclick={toggleFn}
-                >   
-                    <X class="size-4"/>
-                </button>
-            </div>
-
-            <!-- Form to update name changes for the planner -->
-            <form 
-                onsubmit={(e) => { 
-                    e.preventDefault(); 
-                    submitNameChange();
-                }}
+    <div class="flex flex-col flex-1 gap-y-4">
+        <!-- Form to update name changes for the planner -->
+        <form 
+            onsubmit={(e) => { 
+                e.preventDefault(); 
+                submitNameChange();
+            }}
+        >
+            <p class="font-bold">Title</p>
+            <input 
+                type="text" 
+                class="bg-background-50 hover:bg-background-100 focus:bg-background-200 outline-none rounded-lg p-1 px-1.5 w-full shadow-md"
+                bind:value={inputs.name}
+                onblur={submitNameChange}
             >
-                <p class="font-bold">Title</p>
-                <input 
-                    type="text" 
-                    class="border border-background-300 rounded-lg p-1 w-full"
-                    bind:value={inputs.name}
-                    onblur={submitNameChange}
-                >
-            </form>
+        </form>
 
-            <div class="flex flex-col">
-                <p class="font-bold">Color</p>
+        <div class="flex flex-col">
+            <p class="font-bold">Color</p>
 
-                <ColorPicker 
-                    value={inputs.color} 
-                    onChangeFn={(newColor) => { 
-                        inputs.color = newColor as ColorKey
-                        submitColorChange()
-                    }}
-                    buttonClass="rounded-lg px-2 py-1"
-                    offset={5}
-                />
-            </div>
-
+            <ColorPicker 
+                value={inputs.color} 
+                onChangeFn={(newColor) => { 
+                    inputs.color = newColor as ColorKey
+                    submitColorChange()
+                }}
+                buttonClass="rounded-lg px-2 py-1"
+                offset={5}
+            />
         </div>
-        
-        <div class="text-center">
-            <button 
-                class="p-2 border border-background-300 hover:bg-background-100 rounded-lg cursor-pointer"
-                onclick={() => submitDeletionOfPlanner(planner?.id ?? null)}
-            >   
-                <Trash class="size-4"/>
-            </button>
-        </div>
-    </section>
+
+    </div>
+    
+    <div class="text-center">
+        <button 
+            class="p-2 border border-background-300 hover:bg-background-100 rounded-lg cursor-pointer"
+            onclick={() => submitDeletionOfPlanner(planner?.id ?? null)}
+        >   
+            <Trash class="size-4"/>
+        </button>
+    </div>
+{:else}
+    <div class="flex flex-col flex-1 justify-center items-center">
+        <h2 class="font-title font-semibold text-md"> Error Found </h2>
+        <p> Can't edit the selected item.</p>
+    </div>
 {/if}

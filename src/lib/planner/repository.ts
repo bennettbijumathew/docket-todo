@@ -13,10 +13,19 @@ export class PlannerRepository {
         
         // This snapshot sets the planner list while adding a visible attribute for each user 
         return onSnapshot(q, (querySnapshot: QuerySnapshot) => {
-            const newPlanners: Planner[] = querySnapshot.docs.map((doc) => doc.data()) as Planner[]
+            let newPlanners: Planner[] = querySnapshot.docs.map((doc) => doc.data()) as Planner[]
 
-            // Sends a alphabetically sorted version of the planners array
-            callbackFn(newPlanners.sort((a, b) => a.name.localeCompare(b.name)))
+            // Sorts the new planners by name then id.
+            // If the names are the same, then the id are compared rather than name. This ensures the same placement of planners 
+            let sortedPlanners = newPlanners.sort((a, b) => { 
+                if (a.name !== b.name) {
+                    return a.name.localeCompare(b.name) 
+                }
+
+                return a.id.localeCompare(b.id)
+            })
+
+            callbackFn(sortedPlanners)
         })            
     }
 
