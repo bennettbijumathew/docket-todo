@@ -23,7 +23,7 @@
     onValueChange={(v) => onChangeFn(v as ColorKey)}
 >
     <!-- Button that opens the select menu -->
-    <Select.Trigger class="{buttonClass} bg-{colors[value]} hover:opacity-90 flex items-center cursor-pointer transition-all rounded-lg">
+    <Select.Trigger class="{buttonClass} bg-{colors[value]} hover:opacity-90 flex items-center cursor-pointer transition-all rounded-md">
         <PaintBucket class="size-4 text-{colors[value]} mr-2"/>
 
         <p class="rounded-lg">{value.charAt(0).toUpperCase()}{value.slice(1)}</p>

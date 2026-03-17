@@ -13,6 +13,7 @@
     import Main from "@/components/ui/layout/main.svelte";
     import PlannerContainer from "@/components/ui/planner/list/parts/planner-container.svelte";
     import PlannerListByVisible from "@/components/ui/planner/list/planner-list-by-visible.svelte";
+    import PlannerInputs from "@/components/ui/planner/list/parts/planner-inputs.svelte";
 
 
     // This variable represents the input data used to create a new planner
@@ -83,6 +84,8 @@
     <PlannerContainer>
         <PlannerListByVisible/>
     </PlannerContainer>
+    
+    <PlannerInputs/>
 </Main>
 
 <!-- VIEW: This is what is shown on the arrival of the page -->
