@@ -25,7 +25,7 @@
         fixed z-50 w-full h-full
         sm:static sm:w-50 sm:mt-0
         lg:w-90
-        {getPlatform() === "windows" ? "pt-10 sm:pt-12" : ""}
+        {(getPlatform() === "windows" || getPlatform() === "android" ) ? "pt-10 sm:pt-12" : ""}
     ">
         <div class="flex justify-between items-center mb-6">
             <h2 class="

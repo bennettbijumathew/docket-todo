@@ -33,7 +33,7 @@
         bg-background p-6 flex flex-col gap-y-6 z-50
         fixed w-screen h-screen
         sm:static sm:w-50 sm:h-auto sm:flex-1
-        {getPlatform() === "windows" ? "pt-10 sm:pt-12" : ""}
+        {(getPlatform() === "windows" || getPlatform() === "android" ) ? "pt-10 sm:pt-12" : ""}
     ">
         <section class="flex justify-between items-center gap-x-4">
             <!-- Title and redirection back to the website's home  -->
@@ -86,7 +86,7 @@
 {:else if isSidebarCollapsed}
     <aside class="
         bg-background flex flex-col justify-between gap-y-6 py-6 px-5
-        {getPlatform() === "windows" ? "pt-10 sm:pt-12" : ""}
+        {(getPlatform() === "windows" || getPlatform() === "android" ) ? "pt-10 sm:pt-12" : ""}
     ">
         <section class="flex justify-between items-center gap-x-4">
             <!-- Title and redirection back to the website's home  -->
