@@ -28,7 +28,7 @@
     <section class="
         flex-1
         sm:flex-3
-        bg-linear-to-r from-purple-100 to-blue-200
+        bg-linear-to-r from-blue-200 to-purple-100
     ">
     </section>
 
@@ -57,9 +57,7 @@
                 e.preventDefault();
                 handleLogIn();
             }}
-            class="
-                flex flex-col gap-y-4 
-            "
+            class="flex flex-col gap-y-4 "
         >
             <!-- Place for the user to write their email -->
             <div>
