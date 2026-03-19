@@ -109,11 +109,15 @@
             <button 
                 onclick={expandSidebar}
                 class="
-                    p-1.5 bg-background-50 hover:bg-background-100 shadow-md rounded-lg cursor-pointer rotate-270 
-                    sm:p-2 sm:rotate-0
+                    p-1.5 bg-background-50 hover:bg-background-100 shadow-md rounded-lg cursor-pointer 
+                    sm:p-2
                 "
             >      
-                <PanelRightClose class="size-4"/>
+                <PanelRightClose class="
+                    size-4
+                    rotate-270
+                    sm:rotate-0
+                "/>
             </button>
         </section>
 
@@ -128,10 +132,7 @@
                     href={hasSidebar ? p(link, {search: {"sidebar": "collapsed"}}) : p(link)} 
                     class="
                         p-1.5 shadow-md rounded-lg cursor-pointer 
-                        rotate-90 
-                        sm:rotate-0
                         {isActive(link as any) == true ? "bg-background-100" : "bg-background cursor-pointer hover:bg-background-50"}
-
                     "
                     aria-label="Link to {name} Page"
                 >
