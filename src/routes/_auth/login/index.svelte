@@ -110,7 +110,7 @@
             <!-- Place for the log in and sign up -->
             <div class="flex justify-center gap-x-2 pt-2">
                 <a 
-                    class="flex justify-between items-center gap-x-2 px-2 py-1 bg-background-50 hover:bg-background-100 shadow-md rounded-lg cursor-pointer"
+                    class="w-26 flex justify-between items-center gap-x-2 px-2 py-1 bg-background-50 hover:bg-background-100 shadow-md rounded-lg cursor-pointer"
                     href="/signup"
                 >
                     <UserPlus class="size-4"/>
@@ -118,7 +118,7 @@
                 </a>
 
                 <button 
-                    class="flex justify-between items-center gap-x-2 p-2 bg-background-50 hover:bg-background-100 shadow-md rounded-lg cursor-pointer"
+                    class="w-26 flex justify-between items-center gap-x-2 p-2 bg-background-50 hover:bg-background-100 shadow-md rounded-lg cursor-pointer"
                     type="submit"
                 >
                     <DoorOpen class="size-4"/>
