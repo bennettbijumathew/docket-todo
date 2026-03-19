@@ -2,12 +2,12 @@
 <script lang="ts">
     import { type Planner } from "@/lib/planner/type";
     import PlannerEditor from "@/components/ui/planner/editor/planner-editor.svelte";
-    import Sidebar from "@/components/ui/layout/sidebar.svelte";
-    import Main from "@/components/ui/layout/main.svelte";
+    import Sidebar from "@/components/ui/layout/_user/sidebar.svelte";
+    import Main from "@/components/ui/layout/_user/main.svelte";
     import PlannerContainer from "@/components/ui/planner/list/parts/planner-container.svelte";
     import PlannerListByVisible from "@/components/ui/planner/list/planner-list-by-visible.svelte";
     import PlannerInputs from "@/components/ui/planner/list/parts/planner-inputs.svelte";
-    import Editor from "@/components/ui/layout/editor.svelte";
+    import Editor from "@/components/ui/layout/_user/editor.svelte";
     import { searchParams } from "sv-router";
     import { paramKeys, paramValues } from "@/components/util/routes";
 
