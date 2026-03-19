@@ -101,39 +101,30 @@
             </div>
         
             <!-- Input to add a password, includes a button to toggle revealed state of the input. -->
-            <div>
-                <label 
-                    for="password" 
-                    class="text-sm"
-                > 
-                    Password 
-                </label>
+            <div class="relative flex bg-background-50 hover:bg-background-100 focus:bg-background-200 rounded-lg shadow-md">
+                <input 
+                    id="password"
+                    type={isPasswordRevealed == true ? "text": "password"}
+                    bind:value={password} 
+                    class="w-full outline-none p-1 px-1.5 rounded-lg pr-6" 
+                    placeholder="Enter your password"
+                    autocomplete="current-password"
+                />
 
-                <div class="flex bg-background-50 hover:bg-background-100 focus:bg-background-200 rounded-lg p-1 px-1.5 w-full shadow-md">
-                    <input 
-                        id="password"
-                        type={isPasswordRevealed == true ? "text": "password"}
-                        bind:value={password} 
-                        class="flex-1 outline-none" 
-                        placeholder="Enter your password"
-                        autocomplete="current-password"
-                    />
-
-                    <!-- Button to reveal / hide the password -->
-                    <button 
-                        onclick={(e) => {
-                            e.preventDefault();
-                            isPasswordRevealed = !isPasswordRevealed
-                        }}
-                        class="cursor-pointer px-1 hover:bg-background-300 rounded-lg"
-                    >
-                        {#if isPasswordRevealed == true}
-                            <Eye class="size-4"/>
-                        {:else}
-                            <EyeOff class="size-4"/>
-                        {/if}
-                    </button>
-                </div>
+                <!-- Button to reveal / hide the password -->
+                <button 
+                    onclick={(e) => {
+                        e.preventDefault();
+                        isPasswordRevealed = !isPasswordRevealed
+                    }}
+                    class="absolute top-0 bottom-0 right-0 cursor-pointer m-1 p-1 hover:bg-background-300 rounded-lg"
+                >
+                    {#if isPasswordRevealed == true}
+                        <Eye class="size-4"/>
+                    {:else}
+                        <EyeOff class="size-4"/>
+                    {/if}
+                </button>
             </div>
             
             <!-- Button to sign up to the website -->
