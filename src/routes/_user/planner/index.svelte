@@ -11,26 +11,6 @@
     import { searchParams } from "sv-router";
     import { paramKeys, paramValues } from "@/components/util/routes";
 
-    // // These variables represent the current planner that is open on the modal
-    // // and the state of the edit modal being open
-    // let selectedPlanner: Planner | null = $state(null)
-    // let isEditModalOpen: boolean = $state(false)
-
-    // // This function open and closes the edit modal.
-    // function toggleEditModal(newPlanner: Planner | null) {
-    //     // If the user clicks on the same planner or the planner doesn't exist
-    //     // Then the modal is hidden from the users' view 
-    //     if (newPlanner === selectedPlanner) {
-    //         isEditModalOpen = false
-    //         selectedPlanner = null
-    //         return; 
-    //     }
-
-    //     // If the guard clauses are passed, then the new planner is set with the view being open.
-    //     selectedPlanner = newPlanner
-    //     isEditModalOpen = true
-    // }
-
     // These variables represent the current planner that is open on the modal
     let selectedPlanner: Planner | null = $state(null)
 
@@ -86,6 +66,6 @@
 >
     <PlannerEditor 
         planner={selectedPlanner} 
-        toggleFn={closeEditor}
+        onClose={closeEditor}
     />
 </Editor>

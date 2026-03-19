@@ -49,12 +49,16 @@
             <button 
                 onclick={collapseSidebar}
                 class="
-                    p-1.5 bg-background-50 hover:bg-background-100 shadow-md rounded-lg cursor-pointer 
-                    rotate-90 
-                    sm:rotate-0
+                    bg-background-50 hover:bg-background-100 shadow-md rounded-lg cursor-pointer 
+                    p-1.5 
+                    sm:p-2
                 "
             >      
-                <PanelRightOpen class="size-4"/>
+                <PanelRightOpen class="
+                    size-4
+                    rotate-90
+                    sm:rotate-0
+                "/>
             </button>
         </section>
 
@@ -85,7 +89,7 @@
     </aside>
 {:else if isSidebarCollapsed}
     <aside class="
-        bg-background flex flex-col justify-between gap-y-6 py-6 px-5
+        bg-background flex flex-col justify-between gap-y-6 p-6
         {(getPlatform() === "windows" || getPlatform() === "android" ) ? "pt-10 sm:pt-12" : ""}
     ">
         <section class="flex justify-between items-center gap-x-4">
@@ -106,7 +110,7 @@
                 onclick={expandSidebar}
                 class="
                     p-1.5 bg-background-50 hover:bg-background-100 shadow-md rounded-lg cursor-pointer rotate-270 
-                    sm:rotate-0
+                    sm:p-2 sm:rotate-0
                 "
             >      
                 <PanelRightClose class="size-4"/>
@@ -131,7 +135,11 @@
                     "
                     aria-label="Link to {name} Page"
                 >
-                    <RouteIcon class="size-4"/>
+                    <RouteIcon class="
+                        size-4
+                        rotate-90 
+                        sm:rotate-0
+                    "/>
                 </a>
             {/each}
         </section>
