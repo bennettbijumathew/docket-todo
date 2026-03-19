@@ -136,6 +136,7 @@
                 </div>
             </div>
             
+            <!-- Button to sign up to the website -->
             <div class="pt-2 flex justify-center">
                 <button
                     type="submit"
