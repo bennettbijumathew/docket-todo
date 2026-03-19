@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { navigate } from "sv-router/generated";
     import { authController } from "@/lib/auth/controller";
-    import { authStore } from "@/lib/auth/store.svelte";
+    import { DoorOpen, UserPlus } from "@lucide/svelte";
+    import { getPlatform } from "@/components/util/platform";
+    import { Toaster } from "svelte-sonner";
 
     // Inputs for logging into the website, changes in the input changes the values.
     let email: string = $state("");
@@ -17,61 +19,99 @@
     }
 </script>
 
-<main class="flex-1 flex flex-col p-4 rounded-xl gap-x-4 min-h-0 bg-background border border-background-300 m-4 mt-0">
-    <h2 class="font-default font-semibold text-xl text-center pb-4"> Login </h2>
+<main class="
+    flex flex-1 flex-col
+    *:inset-shadow-b-md
+    sm:flex-row-reverse *:sm:inset-shadow-l-md
+">     
+    <!-- This section shows a wallpaper -->
+    <section class="
+        flex-1
+        sm:flex-3
+        bg-linear-to-r from-purple-100 to-blue-200
+    ">
+    </section>
 
-    <!-- Form for the users to input their email and password to log in. -->
-    <form 
-        onsubmit={(e) => {
-            e.preventDefault();
-            handleLogIn();
-        }}
-    >
-        <div class="pb-4">
-            <p>email</p>
+    <!-- The main area -->
+    <section class="
+        p-6 flex flex-col
+        justify-between
+        {(getPlatform() === "android" ) ? "pb-12" : ""}
+        sm:flex-1 sm:justify-center sm:h-auto
+    ">
+        <h1 class="font-title text-2xl font-bold text-content-900 hover:text-content-800 pb-4 text-center">            
+            Docket
+        </h1>
+        
+        <!-- Form for the users to input their email and password to log in. -->
+        <form 
+            onsubmit={(e) => {
+                e.preventDefault();
+                handleLogIn();
+            }}
+            class="
+                flex flex-col gap-y-4 
+                sm:mx-4
+            "
+        >
+            <!-- Place for the user to write their email -->
+            <div>
+                <p class="font-bold">Email</p>
 
-            <input 
-                type="text" 
-                bind:value={email} 
-                class="border-b min-w-50" 
-                placeholder="enter your email"
-                autocomplete="email"
-            />
-        </div>
-    
-        <div class="pb-4">
-            <p>password</p>
-
-            <input
-                type="password" 
-                bind:value={password} 
-                class="border-b min-w-50" 
-                placeholder="enter your password"
-                autocomplete="current-password"
-            />
-        </div>
-    
-        <div class="pb-4 flex gap-x-2">
-            <button 
-                class="border p-1" 
-                type="submit"
-            >
-                log in
-            </button>
-
-            <a 
-                class="border p-1" 
-                href="/signup"
-            >
-                sign up
-            </a>
-        </div>
-
-        <!-- The auth controller sets the store's error state, so that is reflected here. -->
-        {#if authStore.getError() !== null}
-            <div class="pb-4">
-                <p class="text-red-600"> {authStore.getError()} </p>
+                <input 
+                    type="text" 
+                    bind:value={email} 
+                    class="bg-background-50 hover:bg-background-100 focus:bg-background-200 outline-none rounded-lg p-1 px-1.5 w-full shadow-md" 
+                    placeholder="Enter your email"
+                    autocomplete="email"
+                />
             </div>
-        {/if}
-    </form>
+        
+            <!-- Place for the user to write their password -->
+            <div>
+                <p class="font-bold">Password</p>
+
+                <input
+                    type="password" 
+                    bind:value={password} 
+                    class="bg-background-50 hover:bg-background-100 focus:bg-background-200 outline-none rounded-lg p-1 px-1.5 w-full shadow-md" 
+                    placeholder="Enter your password"
+                    autocomplete="current-password"
+                />
+            </div>
+        
+            <!-- Place for the log in and sign up -->
+            <div class="flex justify-center gap-x-2 pt-2">
+                <button 
+                    class="flex justify-between items-center gap-x-2 p-2 bg-background-50 hover:bg-background-100 shadow-md rounded-lg cursor-pointer"
+                    type="submit"
+                >
+                    <DoorOpen class="size-4"/>
+                    Log In
+                </button>
+
+                <a 
+                    class="flex justify-between items-center gap-x-2 px-2 py-1 bg-background-50 hover:bg-background-100 shadow-md rounded-lg cursor-pointer"
+                    href="/signup"
+                >
+                    <UserPlus class="size-4"/>
+                    Sign Up
+                </a>
+            </div>
+
+            <!-- The auth controller sends toasts on errors found. A notification is shown within the page -->
+            <Toaster 
+                richColors={true}
+                toastOptions={{
+                    unstyled: true,
+                    classes: {
+                        toast: `border-0 flex justify-between items-center gap-x-6 p-4 py-3 rounded-lg shadow-md ${getPlatform() === "android" ? "mt-8" : ""}`,
+                        title: 'font-default',
+                    }
+                }}
+                offset={getPlatform() === "android" ? "100px" : undefined}
+                position={getPlatform() === "android" ? "top-center" : "bottom-right"}
+            />
+        </form>
+    </section>
 </main>

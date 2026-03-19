@@ -12,6 +12,7 @@ export class AuthError extends ErrorBase<AuthErrorType> {
 export type AuthErrorType = 
     | "auth/unknown-error"
     | "auth/invalid-email"
+    | "auth/invalid-credential"
     | "auth/user-disabled"
     | "auth/user-not-found"
     | "auth/wrong-password"
@@ -23,7 +24,8 @@ export type AuthErrorType =
 // The messages for each authentication error codes. 
 export const authErrorMessages: Record<AuthErrorType, string> = {
     "auth/unknown-error": "Authentication error.",
-    "auth/invalid-email": "Invalid email address.",
+    "auth/invalid-email": "Invalid email or password.",
+    "auth/invalid-credential": "Invalid email or password.",
     "auth/user-disabled": "This account has been disabled.",
     "auth/user-not-found": "The user could not be found.",
     "auth/wrong-password": "The wrong password has been entered.", 

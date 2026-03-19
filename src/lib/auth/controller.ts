@@ -13,6 +13,7 @@ import { authRepo, AuthRepository } from "./repository.ts";
 import { authStore, AuthDataStore } from "./store.svelte";
 import { AuthError } from "./type.ts";
 import { isEmailValid, isPasswordValid, isUsernameValid } from "../shared/input-validation.ts";
+import { toast } from "svelte-sonner";
 
 export class AuthController {
     // The authRepo class is one that provides services from Firebase Authentication, 
@@ -78,6 +79,9 @@ export class AuthController {
                     await this.authRepo.sendVerifyEmail(user)
                 }
 
+                // Sends a small notification in the page about the error
+                toast.error(this.authStore.getError() ?? "Unknown Error")
+
                 // Returns successful state to false as user is not logged in or verified.
                 return false
             }
@@ -90,6 +94,9 @@ export class AuthController {
             else {
                 this.authStore.setError("An unknown error has been encountered.")
             }
+
+            // Sends a small notification in the page about the error
+            toast.error(this.authStore.getError() ?? "")
 
             // Since an error was encountered, the account creation has failed. 
             return false
@@ -118,16 +125,25 @@ export class AuthController {
             // Validation the inputs before account is created. If inputs are not valid, then a unsuccessful status is sent.
             if (isUsernameValid(username).status == false) {
                 this.authStore.setError(isUsernameValid(username).message)
-                
+
+                // Sends a small notification in the page about the error
+                toast.error(this.authStore.getError() ?? "")
+
                 return false;
             }
             else if (isEmailValid(email).status == false) {
                 this.authStore.setError(isEmailValid(email).message)
 
+                // Sends a small notification in the page about the error
+                toast.error(this.authStore.getError() ?? "")
+
                 return false;
             }
             else if (isPasswordValid(password).status == true) {
                 this.authStore.setError(isPasswordValid(password).message)
+
+                // Sends a small notification in the page about the error
+                toast.error(this.authStore.getError() ?? "")
 
                 return false;
             }
@@ -144,6 +160,11 @@ export class AuthController {
             }
             // Since user does not exist, the account creation has failed. 
             else {
+                this.authStore.setError("Account creation has failed, try again.")
+
+                // Sends a small notification in the page about the error
+                toast.error(this.authStore.getError() ?? "")
+
                 return false;
             }
         }
@@ -156,6 +177,9 @@ export class AuthController {
                 this.authStore.setError("An unknown error has been encountered.")
             }
 
+            // Sends a small notification in the page about the error
+            toast.error(this.authStore.getError() ?? "")
+            
             // Since an error was encountered, the account creation has failed. 
             return false;
         }

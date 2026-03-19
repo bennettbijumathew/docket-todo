@@ -2,12 +2,12 @@
 <script lang="ts">
     import { type Task } from "@/lib/task/type";
     import TaskListByCompleted from "@/components/ui/task/list/task-list-by-completed.svelte";
-    import Main from "@/components/ui/layout/main.svelte";
-    import Sidebar from "@/components/ui/layout/sidebar.svelte";
+    import Main from "@/components/ui/layout/_user/main.svelte";
+    import Sidebar from "@/components/ui/layout/_user/sidebar.svelte";
     import TaskInputs from "@/components/ui/task/list/parts/task-inputs.svelte";
     import TaskContainer from "@/components/ui/task/list/parts/task-container.svelte";
     import PlannerToggleList from "@/components/ui/task/sidebar/planner-toggle-list.svelte";
-    import Editor from "@/components/ui/layout/editor.svelte";
+    import Editor from "@/components/ui/layout/_user/editor.svelte";
     import TaskEditor from "@/components/ui/task/editor/task-editor.svelte";
     import { searchParams } from "sv-router";
     import { paramKeys, paramValues } from "@/components/util/routes";
