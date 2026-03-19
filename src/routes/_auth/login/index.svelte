@@ -3,7 +3,6 @@
     import { authController } from "@/lib/auth/controller";
     import { DoorOpen, UserPlus } from "@lucide/svelte";
     import { getPlatform } from "@/components/util/platform";
-    import { Toaster } from "svelte-sonner";
 
     // Inputs for logging into the website, changes in the input changes the values.
     let email: string = $state("");
@@ -103,20 +102,6 @@
                     Sign Up
                 </a>
             </div>
-
-            <!-- The auth controller sends toasts on errors found. A notification is shown within the page -->
-            <Toaster 
-                richColors={true}
-                toastOptions={{
-                    unstyled: true,
-                    classes: {
-                        toast: `border-0 flex justify-between items-center gap-x-6 p-4 py-3 rounded-lg shadow-md ${getPlatform() === "android" ? "mt-8" : ""}`,
-                        title: 'font-default',
-                    }
-                }}
-                offset={getPlatform() === "android" ? "100px" : undefined}
-                position={getPlatform() === "android" ? "top-center" : "bottom-right"}
-            />
         </form>
     </section>
 </main>
