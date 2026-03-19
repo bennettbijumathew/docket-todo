@@ -18,6 +18,7 @@
         }
     }
 
+    // This is used for the password input.
     let isPasswordRevealed: boolean = $state(false)
 </script>
 
@@ -61,9 +62,17 @@
             }}
 
         >
+            <!-- Input to add a username -->
             <div>
-                <p>Username</p>
+                <label 
+                    for="username" 
+                    class="text-sm"
+                > 
+                    Username 
+                </label>
+
                 <input 
+                    id="username"
                     type="text"
                     bind:value={username} 
                     class="bg-background-50 hover:bg-background-100 focus:bg-background-200 outline-none rounded-lg p-1 px-1.5 w-full shadow-md" 
@@ -72,9 +81,17 @@
                 />
             </div>
 
+            <!-- Input to add an email -->
             <div>
-                <p>Email</p>
+                <label 
+                    for="email" 
+                    class="text-sm"
+                > 
+                    Email 
+                </label>
+
                 <input 
+                    id="email"
                     type="text" 
                     bind:value={email} 
                     class="bg-background-50 hover:bg-background-100 focus:bg-background-200 outline-none rounded-lg p-1 px-1.5 w-full shadow-md" 
@@ -83,13 +100,18 @@
                 />
             </div>
         
+            <!-- Input to add a password, includes a button to toggle revealed state of the input. -->
             <div>
-                <p>Password</p>
+                <label 
+                    for="password" 
+                    class="text-sm"
+                > 
+                    Password 
+                </label>
 
-                <div
-                    class="flex bg-background-50 hover:bg-background-100 focus:bg-background-200 rounded-lg p-1 px-1.5 w-full shadow-md"
-                >
+                <div class="flex bg-background-50 hover:bg-background-100 focus:bg-background-200 rounded-lg p-1 px-1.5 w-full shadow-md">
                     <input 
+                        id="password"
                         type={isPasswordRevealed == true ? "text": "password"}
                         bind:value={password} 
                         class="flex-1 outline-none" 
@@ -97,9 +119,13 @@
                         autocomplete="current-password"
                     />
 
+                    <!-- Button to reveal / hide the password -->
                     <button 
-                        onclick={() => isPasswordRevealed = !isPasswordRevealed}
-                        class="cursor-pointer px-2"
+                        onclick={(e) => {
+                            e.preventDefault();
+                            isPasswordRevealed = !isPasswordRevealed
+                        }}
+                        class="cursor-pointer px-1 hover:bg-background-300 rounded-lg"
                     >
                         {#if isPasswordRevealed == true}
                             <Eye class="size-4"/>
