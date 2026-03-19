@@ -51,37 +51,22 @@ export class AuthController {
         this.authStore.setError("")
 
         try {
-            // This logs the user in, issues in the log in are caught and handled.
             const user = await this.authRepo.emailLogIn(email, password)
 
-            // Runs once the user is logged in with a verified account, 
-            if (user !== null && user.emailVerified === true) {
-                // Sets user interface to be ready.
-                this.authStore.setLoading(false)
-                this.authStore.setReady(true)
-                
-                // Returns successful state to true as user has been logged in and verified.
-                return true 
+            if (user === null) {
+                throw new AuthError("auth/user-not-found")
             }
-            else {
-                // This sets the user in an unready state as account is not logged in.
-                this.authStore.setLoading(true)
-                this.authStore.setReady(false)
-                
-                // If user doesn't exist, an unknown error is given.
-                if (user === null) {
-                    throw new AuthError("auth/unknown-error")
-                }
 
-                // If user exists but email doesn't exist, an error is given while sending a verification email.
-                if (user !== null && user.emailVerified === false) {
-                    await this.authRepo.sendVerifyEmail(user)
-                    throw new AuthError("verification/account-not-verified")
-                }
-
-                return false
+            // Checks if email is verified, it is assumed that the user exists 
+            // as code passed the last guard clause
+            if (user.emailVerified === false) {
+                await this.authRepo.sendVerifyEmail(user)
+                throw new AuthError("verification/account-not-verified")
             }
-        } 
+
+            // Returns true, as all of the guard clauses have been passed.
+            return true
+        }
         catch (error) {
             // If an error is encountered, the auth error is updated. 
             if (error instanceof AuthError) {
@@ -96,6 +81,10 @@ export class AuthController {
 
             // Since an error was encountered, the account creation has failed. 
             return false
+        }
+        finally {
+            this.authStore.setReady(true)
+            this.authStore.setLoading(false)
         }
     }
 
