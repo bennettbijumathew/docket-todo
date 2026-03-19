@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { navigate } from "sv-router/generated";
     import { authController } from "@/lib/auth/controller";
-    import { authStore } from "@/lib/auth/store.svelte";
     import { DoorOpen, UserPlus } from "@lucide/svelte";
     import { getPlatform } from "@/components/util/platform";
+    import { Toaster } from "svelte-sonner";
 
     // Inputs for logging into the website, changes in the input changes the values.
     let email: string = $state("");
@@ -24,7 +24,7 @@
     *:inset-shadow-b-md
     sm:flex-row-reverse *:sm:inset-shadow-l-md
 ">     
-    <!-- This section shows an image -->
+    <!-- This section shows a wallpaper -->
     <section class="
         flex-1
         sm:flex-3
@@ -32,18 +32,15 @@
     ">
     </section>
 
-    <!-- The main area  -->
+    <!-- The main area -->
     <section class="
         p-6 flex flex-col
         justify-between
         {(getPlatform() === "android" ) ? "pb-12" : ""}
         sm:flex-1 sm:justify-center sm:h-auto
     ">
-        <h1 class="
-            font-title text-2xl font-bold text-content-900 hover:text-content-800 pb-4
-            text-center
-        ">            
-                Docket
+        <h1 class="font-title text-2xl font-bold text-content-900 hover:text-content-800 pb-4 text-center">            
+            Docket
         </h1>
         
         <!-- Form for the users to input their email and password to log in. -->
@@ -57,6 +54,7 @@
                 sm:mx-4
             "
         >
+            <!-- Place for the user to write their email -->
             <div>
                 <p class="font-bold">Email</p>
 
@@ -69,6 +67,7 @@
                 />
             </div>
         
+            <!-- Place for the user to write their password -->
             <div>
                 <p class="font-bold">Password</p>
 
@@ -81,6 +80,7 @@
                 />
             </div>
         
+            <!-- Place for the log in and sign up -->
             <div class="flex justify-center gap-x-2 pt-2">
                 <button 
                     class="flex justify-between items-center gap-x-2 p-2 bg-background-50 hover:bg-background-100 shadow-md rounded-lg cursor-pointer"
@@ -99,12 +99,19 @@
                 </a>
             </div>
 
-            <!-- The auth controller sets the store's error state, so that is reflected here. -->
-            {#if authStore.getError() !== null}
-                <div class="pb-4">
-                    <p class="text-red-600"> {authStore.getError()} </p>
-                </div>
-            {/if}
+            <!-- The auth controller sends toasts on errors found. A notification is shown within the page -->
+            <Toaster 
+                richColors={true}
+                toastOptions={{
+                    unstyled: true,
+                    classes: {
+                        toast: `border-0 flex justify-between items-center gap-x-6 p-4 py-3 rounded-lg shadow-md ${getPlatform() === "android" ? "mt-8" : ""}`,
+                        title: 'font-default',
+                    }
+                }}
+                offset={getPlatform() === "android" ? "100px" : undefined}
+                position={getPlatform() === "android" ? "top-center" : "bottom-right"}
+            />
         </form>
     </section>
 </main>
