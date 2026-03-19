@@ -1,9 +1,8 @@
 <script lang="ts">
 	import { navigate } from "sv-router/generated";
     import { authController } from "@/lib/auth/controller";
-    import { DoorOpen, UserPlus } from "@lucide/svelte";
+    import { DoorOpen, Eye, EyeOff, UserPlus } from "@lucide/svelte";
     import { getPlatform } from "@/components/util/platform";
-    import { Toaster } from "svelte-sonner";
 
     // Inputs for logging into the website, changes in the input changes the values.
     let email: string = $state("");
@@ -17,6 +16,9 @@
             navigate("/task")
         }
     }
+
+    // This is used for the password input.
+    let isPasswordRevealed: boolean = $state(false)
 </script>
 
 <main class="
@@ -28,7 +30,7 @@
     <section class="
         flex-1
         sm:flex-3
-        bg-linear-to-r from-purple-100 to-blue-200
+        bg-linear-to-r from-blue-200 to-purple-100
     ">
     </section>
 
@@ -39,9 +41,17 @@
         {(getPlatform() === "android" ) ? "pb-12" : ""}
         sm:flex-1 sm:justify-center sm:h-auto
     ">
-        <h1 class="font-title text-2xl font-bold text-content-900 hover:text-content-800 pb-4 text-center">            
-            Docket
-        </h1>
+        <div class="
+            pb-4 
+            text-center
+            sm:text-left
+        ">
+            <h1 class="font-title text-2xl font-bold text-content-900 hover:text-content-800">            
+                Docket
+            </h1>
+            
+            <p> Log into your account. </p>   
+        </div>
         
         <!-- Form for the users to input their email and password to log in. -->
         <form 
@@ -49,69 +59,73 @@
                 e.preventDefault();
                 handleLogIn();
             }}
-            class="
-                flex flex-col gap-y-4 
-                sm:mx-4
-            "
+            class="flex flex-col gap-y-4 "
         >
             <!-- Place for the user to write their email -->
             <div>
-                <p class="font-bold">Email</p>
+                <label 
+                    for="email" 
+                    class="text-sm"
+                > 
+                    Email 
+                </label>
 
                 <input 
+                    id="email"
                     type="text" 
                     bind:value={email} 
                     class="bg-background-50 hover:bg-background-100 focus:bg-background-200 outline-none rounded-lg p-1 px-1.5 w-full shadow-md" 
                     placeholder="Enter your email"
-                    autocomplete="email"
+                    autocomplete="email" 
                 />
             </div>
         
             <!-- Place for the user to write their password -->
-            <div>
-                <p class="font-bold">Password</p>
-
-                <input
-                    type="password" 
+            <div class="relative flex bg-background-50 hover:bg-background-100 focus:bg-background-200 rounded-lg shadow-md">
+                <input 
+                    id="password"
+                    type={isPasswordRevealed == true ? "text": "password"}
                     bind:value={password} 
-                    class="bg-background-50 hover:bg-background-100 focus:bg-background-200 outline-none rounded-lg p-1 px-1.5 w-full shadow-md" 
+                    class="w-full outline-none p-1 px-1.5 rounded-lg pr-6" 
                     placeholder="Enter your password"
                     autocomplete="current-password"
                 />
+
+                <!-- Button to reveal / hide the password -->
+                <button 
+                    onclick={(e) => {
+                        e.preventDefault();
+                        isPasswordRevealed = !isPasswordRevealed
+                    }}
+                    class="absolute top-0 bottom-0 right-0 cursor-pointer m-1 p-1 hover:bg-background-300 rounded-lg"
+                >
+                    {#if isPasswordRevealed == true}
+                        <Eye class="size-4"/>
+                    {:else}
+                        <EyeOff class="size-4"/>
+                    {/if}
+                </button>
             </div>
         
             <!-- Place for the log in and sign up -->
             <div class="flex justify-center gap-x-2 pt-2">
+                <a 
+                    class="w-26 flex justify-between items-center gap-x-2 px-2 py-1 bg-background-50 hover:bg-background-100 shadow-md rounded-lg cursor-pointer"
+                    href="/signup"
+                >
+                    <UserPlus class="size-4"/>
+                    Sign Up
+                </a>
+
                 <button 
-                    class="flex justify-between items-center gap-x-2 p-2 bg-background-50 hover:bg-background-100 shadow-md rounded-lg cursor-pointer"
+                    class="w-26 flex justify-between items-center gap-x-2 p-2 bg-background-50 hover:bg-background-100 shadow-md rounded-lg cursor-pointer"
                     type="submit"
                 >
                     <DoorOpen class="size-4"/>
                     Log In
                 </button>
 
-                <a 
-                    class="flex justify-between items-center gap-x-2 px-2 py-1 bg-background-50 hover:bg-background-100 shadow-md rounded-lg cursor-pointer"
-                    href="/signup"
-                >
-                    <UserPlus class="size-4"/>
-                    Sign Up
-                </a>
             </div>
-
-            <!-- The auth controller sends toasts on errors found. A notification is shown within the page -->
-            <Toaster 
-                richColors={true}
-                toastOptions={{
-                    unstyled: true,
-                    classes: {
-                        toast: `border-0 flex justify-between items-center gap-x-6 p-4 py-3 rounded-lg shadow-md ${getPlatform() === "android" ? "mt-8" : ""}`,
-                        title: 'font-default',
-                    }
-                }}
-                offset={getPlatform() === "android" ? "100px" : undefined}
-                position={getPlatform() === "android" ? "top-center" : "bottom-right"}
-            />
         </form>
     </section>
 </main>

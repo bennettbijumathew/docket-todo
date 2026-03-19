@@ -51,41 +51,22 @@ export class AuthController {
         this.authStore.setError("")
 
         try {
-            // This logs the user in, issues in the log in are caught and handled.
             const user = await this.authRepo.emailLogIn(email, password)
 
-            // Runs once the user is logged in with a verified account, 
-            if (user !== null && user.emailVerified === true) {
-                // Sets user interface to be ready.
-                this.authStore.setLoading(false)
-                this.authStore.setReady(true)
-                
-                // Returns successful state to true as user has been logged in and verified.
-                return true 
+            if (user === null) {
+                throw new AuthError("auth/user-not-found")
             }
-            else {
-                // This sets the user in an unready state as account is not logged in.
-                this.authStore.setLoading(true)
-                this.authStore.setReady(false)
-                
-                // If user doesn't exist, an unknown error is given.
-                if (user === null) {
-                    this.authStore.setError("An unknown error has been encountered. Try to log in or create a new account. ")
-                }
 
-                // If user exists but email doesn't exist, an error is given while sending a verification email.
-                if (user !== null && user.emailVerified === false) {
-                    this.authStore.setError("Your account has not been verified. A link will be sent to your email. ")
-                    await this.authRepo.sendVerifyEmail(user)
-                }
-
-                // Sends a small notification in the page about the error
-                toast.error(this.authStore.getError() ?? "Unknown Error")
-
-                // Returns successful state to false as user is not logged in or verified.
-                return false
+            // Checks if email is verified, it is assumed that the user exists 
+            // as code passed the last guard clause
+            if (user.emailVerified === false) {
+                await this.authRepo.sendVerifyEmail(user)
+                throw new AuthError("verification/account-not-verified")
             }
-        } 
+
+            // Returns true, as all of the guard clauses have been passed.
+            return true
+        }
         catch (error) {
             // If an error is encountered, the auth error is updated. 
             if (error instanceof AuthError) {
@@ -100,6 +81,10 @@ export class AuthController {
 
             // Since an error was encountered, the account creation has failed. 
             return false
+        }
+        finally {
+            this.authStore.setReady(true)
+            this.authStore.setLoading(false)
         }
     }
 
@@ -122,31 +107,11 @@ export class AuthController {
         this.authStore.setError("")
 
         try {
-            // Validation the inputs before account is created. If inputs are not valid, then a unsuccessful status is sent.
-            if (isUsernameValid(username).status == false) {
-                this.authStore.setError(isUsernameValid(username).message)
-
-                // Sends a small notification in the page about the error
-                toast.error(this.authStore.getError() ?? "")
-
-                return false;
-            }
-            else if (isEmailValid(email).status == false) {
-                this.authStore.setError(isEmailValid(email).message)
-
-                // Sends a small notification in the page about the error
-                toast.error(this.authStore.getError() ?? "")
-
-                return false;
-            }
-            else if (isPasswordValid(password).status == true) {
-                this.authStore.setError(isPasswordValid(password).message)
-
-                // Sends a small notification in the page about the error
-                toast.error(this.authStore.getError() ?? "")
-
-                return false;
-            }
+            // These are functions that validate the given input. 
+            // If any conditions fail, an AuthError is thrown, and leads to the catch section
+            isEmailValid(email)
+            isPasswordValid(password)
+            isUsernameValid(username)
             
             // A new account is created with the email and password.
             const newUser = await this.authRepo.createNewEmailAccount(email.trim(), password.trim())
@@ -156,16 +121,13 @@ export class AuthController {
                 await this.authRepo.sendVerifyEmail(newUser)
                 await this.authRepo.setUsername(username, newUser)
 
+                toast.info("To verify the email, a link has been sent to your email.")
+
                 return true;
             }
             // Since user does not exist, the account creation has failed. 
             else {
-                this.authStore.setError("Account creation has failed, try again.")
-
-                // Sends a small notification in the page about the error
-                toast.error(this.authStore.getError() ?? "")
-
-                return false;
+                throw new AuthError("auth/user-not-found")
             }
         }
         catch (error: any) { 
@@ -179,7 +141,7 @@ export class AuthController {
 
             // Sends a small notification in the page about the error
             toast.error(this.authStore.getError() ?? "")
-            
+                            
             // Since an error was encountered, the account creation has failed. 
             return false;
         }
