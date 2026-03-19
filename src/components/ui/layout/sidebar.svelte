@@ -33,7 +33,7 @@
         bg-background p-6 flex flex-col gap-y-6 z-50
         fixed w-screen h-screen
         sm:static sm:w-50 sm:h-auto sm:flex-1
-        {getPlatform() === "windows" ? "pt-10 sm:pt-12" : ""}
+        {(getPlatform() === "windows" || getPlatform() === "android" ) ? "pt-10 sm:pt-12" : ""}
     ">
         <section class="flex justify-between items-center gap-x-4">
             <!-- Title and redirection back to the website's home  -->
@@ -49,12 +49,16 @@
             <button 
                 onclick={collapseSidebar}
                 class="
-                    p-1.5 bg-background-50 hover:bg-background-100 shadow-md rounded-lg cursor-pointer 
-                    rotate-90 
-                    sm:rotate-0
+                    bg-background-50 hover:bg-background-100 shadow-md rounded-lg cursor-pointer 
+                    p-1.5 
+                    sm:p-2
                 "
             >      
-                <PanelRightOpen class="size-4"/>
+                <PanelRightOpen class="
+                    size-4
+                    rotate-90
+                    sm:rotate-0
+                "/>
             </button>
         </section>
 
@@ -85,8 +89,8 @@
     </aside>
 {:else if isSidebarCollapsed}
     <aside class="
-        bg-background flex flex-col justify-between gap-y-6 py-6 px-5
-        {getPlatform() === "windows" ? "pt-10 sm:pt-12" : ""}
+        bg-background flex flex-col justify-between gap-y-6 p-6
+        {(getPlatform() === "windows" || getPlatform() === "android" ) ? "pt-10 sm:pt-12" : ""}
     ">
         <section class="flex justify-between items-center gap-x-4">
             <!-- Title and redirection back to the website's home  -->
@@ -105,11 +109,15 @@
             <button 
                 onclick={expandSidebar}
                 class="
-                    p-1.5 bg-background-50 hover:bg-background-100 shadow-md rounded-lg cursor-pointer rotate-270 
-                    sm:rotate-0
+                    p-1.5 bg-background-50 hover:bg-background-100 shadow-md rounded-lg cursor-pointer 
+                    sm:p-2
                 "
             >      
-                <PanelRightClose class="size-4"/>
+                <PanelRightClose class="
+                    size-4
+                    rotate-270
+                    sm:rotate-0
+                "/>
             </button>
         </section>
 
@@ -124,14 +132,15 @@
                     href={hasSidebar ? p(link, {search: {"sidebar": "collapsed"}}) : p(link)} 
                     class="
                         p-1.5 shadow-md rounded-lg cursor-pointer 
-                        rotate-90 
-                        sm:rotate-0
                         {isActive(link as any) == true ? "bg-background-100" : "bg-background cursor-pointer hover:bg-background-50"}
-
                     "
                     aria-label="Link to {name} Page"
                 >
-                    <RouteIcon class="size-4"/>
+                    <RouteIcon class="
+                        size-4
+                        rotate-90 
+                        sm:rotate-0
+                    "/>
                 </a>
             {/each}
         </section>

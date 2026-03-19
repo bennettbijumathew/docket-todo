@@ -1497,6 +1497,13 @@ rollup@^4.34.9:
     "@rollup/rollup-win32-x64-msvc" "4.54.0"
     fsevents "~2.3.2"
 
+runed@^0.28.0:
+  version "0.28.0"
+  resolved "https://registry.yarnpkg.com/runed/-/runed-0.28.0.tgz#68e2ec076ae921f5e7ca0ebaa37e9f6598775c3c"
+  integrity sha512-k2xx7RuO9hWcdd9f+8JoBeqWtYrm5CALfgpkg2YDB80ds/QE4w0qqu34A7fqiAwiBBSBQOid7TLxwxVC27ymWQ==
+  dependencies:
+    esm-env "^1.0.0"
+
 runed@^0.35.1:
   version "0.35.1"
   resolved "https://registry.yarnpkg.com/runed/-/runed-0.35.1.tgz#e7e424aaa18d4e585a9e7b2d948c2b0860858c74"
@@ -1545,6 +1552,13 @@ sv-router@^0.14.0:
   integrity sha512-zzi2k2ZG2UbTgBOjYmXWMv3XdXFCBpABD7vUsoL2XLvlnannXXLvieY9wGKMIvHIeocXOq4l47PXYtHPI23qgA==
   dependencies:
     esm-env "^1.2.2"
+
+svelte-sonner@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/svelte-sonner/-/svelte-sonner-1.1.0.tgz#61f674bb2d428a3c0104118d64bd3298abc225d6"
+  integrity sha512-3lYM6ZIqWe+p9vwwWHGWP/ZdvHiUtzURsud2quIxivrX4rvpXh6i+geBGn0m3JS6KwW6W8VgbOl3xQMcDuh6gg==
+  dependencies:
+    runed "^0.28.0"
 
 svelte-toolbelt@^0.10.6:
   version "0.10.6"

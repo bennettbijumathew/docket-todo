@@ -28,7 +28,7 @@
 <!-- This is a form that on submit adds a new task -->
 <form
     class="
-        block sticky bottom-6 shadow-lg/20 text-content-900 rounded-lg bg-background-50
+        block sticky bottom-8 shadow-lg/20 text-content-900 rounded-lg bg-background-50
         sm:flex
     "
     onsubmit={(e) => { 

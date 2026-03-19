@@ -3,7 +3,8 @@
     import { ArrowRight } from '@lucide/svelte';
     import { navigate } from 'sv-router/generated';
 	import { type Snippet } from 'svelte';  
-    
+    import { Toaster } from 'svelte-sonner'
+
 	let { children }: { children: Snippet } = $props();
 </script>
 
@@ -37,6 +38,7 @@
         flex flex-col flex-1 inset *:inset-shadow-b-md
         sm:min-h-0 sm:flex-row *:sm:inset-shadow-l-md
     ">
+        <Toaster/>
         {@render children()}
     </main>
 {/if}
