@@ -39,9 +39,17 @@
         {(getPlatform() === "android" ) ? "pb-12" : ""}
         sm:flex-1 sm:justify-center sm:h-auto
     ">
-        <h1 class="font-title text-2xl font-bold text-content-900 hover:text-content-800 pb-4 text-center">            
-            Docket
-        </h1>
+        <div class="
+            pb-4 
+            text-center
+            sm:text-left
+        ">
+            <h1 class="font-title text-2xl font-bold text-content-900 hover:text-content-800">            
+                Docket
+            </h1>
+            
+            <p> Log into your account. </p>   
+        </div>
         
         <!-- Form for the users to input their email and password to log in. -->
         <form 
@@ -51,7 +59,6 @@
             }}
             class="
                 flex flex-col gap-y-4 
-                sm:mx-4
             "
         >
             <!-- Place for the user to write their email -->
