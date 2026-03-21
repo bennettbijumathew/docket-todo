@@ -32,7 +32,8 @@
     <aside class="
         bg-background p-6 flex flex-col gap-y-6 z-50
         fixed w-screen h-screen
-        sm:static sm:w-50 sm:h-auto sm:flex-1
+        sm:static sm:min-w-50 sm:h-auto sm:flex-1
+        lg:w-130
         {(getPlatform() === "windows" || getPlatform() === "android" ) ? "pt-10 sm:pt-12" : ""}
     ">
         <section class="flex justify-between items-center gap-x-4">
@@ -131,7 +132,9 @@
                 <a 
                     href={hasSidebar ? p(link, {search: {"sidebar": "collapsed"}}) : p(link)} 
                     class="
-                        p-1.5 shadow-md rounded-lg cursor-pointer 
+                        shadow-md rounded-lg cursor-pointer 
+                        p-1.5 
+                        sm:p-2
                         {isActive(link as any) == true ? "bg-background-100" : "bg-background cursor-pointer hover:bg-background-50"}
                     "
                     aria-label="Link to {name} Page"
