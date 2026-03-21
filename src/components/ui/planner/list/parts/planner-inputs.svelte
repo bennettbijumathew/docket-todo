@@ -32,8 +32,8 @@
 <!-- This area is the place to add planners -->
 <form
     class="
-        block sticky bottom-6 shadow-lg/20 text-content-900 rounded-lg bg-background-50
-        sm:flex
+        block sticky bottom-8 shadow-lg/20 text-content-900 rounded-lg bg-background-50
+        sm:flex sm:bottom-0
     "
     onsubmit={(e) => { 
         e.preventDefault(); 

@@ -131,7 +131,7 @@
             <div class="pt-2 flex justify-center">
                 <button
                     type="submit"
-                    class="w-26 flex justify-between items-center gap-x-2 p-2 bg-background-50 hover:bg-background-100 shadow-md rounded-lg cursor-pointer"
+                    class="min-w-26 flex justify-between items-center gap-x-2 p-2 bg-background-50 hover:bg-background-100 shadow-md rounded-lg cursor-pointer"
                 >
                     <UserPlus class="size-4"/>
                     Sign Up
