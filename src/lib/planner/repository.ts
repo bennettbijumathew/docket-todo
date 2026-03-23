@@ -1,5 +1,5 @@
 import { db } from "@/lib/config/firebase.ts"
-import { collection, query, orderBy, onSnapshot, QuerySnapshot, doc, Unsubscribe, updateDoc, addDoc, deleteDoc } from "firebase/firestore";
+import { collection, query, orderBy, onSnapshot, QuerySnapshot, doc, Unsubscribe, updateDoc, addDoc, deleteDoc, where, or } from "firebase/firestore";
 import { createPlannerConverter, NewPlannerData, Planner } from "./type";
 import { ColorKey } from "@/components/util/color";
 import { taskRepo } from "../task/repository";
@@ -7,10 +7,10 @@ import { taskRepo } from "../task/repository";
 export class PlannerRepository {
     // This returns a listeners that returns the list of planners that are related to the user.
     public onChange(userId: string, callbackFn: (planner: Planner[]) => void): Unsubscribe {
-        // Gets a list of planners ordered by name and the current user of the planner. 
+        // Gets a list of planners where user has a visibility (represented as a boolean value) in the users field. 
         // Applies a converter to help transition from Firestore to code.
-        const q = query(collection(db, "planners"), orderBy(`users.${userId}`)).withConverter(createPlannerConverter(userId));
-        
+        const q = query(collection(db, "planners"), where(`users.${userId}`, "in", [true, false]), orderBy(`users.${userId}`)).withConverter(createPlannerConverter(userId));
+
         // This snapshot sets the planner list while adding a visible attribute for each user 
         return onSnapshot(q, (querySnapshot: QuerySnapshot) => {
             let newPlanners: Planner[] = querySnapshot.docs.map((doc) => doc.data()) as Planner[]

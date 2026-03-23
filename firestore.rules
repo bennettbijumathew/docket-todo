@@ -1,0 +1,23 @@
+rules_version = '2';
+
+service cloud.firestore {
+  function isUserAuthenticated() {
+    return request.auth != null && request.auth.token.email_verified == true;
+  }
+
+  function isPlannerVisibleToUser() {
+    return request.auth.uid in resource.data.users; 
+  }
+
+  match /databases/{database}/documents {
+    match /planners/{plannerId} { 
+        allow read: if isUserAuthenticated() == true && isPlannerVisibleToUser() == true;
+        allow write: if isUserAuthenticated() == true;
+    }
+
+    match /tasks/{taskId} {
+        allow read: if isUserAuthenticated() == true;
+        allow write: if isUserAuthenticated() == true;
+    }
+  }
+}
