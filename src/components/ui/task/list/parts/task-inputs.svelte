@@ -5,11 +5,12 @@
     import { getLocalTimeZone, Time, toCalendarDateTime, today } from "@internationalized/date";
     import PlannerPicker from "@/components/ui/inputs/planner-picker.svelte";
     import { taskRepo } from "@/lib/task/repository";
+    import { SvelteSet } from "svelte/reactivity";
 
     // This variable is used to handle new tasks that come in from the inputs
     let newTask: NewTaskData = $state({
         name: "",
-        planners: [],
+        planners: new SvelteSet(),
         dueDate: toCalendarDateTime(today(getLocalTimeZone()), new Time(0, 0))
     })
     
@@ -17,11 +18,10 @@
     function addNewTask(): void {
         taskRepo.createTask(newTask)
         
-        newTask = {
-            name: "",
-            planners: [],
-            dueDate: toCalendarDateTime(today(getLocalTimeZone()), new Time(0, 0))
-        }
+        newTask.name == ""; 
+        newTask.planners.clear(); 
+        newTask.dueDate = toCalendarDateTime(today(getLocalTimeZone()), new Time(0, 0))
+
     }
 </script>
 

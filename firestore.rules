@@ -1,0 +1,42 @@
+rules_version = '2';
+
+service cloud.firestore {
+    function isUserAuthenticated() {
+        return request.auth != null && request.auth.token.email_verified == true;
+    }
+    
+    // The 'users' field is a map that holds a key of user id and a value of boolean that represents
+    // the visibility of the planner to the user. This checks if the user id is in the users map.
+    function isPlannerVisibleToUser() {
+        return request.auth.uid in resource.data.users; 
+    }
+
+    function isPlannerWriteValid(data) {
+        return (
+            data.name is string &&
+            data.users is map &&
+            data.color is string
+        );
+    }
+
+    function isTaskWriteValid(data) {
+        return (
+            data.name is string &&
+            data.planners is list &&
+            data.dueDate is timestamp &&
+            data.completed is bool
+        );
+    }
+
+    match /databases/{database}/documents {
+        match /planners/{plannerId} { 
+            allow read: if isUserAuthenticated() == true && isPlannerVisibleToUser() == true;
+            allow write: if isUserAuthenticated() == true && isPlannerWriteValid(request.resource.data);
+        }
+
+        match /tasks/{taskId} {
+            allow read: if isUserAuthenticated() == true;
+            allow write: if isUserAuthenticated() == true && isTaskWriteValid(request.resource.data) == true 
+        }
+    }
+}

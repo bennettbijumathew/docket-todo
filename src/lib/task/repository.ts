@@ -3,13 +3,14 @@ import { collection, query, onSnapshot, QuerySnapshot, where, doc, updateDoc, ar
 import { type NewTaskData, Task, createTaskConverter } from "./type";
 import { CalendarDateTime } from "@internationalized/date";
 import { dateToTimestamp } from "@/components/util/date";
+import { toast } from "svelte-sonner";
 
 export class TaskRepository {
     // This function is a listener that checks for tasks that are associated to the given planner ids. 
     // Using the callback function, the user can use the given tasks in any manner.
     public onChange(plannerIds: string[], callbackFn: (tasks: Task[]) => void) {
         // If there is no planners, an empty array and empty function are given for the caller.
-        if (plannerIds.length <= 0) {
+        if (plannerIds.length <= MIN_PLANNERS) {
             callbackFn([])
             return () => {}
         }
@@ -29,7 +30,12 @@ export class TaskRepository {
     public async createTask(newTask: NewTaskData): Promise<void> {
         // A guard clause to prevent a new task being added if there is no name
         // or planners attached to the task.
-        if (newTask.name.trim() == "" || newTask.planners.length <= 0) {
+        if (newTask.name.trim() == "") {
+            toast.error("To create a new task, the title requires a non-empty field")
+            return 
+        }
+        else if (newTask.planners.size <= MIN_PLANNERS) {
+            toast.error("To create a new task, the task requires more than 0 planners")
             return 
         }
 
@@ -47,6 +53,7 @@ export class TaskRepository {
     public async deleteTask(taskId: string): Promise<void> {
         // A guard clause to stop the function when there is no task id.
         if (taskId.trim() == "") {
+            toast.error("The task could not be deleted")
             return
         }
 
@@ -61,6 +68,7 @@ export class TaskRepository {
     public async addPlannerToTask(taskId: string, plannerId: string): Promise<void> {
         // A guard clause to stop the function when there is no task id.
         if (taskId.trim() == "") {
+            toast.error("The planner could not be added to the task")
             return
         }
 
@@ -70,7 +78,8 @@ export class TaskRepository {
         // This adds a new planner only if the planner document exists in the planners database.
         if (isPlannerReal === true) {
             const taskRef = doc(db, "tasks", taskId)
-            
+
+            // The "arrayUnion" function prevents duplicate ids from being added to the array.
             await updateDoc(taskRef, {
                 planners: arrayUnion(plannerId)
             })
@@ -81,6 +90,7 @@ export class TaskRepository {
     public async removePlannerFromTask(taskId: string, plannerId: string): Promise<void> {
         // A guard clause to stop the function when there is no task id.
         if (taskId.trim() == "") {
+            toast.error("The planner could not be removed from the task")
             return
         }
 
@@ -89,7 +99,7 @@ export class TaskRepository {
 
         // Only removes the planner from the task, if tasks exists 
         // and if there is more than 0 planners in the tasks. 
-        if (currentTask.exists() && currentTask.data().planners.length - 1 > 0) {
+        if (currentTask.exists() && currentTask.data().planners.length - 1 > MIN_PLANNERS) {
             await updateDoc(taskRef, {
                 planners: arrayRemove(plannerId)
             })
@@ -100,8 +110,13 @@ export class TaskRepository {
     // This changes a task's name
     public async editName(taskId: string, newName: string): Promise<void> {
         // A guard clause to stop the function when there is no task id or new name.
-        if (taskId.trim() == "" || newName.trim() == "") {
+        if (taskId.trim() == "") {
+            toast.error("The task's name could not be edited")
             return
+        }
+        else if (newName.trim() == "") {
+            toast.error("To edit the task, the title requires a non-empty field")
+            return 
         }
 
         // This updates the task to have a new name.
@@ -116,6 +131,7 @@ export class TaskRepository {
     public async editDate(taskId: string, newDate: CalendarDateTime): Promise<void> {
         // A guard clause to stop the function when there is no task id.
         if (taskId.trim() == "") {
+            toast.error("The task's date could not be edited")
             return
         }
 
@@ -131,6 +147,7 @@ export class TaskRepository {
     public async editComplete(taskId: string, newValue: boolean): Promise<void> {
         // A guard clause to stop the function when there is no task id.
         if (taskId.trim() == "") {
+            toast.error("The task's completed status could not be edited")
             return
         }
 
@@ -159,4 +176,5 @@ export const taskRepo = new TaskRepository()
 
 // This variable is the maximum amount of planners that can be added to a task. The limit is placed as
 // as there is a limit of items for Firebase's array-contains-any query.
+export const MIN_PLANNERS = 0
 export const MAX_PLANNERS = 10

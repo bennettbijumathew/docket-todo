@@ -21,7 +21,7 @@
     toastOptions={{
         unstyled: true,
         classes: {
-            toast: `border-0 flex justify-between items-center gap-x-6 p-4 py-3 rounded-lg shadow-md ${getPlatform() === "android" ? "mt-8" : ""}`,
+            toast: `border-0 flex justify-between items-center gap-x-4 px-3 py-2 rounded-lg shadow-md ${getPlatform() === "android" ? "mt-8" : ""}`,
             title: 'font-default',
         }
     }}

@@ -10,7 +10,7 @@
         <p> This is a task management application </p>
     </div>
 
-    {#if authStore.getUser === null}
+    {#if authStore.getUser() === null}
         <a
             href={routes.get("Log In")?.link} 
             aria-label="This is a link to go to the log in page"

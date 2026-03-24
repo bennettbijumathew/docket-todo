@@ -1,9 +1,10 @@
-import { type Icon, House, DoorOpen, UserPlus, ClipboardCheck, Notebook } from '@lucide/svelte';
+import { type Icon, House, DoorOpen, UserPlus, ClipboardCheck, Notebook, LogIn } from '@lucide/svelte';
 
 // A type for the title for each route
 type RouteNames =
     | "Home"
     | "Log In"
+    | "Log Out"
     | "Sign Up"
     | "Task"
     | "Planner";
@@ -12,6 +13,7 @@ type RouteNames =
 export type RoutePath = 
     | "/"
     | "/login"
+    | "/logout"
     | "/signup"
     | "/task"
     | "/planner";
@@ -33,6 +35,11 @@ routes.set("Home", {
 });
 routes.set("Log In", { 
     link: "/login", 
+    icon: LogIn,
+    hasSidebar: false
+});
+routes.set("Log Out", { 
+    link: "/logout", 
     icon: DoorOpen,
     hasSidebar: false
 });
