@@ -64,7 +64,10 @@
         <!-- A group of selected Planners -->
         <div class="w-full flex flex-1 flex-wrap gap-1 p-1.5">   
             {#each taskPlanners.filter(p => p.selected) as planner}
-                <span class="flex items-center gap-x-3 bg-{colors[planner.color]} rounded-sm px-1.5 py-0.5 text-sm font">                    
+                <span class="
+                    flex items-center gap-x-3 rounded-sm px-1.5 py-px text-sm font border-2 border-{colors[planner.color]}
+                    { planner.visible == true ? `bg-${colors[planner.color]}` : `bg-transperant` }
+                ">
                     {planner.name}
 
                     <button 
