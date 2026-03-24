@@ -25,7 +25,7 @@ export class PlannerDataStore {
 
     // This returns a list of planners based on id. The result can changed based on if
     // caller wants to see the user's hidden planners.
-    public getItemsById(plannerIds: Set<string>, showHidden: boolean): Planner[] {
+    public getItemsById(plannerIds: SvelteSet<string>, showHidden: boolean): Planner[] {
         let planners: Planner[] = []
         
         for (const planner of this.list) {

@@ -6,9 +6,11 @@
     import { Combobox } from "bits-ui";
     import Checkbox from "./checkbox.svelte";
     import { MAX_PLANNERS } from "@/lib/task/repository";
+    import { SvelteSet } from "svelte/reactivity";
+    import { toast } from "svelte-sonner";
   
     interface PickerProps {
-        value: string[],
+        value: SvelteSet<string>,
         buttonStyle: string,
         pickerStyle: string
     }
@@ -40,7 +42,6 @@
 
 <Combobox.Root
     type="multiple"
-    bind:value={value}
     inputValue={searchInput}
     required={true}
     onOpenChangeComplete={(isOpen) => {
@@ -48,27 +49,24 @@
     }}
 >
     <!-- Input to open the combobox options and triggers the combobox search. -->
-    <div class="{buttonStyle} flex items-center justify-between rounded-lg text-center gap-x-2">
-        <div class="flex items-center gap-x-2">
-            <Combobox.Trigger class="cursor-pointer">
-                <Notebook class="size-4"/>
-            </Combobox.Trigger>
+    <Combobox.Trigger class="{buttonStyle} flex items-center justify-between rounded-lg text-center gap-x-2 cursor-pointer">
+        <Notebook class="size-4"/>
 
-            <!-- Search input to filter through the planners.  -->
-            <Combobox.Input
-                onclick={(e) => e.stopPropagation()}
-                oninput={(e) => searchInput = e.currentTarget.value }
-                placeholder="Select a planner..."
-                aria-label="Select a planner..."
-                class="w-32 border-background-100 focus:outline-0"
-                autocomplete="off"
-                clearOnDeselect={true}
-                required={value.length <= 0 ? true : false}
-            />
-        </div>
+        <!-- Search input to filter through the planners.  -->
+        <Combobox.Input
+            onclick={(e) => e.stopPropagation()}
+            oninput={(e) => searchInput = e.currentTarget.value }
+            placeholder="Select a planner..."
+            aria-label="Select a planner..."
+            class="flex-1 w-32 border-background-100 focus:outline-0"
+            autocomplete="off"
+            clearOnDeselect={true}
+            required={value.size <= 0 ? true : false}
+        />
 
-        <Combobox.Trigger class="
-            grid gap-2 select-none grid-cols-5 grid-rows-1 *:rounded-xs *:size-2 
+        <div class="
+            grid grid-cols-5 grid-rows-1 *:rounded-xs *:size-2 select-none
+            gap-2
             sm:gap-0.5
         ">
             {#each {length: MAX_PLANNERS - selectedPlanners.length}, slotNum}
@@ -82,11 +80,10 @@
             {/each}
 
             {#each selectedPlanners as planner}    
-                <div class="flex items-center justify-center bg-{colors[planner.color]}"> 
-                </div>
+                <div class="flex items-center justify-center bg-{colors[planner.color]}"> </div>
             {/each}
-        </Combobox.Trigger>
-    </div>
+        </div>
+    </Combobox.Trigger>
 
     <!-- The content that is shown once the trigger is pressed. -->
     <Combobox.Content 
@@ -102,25 +99,40 @@
 
         <!-- The main content for the menu -->
         <Combobox.Viewport class="bg-background p-2 w-60 min-w-(--bits-combobox-anchor-width)">
+            {@const isSelectedPlannersOverMax = value.size >= MAX_PLANNERS}
+
             {#each searchedPlanners as planner (planner.id)}
+                {@const isPlannerSelected = value.has(planner.id)}
+
                 <!-- This is a item to pick the planner -->
                 <!-- If selected planners exceed 10 planners, the option to select is deleted. -->
                 <Combobox.Item
                     value={planner.id}
                     label={planner.name}
                     class="flex justify-between items-center data-highlighted:bg-background-100 p-1 px-2 cursor-pointer rounded-lg gap-x-2 data-disabled:cursor-not-allowed"
-                    disabled={value.length >= MAX_PLANNERS + 1 && !value.includes(planner.id)}
+                    disabled={isSelectedPlannersOverMax == true && isPlannerSelected == false}
+                    onclick={() => {      
+                        if (isPlannerSelected == true) {
+                            value.delete(planner.id)
+                        } 
+                        else {
+                            if (!isSelectedPlannersOverMax == true) {
+                                value.add(planner.id)
+                            } 
+                            else {
+                                toast.error(`A task is only allowed to hold ${MAX_PLANNERS} planners.`)
+                            }
+                        }
+                    }}
                 >   
-                    {#snippet children({ selected })}
-                        <p class="truncate"> {planner.name} </p> 
+                    <p class="truncate flex-1"> {planner.name} </p> 
 
-                        <Checkbox 
-                            value={selected}
-                            checkedStyle="size-4 bg-{colors[planner.color]}"
-                            unCheckedStyle="size-4 border-{colors[planner.color]}"
-                            disabled={value.length >= MAX_PLANNERS + 1 && selected == false}
-                        />
-                    {/snippet}
+                    <Checkbox 
+                        value={value.has(planner.id)}
+                        checkedStyle="size-4 bg-{colors[planner.color]}"
+                        unCheckedStyle="size-4 border-{colors[planner.color]}"
+                        disabled={isSelectedPlannersOverMax == true && isPlannerSelected == false}
+                    />
                 </Combobox.Item>
             {:else}
                 <p class="text-content-400 p-1">No planners found.</p>

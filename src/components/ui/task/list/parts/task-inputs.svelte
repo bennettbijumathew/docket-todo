@@ -5,11 +5,12 @@
     import { getLocalTimeZone, Time, toCalendarDateTime, today } from "@internationalized/date";
     import PlannerPicker from "@/components/ui/inputs/planner-picker.svelte";
     import { taskRepo } from "@/lib/task/repository";
+    import { SvelteSet } from "svelte/reactivity";
 
     // This variable is used to handle new tasks that come in from the inputs
     let newTask: NewTaskData = $state({
         name: "",
-        planners: new Set(),
+        planners: new SvelteSet(),
         dueDate: toCalendarDateTime(today(getLocalTimeZone()), new Time(0, 0))
     })
     
@@ -72,14 +73,14 @@
             pickerStyle="bg-background shadow-md"
         />
 
-        <!-- <PlannerPicker 
-            bind:value={plannersInArray}
+        <PlannerPicker 
+            bind:value={newTask.planners}
             buttonStyle="
                 bg-background-100 hover:bg-background-200 h-full min-w-60
                 py-1 px-2
                 sm:px-2 sm:py-0
             "
             pickerStyle="bg-background shadow-md"
-        /> -->
+        />
     </div>
 </form>

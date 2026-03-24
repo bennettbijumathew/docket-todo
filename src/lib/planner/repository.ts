@@ -1,5 +1,5 @@
 import { db } from "@/lib/config/firebase.ts"
-import { collection, query, orderBy, onSnapshot, QuerySnapshot, doc, Unsubscribe, updateDoc, addDoc, deleteDoc, where, or } from "firebase/firestore";
+import { collection, query, orderBy, onSnapshot, QuerySnapshot, doc, Unsubscribe, updateDoc, addDoc, deleteDoc, where } from "firebase/firestore";
 import { createPlannerConverter, NewPlannerData, Planner } from "./type";
 import { ColorKey } from "@/components/util/color";
 import { taskRepo } from "../task/repository";
