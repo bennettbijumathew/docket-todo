@@ -7,7 +7,7 @@
     import { MAX_PLANNERS, taskRepo } from "@/lib/task/repository";
     import { Combobox } from "bits-ui";
     import Checkbox from "@/components/ui/inputs/checkbox.svelte";
-    import { ArrowDown, ArrowUp, X } from "@lucide/svelte";
+    import { ArrowDown, ArrowUp, Eye, EyeOff, X } from "@lucide/svelte";
 
     // This picker receives a task as a prop to show planners related to the task
     // The onchange function determines what changes in input should do
@@ -97,26 +97,42 @@
 
         <Combobox.Viewport class="p-2 w-(--bits-combobox-anchor-width)">
             {#each searchedPlanners as planner (planner.id)}
+                {@const isPlannerSelected = selectedTaskPlanners.some(item => item.id === planner.id)}
+                {@const isSelectedPlannersOverMax = selectedTaskPlanners.length >= MAX_PLANNERS}
                 <!-- This is a item to pick the planner -->
                 <!-- If selected planners exceed 10 planners, the option to select is deleted. -->
                 <Combobox.Item
                     value={planner.id}
                     label={planner.name}
                     class="flex justify-between items-center data-highlighted:bg-background-100 p-1 px-2 cursor-pointer rounded-lg gap-x-2 data-disabled:cursor-not-allowed"
-                    disabled={selectedTaskPlanners.length >= MAX_PLANNERS && !selectedTaskPlanners.map(item => item.id).includes(planner.id)}
+                    disabled={isSelectedPlannersOverMax == true && isPlannerSelected == false}
                     onclick={() => {
-                        if (!(selectedTaskPlanners.length >= MAX_PLANNERS && !selectedTaskPlanners.map(item => item.id).includes(planner.id))) {
+                        if (!(isSelectedPlannersOverMax == true && !(isPlannerSelected == true))) {
                             handleSelect(planner.id)
                         }
                     }}  
                 >   
-                    <p class="truncate"> {planner.name} </p> 
+                    {#if planner.visible == true}
+                        <Eye 
+                            class="size-4 text-background-400" 
+                            aria-label="Icon to show that {planner.name} is visible."
+                        />
+                    {:else}
+                        <EyeOff 
+                            class="size-4 text-background-300" 
+                            aria-label="Icon to show that {planner.name} is hidden."
+                        />
+                    {/if}
+
+                    <p class="truncate flex-1"> 
+                        {planner.name} 
+                    </p> 
                     
                     <Checkbox 
                         value={planner.selected}
                         checkedStyle="size-4 bg-{colors[planner.color]}"
                         unCheckedStyle="size-4 border-{colors[planner.color]}"
-                        disabled={selectedTaskPlanners.length >= MAX_PLANNERS && planner.selected == false}
+                        disabled={isSelectedPlannersOverMax == true && planner.selected == false}
                     />
                 </Combobox.Item>
             {:else}
