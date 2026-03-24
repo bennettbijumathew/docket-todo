@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { navigate } from "sv-router/generated";
     import { authController } from "@/lib/auth/controller";
-    import { DoorOpen, Eye, EyeOff, UserPlus } from "@lucide/svelte";
+    import { Eye, EyeOff, LogIn, UserPlus } from "@lucide/svelte";
     import { getPlatform } from "@/components/util/platform";
     import { authStore } from "@/lib/auth/store.svelte";
 
@@ -109,7 +109,19 @@
             </div>
         
             <!-- Place for the log in and sign up -->
-            <div class="flex justify-center gap-x-2 pt-2">
+            <div class="
+                flex gap-x-2 pt-3
+                justify-center flex-row-reverse
+                sm:justify-start sm:flex-row
+            ">
+                <button 
+                    class="min-w-26 flex justify-between items-center gap-x-2 p-2 bg-background-100 hover:bg-background-200 shadow-md rounded-lg cursor-pointer"
+                    type="submit"
+                >
+                    <LogIn class="size-4"/>
+                    Log In
+                </button>
+                
                 <a 
                     class="min-w-26 flex justify-between items-center gap-x-2 px-2 py-1 bg-background-50 hover:bg-background-100 shadow-md rounded-lg cursor-pointer"
                     href="/signup"
@@ -117,15 +129,6 @@
                     <UserPlus class="size-4"/>
                     Sign Up
                 </a>
-
-                <button 
-                    class="min-w-26 flex justify-between items-center gap-x-2 p-2 bg-background-50 hover:bg-background-100 shadow-md rounded-lg cursor-pointer"
-                    type="submit"
-                >
-                    <DoorOpen class="size-4"/>
-                    Log In
-                </button>
-
             </div>
         </form>
     </section>
