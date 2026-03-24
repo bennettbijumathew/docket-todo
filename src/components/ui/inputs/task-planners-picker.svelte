@@ -3,8 +3,8 @@
     import { type Task } from "@/lib/task/type";
     import { plannerStore } from "@/lib/planner/store.svelte";
     import { taskStore } from "@/lib/task/store.svelte";
-    import { type TaskPlanner } from "@/lib/planner/type";
-    import { MAX_PLANNERS, taskRepo } from "@/lib/task/repository";
+    import { type Planner } from "@/lib/planner/type";
+    import { MAX_PLANNERS } from "@/lib/task/repository";
     import { Combobox } from "bits-ui";
     import Checkbox from "@/components/ui/inputs/checkbox.svelte";
     import { ArrowDown, ArrowUp, X } from "@lucide/svelte";
@@ -14,46 +14,60 @@
     // The onchange function determines what changes in input should do
     interface PickerProps {
         task: Task,
-        onChangeFn: (taskPlanner: TaskPlanner | null) => void,
+        addPlannerFn: (plannerId: string) => void,
+        removePlannerFn: (plannerId: string) => void,
         buttonStyle: string, 
         pickerStyle: string
     }
 
     const { 
         task: initialTask, 
-        onChangeFn,
+        addPlannerFn,
+        removePlannerFn,
         buttonStyle = "bg-background hover:bg-background-100",
         pickerStyle = "bg-background",
     }: PickerProps = $props();
 
-    let searchInput: string = $state("");
-
+    
     // Using the task id from the props, the task is fetched from store to ensure proper reactive state.
     const task = $derived(taskStore.getList().find(t => t.id === initialTask.id) ?? initialTask);
-
-    // Deriving from the planner list, a new planner list is created with a selected attribute.
-    const taskPlanners: TaskPlanner[] = $derived(
-        plannerStore.getList().map((item) => ({
-            ...item,
-            selected: task.planners.has(item.id) || false
-        }))
+    
+    // Create a variable that derives from the planner list.
+    const taskPlanners: Planner[] = $derived(plannerStore.getList());
+    
+    // Deriving from the task related planners, a list is created with only selected planners for a task.
+    const selectedTaskPlanners = $derived(
+        taskPlanners.filter((item) => isPlannerSelected(item.id) == true)
     );
 
+
     // Using the search input, the list of planners are filtered.
-    const searchedPlanners: TaskPlanner[] = $derived(
+    let searchInput: string = $state("");
+
+    const searchedPlanners: Planner[] = $derived(
         taskPlanners.filter((item) => item.name.toLowerCase().includes(searchInput.toLowerCase()))
     );
 
-    // Deriving from the task related planners, a list is created with only selected planners for a task.
-    const selectedTaskPlanners = $derived(
-        taskPlanners.filter((item) => item.selected === true)
-    )
 
-    // This function determines if the planner is removed or added based on the selected value
-    function handleSelect(plannerId: string) {
-        const planner = taskPlanners.find(p => p.id === plannerId);
+    // Utility variables / function that is used for validation of code and user interface.
+    const isSelectedPlannersOverMax = $derived(selectedTaskPlanners.length >= MAX_PLANNERS);
+    const isPlannerSelected = (plannerId: string) => task.planners.has(plannerId);
+    const isPlannerDisabled = (plannerId: string) => isSelectedPlannersOverMax == true && isPlannerSelected(plannerId) == false;
 
-        onChangeFn(planner ?? null)
+
+    // Submit function for changes in the picker. 
+    function handleSubmit(plannerId: string): void {
+        if (isPlannerSelected(plannerId) == true) {
+            removePlannerFn(plannerId)
+        } 
+        else {
+            if (isSelectedPlannersOverMax == false) {
+                addPlannerFn(plannerId)
+            } 
+            else {
+                toast.error(`A task is only allowed to hold ${MAX_PLANNERS} planners.`)
+            }
+        }
     }
 </script>
 
@@ -72,7 +86,7 @@
                     {planner.name}
 
                     <button 
-                        onclick={() => taskRepo.removePlannerFromTask(task.id, planner.id)} 
+                        onclick={() => removePlannerFn(planner.id)} 
                         class="hover:opacity-50 rounded-full p-0.5 cursor-pointer"
                     >
                         <X class="size-3"/>
@@ -100,38 +114,25 @@
         </Combobox.ScrollUpButton>
 
         <Combobox.Viewport class="p-2 w-(--bits-combobox-anchor-width)">
-            {@const isSelectedPlannersOverMax = selectedTaskPlanners.length >= MAX_PLANNERS}
-
             {#each searchedPlanners as planner (planner.id)}
-                {@const isPlannerSelected = selectedTaskPlanners.some(item => item.id === planner.id)}
-
                 <!-- This is a item to pick the planner -->
                 <!-- If selected planners exceed 10 planners, the option to select is deleted. -->
                 <Combobox.Item
                     value={planner.id}
                     label={planner.name}
                     class="flex justify-between items-center data-highlighted:bg-background-100 p-1 px-2 cursor-pointer rounded-lg gap-x-2 data-disabled:cursor-not-allowed"
-                    disabled={isSelectedPlannersOverMax == true && isPlannerSelected == false}
-                    onclick={() => {
-                        if (isSelectedPlannersOverMax == true && isPlannerSelected == false) {
-                            toast.error(`A task is only allowed to hold ${MAX_PLANNERS} planners.`)
-                        }
-                        
-                        // Handles the select event if the planner is selected or if there are space to add new planners
-                        if (isPlannerSelected == true || isSelectedPlannersOverMax == false) {
-                            handleSelect(planner.id)
-                        }
-                    }}  
+                    disabled={isPlannerDisabled(planner.id)}
+                    onclick={() => handleSubmit(planner.id)}
                 >   
                     <p class="truncate flex-1"> 
                         {planner.name} 
                     </p> 
                     
                     <Checkbox 
-                        value={planner.selected}
+                        value={isPlannerSelected(planner.id)}
                         checkedStyle="size-4 bg-{colors[planner.color]}"
                         unCheckedStyle="size-4 border-{colors[planner.color]}"
-                        disabled={isSelectedPlannersOverMax == true && planner.selected == false}
+                        disabled={isPlannerDisabled(planner.id)}
                     />
                 </Combobox.Item>
             {:else}

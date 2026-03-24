@@ -70,7 +70,8 @@ export class TaskRepository {
         // This adds a new planner only if the planner document exists in the planners database.
         if (isPlannerReal === true) {
             const taskRef = doc(db, "tasks", taskId)
-            
+
+            // The "arrayUnion" function prevents duplicate ids from being added to the array.
             await updateDoc(taskRef, {
                 planners: arrayUnion(plannerId)
             })

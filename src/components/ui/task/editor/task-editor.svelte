@@ -5,7 +5,6 @@
     import { Trash } from "@lucide/svelte";
     import DatePicker from "../../inputs/date-picker.svelte";
     import TaskPlannersPicker from "../../inputs/task-planners-picker.svelte";
-    import { type TaskPlanner } from "@/lib/planner/type";
 
     // The component receives the selected task id with a function that 
     // closes the editor. 
@@ -46,18 +45,21 @@
         taskRepo.editName(task.id, inputs.name) 
     }
 
-    // Function to update a change in the task's planners
-    function submitPlannerChange(taskPlanner: TaskPlanner | null) {
-        if (taskPlanner === null || task === null) { 
+    // Function to add a planner to the task's planner list
+    function submitPlannerAddChange(plannerId: string) {
+        if (task === null || plannerId.trim() == "") { 
             return;
         }
 
-        if (taskPlanner.selected) {
-            taskRepo.removePlannerFromTask(task.id, taskPlanner.id);
-        } 
-        else {
-            taskRepo.addPlannerToTask(task.id, taskPlanner.id);
+        taskRepo.addPlannerToTask(task.id, plannerId);
+    }
+
+    function submitPlannerRemoveChange(plannerId: string) {
+        if (task === null || plannerId.trim() == "") { 
+            return;
         }
+
+        taskRepo.removePlannerFromTask(task.id, plannerId);
     }
 
     // Functions to update the planners' name
@@ -83,7 +85,6 @@
         // Closes the sidebar using the sidebar's close function
         onClose?.()
     }
-
 </script>
 
 {#if task !== null}
@@ -120,7 +121,8 @@
             <p class="font-bold">Planners</p>
             <TaskPlannersPicker 
                 task={task} 
-                onChangeFn={(planner) => submitPlannerChange(planner)}
+                addPlannerFn={(plannerId) => submitPlannerAddChange(plannerId)}
+                removePlannerFn={(plannerId) => submitPlannerRemoveChange(plannerId)}
                 buttonStyle="bg-background-50 hover:bg-background-100 shadow-md"
                 pickerStyle="bg-background shadow-md"
             />
