@@ -3,6 +3,7 @@
     import { authController } from "@/lib/auth/controller";
     import { DoorOpen, Eye, EyeOff, UserPlus } from "@lucide/svelte";
     import { getPlatform } from "@/components/util/platform";
+    import { authStore } from "@/lib/auth/store.svelte";
 
     // Inputs for logging into the website, changes in the input changes the values.
     let email: string = $state("");
@@ -12,7 +13,7 @@
     async function handleLogIn() {
         const logInResult = await authController.logInWithEmail(email.trim(), password)
 
-        if (logInResult === true) {
+        if (logInResult === true && authStore.getReady() == true) {
             navigate("/task")
         }
     }

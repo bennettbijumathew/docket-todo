@@ -14,12 +14,14 @@ export class AuthDataStore {
     // The error represents an error state, null = no error.
     private user: User | null;
     private loading: boolean;
+    private loadingTimeout: ReturnType<typeof setTimeout> | null;
     private ready: boolean;
     private error: string | null
 
     constructor() {
         this.user = $state(null);
         this.loading = $state(true);
+        this.loadingTimeout = null;
         this.ready = $state(false);
         this.error = $state(null);
     }
@@ -32,7 +34,16 @@ export class AuthDataStore {
 
     // Setter function for the loading variable.
     public setLoading(state: boolean): void {
-        this.loading = state
+        const delay = 900
+        
+        if (this.loadingTimeout) {
+            clearTimeout(this.loadingTimeout);
+        }
+
+        this.loadingTimeout = setTimeout(() => {
+            this.loading = state;
+        }, delay);
+        this.loading = state;
     }
 
 
