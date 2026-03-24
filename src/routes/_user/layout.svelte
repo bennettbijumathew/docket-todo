@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { getPlatform } from '@/components/util/platform';
     import { authStore } from '@/lib/auth/store.svelte';
     import { ArrowRight } from '@lucide/svelte';
     import { navigate } from 'sv-router/generated';
@@ -38,7 +39,21 @@
         flex flex-col flex-1 inset *:inset-shadow-b-md
         sm:min-h-0 sm:flex-row *:sm:inset-shadow-l-md
     ">
-        <Toaster/>
         {@render children()}
+
+        <!-- Functions may send a toast to convey a message. A notification is shown within the page -->
+        <Toaster 
+            richColors={true}
+            toastOptions={{
+                unstyled: true,
+                classes: {
+                    toast: `border-0 flex justify-between items-center gap-x-4 px-3 py-2 rounded-lg shadow-md ${getPlatform() === "android" ? "mt-8" : ""}`,
+                    title: 'font-default',
+                }
+            }}
+            offset={getPlatform() === "android" ? "100px" : undefined}
+            position={getPlatform() === "android" ? "top-center" : "bottom-right"}
+        />
+
     </main>
 {/if}
