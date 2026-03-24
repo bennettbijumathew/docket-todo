@@ -3,6 +3,7 @@ import { collection, query, orderBy, onSnapshot, QuerySnapshot, doc, Unsubscribe
 import { createPlannerConverter, NewPlannerData, Planner } from "./type";
 import { ColorKey } from "@/components/util/color";
 import { taskRepo } from "../task/repository";
+import { toast } from "svelte-sonner";
 
 export class PlannerRepository {
     // This returns a listeners that returns the list of planners that are related to the user.
@@ -35,6 +36,7 @@ export class PlannerRepository {
         // A guard clause to prevent a new task being added if there is no name
         // or planners attached to the task.
         if (newPlanner.name.trim() == "") {
+            toast.error("To create a new planner, the title requires a non-empty field")
             return 
         }
         
@@ -52,6 +54,7 @@ export class PlannerRepository {
     public async deletePlanner(plannerId: string): Promise<void> {
         // A guard clause to stop the function when there is no planner id.
         if (plannerId.trim() == "") {
+            toast.error("The planner could not be deleted")
             return
         }
 
@@ -69,8 +72,13 @@ export class PlannerRepository {
     // This changes a planner's title
     public async editName(plannerId: string, newName: string): Promise<void> {
         // A guard clause to stop the function when there is no planner id or new name.
-        if (plannerId.trim() == "" || newName.trim() == "") {
+        if (plannerId.trim() == "") {
+            toast.error("The planner's name could not be edited")
             return
+        }
+        else if (newName.trim() == "") {
+            toast.error("To edit the planner, the title requires a non-empty field")
+            return 
         }
 
         // This updates the planner to have a new name.
@@ -85,6 +93,7 @@ export class PlannerRepository {
     public async editColor(plannerId: string, newColor: ColorKey): Promise<void> {
         // A guard clause to stop the function when there is no planner id or new name.
         if (plannerId.trim() == "") {
+            toast.error("The planner's color could not be edited")
             return
         }
 
@@ -100,6 +109,7 @@ export class PlannerRepository {
     public async editVisibility(uid: string, plannerId: string, newValue: boolean): Promise<void> {
         // A guard clause to stop the function when there is no user id or planner id.
         if (uid.trim() == "" || plannerId.trim() == "") {
+            toast.error("The planner's visibility could not be edited")
             return
         }
 
