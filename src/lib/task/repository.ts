@@ -29,7 +29,7 @@ export class TaskRepository {
     public async createTask(newTask: NewTaskData): Promise<void> {
         // A guard clause to prevent a new task being added if there is no name
         // or planners attached to the task.
-        if (newTask.name.trim() == "" || newTask.planners.length <= 0) {
+        if (newTask.name.trim() == "" || newTask.planners.size <= 0) {
             return 
         }
 

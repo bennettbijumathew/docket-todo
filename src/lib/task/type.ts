@@ -5,14 +5,14 @@ import { QueryDocumentSnapshot } from "firebase/firestore";
 export interface Task { 
     id: string, 
     name: string,
-    planners: string[]
+    planners: Set<string>
     dueDate: CalendarDateTime
     completed: boolean
 }
 
 export interface NewTaskData {
     name: string,
-    planners: string[],
+    planners: Set<string>,
     dueDate: CalendarDateTime
 } 
 
@@ -20,7 +20,7 @@ export const createTaskConverter = () => ({
     toFirestore: (task: NewTaskData) => {
         return {
             name: task.name,
-            planners: task.planners,
+            planners: [...task.planners],
             dueDate: dateToTimestamp(task.dueDate),
             completed: false
         };
@@ -32,7 +32,7 @@ export const createTaskConverter = () => ({
         const task: Task = {
             id: snapshot.id,
             name: data.name,
-            planners: data.planners,
+            planners: new Set(data.planners),
             dueDate: timestampToDate(data.dueDate),
             completed: data.completed,
         }

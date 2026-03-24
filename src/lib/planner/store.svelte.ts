@@ -1,3 +1,4 @@
+import { SvelteSet } from "svelte/reactivity";
 import { Planner } from "./type";
 
 export class PlannerDataStore {
@@ -24,19 +25,18 @@ export class PlannerDataStore {
 
     // This returns a list of planners based on id. The result can changed based on if
     // caller wants to see the user's hidden planners.
-    public getItemsById(plannerIds: string[], showHidden: boolean): Planner[] {
-        const ids = new Set(plannerIds)
+    public getItemsById(plannerIds: Set<string>, showHidden: boolean): Planner[] {
         let planners: Planner[] = []
         
         for (const planner of this.list) {
             // This adds a planner based on if ids match and if the item is visible.
-            if (ids.has(planner.id) && (showHidden == false && planner.visible === true)) {
+            if (plannerIds.has(planner.id) && (showHidden == false && planner.visible === true)) {
                 planners.push(planner)
                 continue; 
             }
 
             // This adds a planner based on the matching ids.   
-            if (ids.has(planner.id) && showHidden == true) {
+            if (plannerIds.has(planner.id) && showHidden == true) {
                 planners.push(planner)
             }
         }

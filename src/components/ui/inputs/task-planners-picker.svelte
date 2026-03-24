@@ -35,7 +35,7 @@
     const taskPlanners: TaskPlanner[] = $derived(
         plannerStore.getList().map((item) => ({
             ...item,
-            selected: task.planners.includes(item.id) || false
+            selected: task.planners.has(item.id) || false
         }))
     );
 

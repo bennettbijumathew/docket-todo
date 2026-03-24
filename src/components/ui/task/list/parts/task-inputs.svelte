@@ -9,7 +9,7 @@
     // This variable is used to handle new tasks that come in from the inputs
     let newTask: NewTaskData = $state({
         name: "",
-        planners: [],
+        planners: new Set(),
         dueDate: toCalendarDateTime(today(getLocalTimeZone()), new Time(0, 0))
     })
     
@@ -17,11 +17,10 @@
     function addNewTask(): void {
         taskRepo.createTask(newTask)
         
-        newTask = {
-            name: "",
-            planners: [],
-            dueDate: toCalendarDateTime(today(getLocalTimeZone()), new Time(0, 0))
-        }
+        newTask.name == ""; 
+        newTask.planners.clear(); 
+        newTask.dueDate = toCalendarDateTime(today(getLocalTimeZone()), new Time(0, 0))
+
     }
 </script>
 
@@ -73,14 +72,14 @@
             pickerStyle="bg-background shadow-md"
         />
 
-        <PlannerPicker 
-            bind:value={newTask.planners}
+        <!-- <PlannerPicker 
+            bind:value={plannersInArray}
             buttonStyle="
                 bg-background-100 hover:bg-background-200 h-full min-w-60
                 py-1 px-2
                 sm:px-2 sm:py-0
             "
             pickerStyle="bg-background shadow-md"
-        />
+        /> -->
     </div>
 </form>
