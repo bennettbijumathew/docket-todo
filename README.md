@@ -33,18 +33,15 @@
 [firestore-url]: https://firebase.google.com/docs/firestore
 
 <!-- PROJECT HEADER -->
-<div style="
-    text-align: center
-">
-	<h3 style="
-        font-size: 1.8rem;
-    ">
-        Docket.
-    </h3>
-	<p>
-	    Docket is a task management application that is created by Bennett Biju Mathew. This application aims to introduce tasks that belong within multiple planners. The goal of this project was to learn about the language of Svelte and refine my current skills. Alongside this, I wanted to solve the issue of tasks being stuck in one group, as it is hard to express the connection between multiple groups.
-	</p>
-</div>
+# Docket.
+Docket is a task management application that is created by Bennett Biju Mathew. This application aims to introduce tasks that belong within multiple planners. The goal of this project was to learn about the language of Svelte and refine my current skills. Alongside this, I wanted to solve the issue of tasks being stuck in one group, as it is hard to express the connection between multiple groups.
+
+Image of the Task List View 
+<img width="1920" height="911" alt="Task List View of the Docket Application" src="https://github.com/user-attachments/assets/fd993cdc-e217-4927-b90e-ae9130267620" />
+
+
+Image of the Planner List View 
+<img width="1920" height="911" alt="Planner List View of the Docket Application" src="https://github.com/user-attachments/assets/2bbec5fe-19dc-4500-af58-465bdb9f80b8" />
 
 ## About The Project
 This project is a multi platform application that is powered by Tauri. The frontend for the application uses Svelte and sv-router to provide a fast and smooth user experience. This is connected with Firebase where authentication and data storage is handled. 
