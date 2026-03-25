@@ -32,11 +32,13 @@ service cloud.firestore {
         match /planners/{plannerId} { 
             allow read: if isUserAuthenticated() == true && isPlannerVisibleToUser() == true;
             allow write: if isUserAuthenticated() == true && isPlannerWriteValid(request.resource.data);
+            allow delete: if isUserAuthenticated() == true;
         }
 
         match /tasks/{taskId} {
             allow read: if isUserAuthenticated() == true;
-            allow write: if isUserAuthenticated() == true && isTaskWriteValid(request.resource.data) == true 
+            allow write: if isUserAuthenticated() == true && isTaskWriteValid(request.resource.data) == true;
+            allow delete: if isUserAuthenticated() == true;
         }
     }
 }
