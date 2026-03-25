@@ -42,14 +42,20 @@
         Docket.
     </h3>
 	<p>
-	    Docket is a task management application that is created by Bennett Biju Mathew. This application aims to introduce tasks that belong within multiple planners. The goal of this project was to learn about the language of Svelte while also solving issues that I found with the other task management applications
+	    Docket is a task management application that is created by Bennett Biju Mathew. This application aims to introduce tasks that belong within multiple planners. The goal of this project was to learn about the language of Svelte and refine my current skills. Alongside this, I wanted to solve the issue of tasks being stuck in one group, as it is hard to express the connection between multiple groups.
 	</p>
 </div>
 
 ## About The Project
 This project is a multi platform application that is powered by Tauri. The frontend for the application uses Svelte and sv-router to provide a fast and smooth user experience. This is connected with Firebase where authentication and data storage is handled. 
 
-Using these components, the application helps to manage tasks with two objects, one called planners and the other called tasks. Planners are groups that 
+Using these components, the application helps to manage tasks with two core entities:
+- Planner: A tag that is used to group tasks into different groups.
+- Task: An actionable item that belongs to a group of planners. It includes attributes such as due date and title. 
+
+With this multi-planner approach, it helps the user to group tasks into multiple domains. This could be useful in use cases such as a tasks like 'Buy groceries' belonging to both 'Home' and 'Errands' planners. 
+
+This allows users to filter tasks dynamically by toggling planners, making it easy to view tasks relevant to a specific context—such as everything that needs to be done at home or while running errands.
 
 ### Features
 - Authenticate users and have data for each user.
@@ -95,6 +101,7 @@ This is a list of upcoming changes that may be planned for the future of the app
 - [ ] Implement mass actions (such as delete or completing tasks) for the Task View
 - [ ] Creating a new calendar view
 - [ ] Update the application's aesthetic
+- [ ] Offline Support
 
 <!-- CONTACT -->
 ## Contact
