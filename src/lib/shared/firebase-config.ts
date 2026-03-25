@@ -8,6 +8,7 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
 import { connectAuthEmulator, getAuth } from 'firebase/auth';
+import { getPlatform } from '@/components/util/platform';
 
 // The firebase config uses a .env file to load information, this config is then
 // used to initialize the app.
@@ -28,7 +29,7 @@ export const db = getFirestore(firebaseApp)
 export const auth = getAuth(firebaseApp)
 
 // // This is used for developer to connect an emulator to the instance. 
-if (import.meta.env.MODE === "development") {
+if (import.meta.env.MODE === "development" && getPlatform() !== 'android') {
     connectFirestoreEmulator(db, '127.0.0.1', 8079);
     connectAuthEmulator(auth, 'http://127.0.0.1:9098');
 }
