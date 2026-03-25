@@ -16,12 +16,11 @@
     
     // This is a function for adding a new task and resetting the inputs
     function addNewTask(): void {
-        taskRepo.createTask(newTask)
+        taskRepo.createTask(newTask);
         
-        newTask.name == ""; 
+        newTask.name = ""; 
         newTask.planners.clear(); 
         newTask.dueDate = toCalendarDateTime(today(getLocalTimeZone()), new Time(0, 0))
-
     }
 </script>
 
