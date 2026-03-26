@@ -1,8 +1,8 @@
-import { db } from "@/lib/config/firebase.ts"
+import { db } from "@/lib/shared/firebase-config"
 import { collection, query, onSnapshot, QuerySnapshot, where, doc, updateDoc, arrayRemove, DocumentReference, Query, getDoc, arrayUnion, addDoc, deleteDoc, getDocs } from "firebase/firestore";
 import { type NewTaskData, Task, createTaskConverter } from "./type";
 import { CalendarDateTime } from "@internationalized/date";
-import { dateToTimestamp } from "@/components/util/date";
+import { dateToTimestamp } from "@/lib/shared/date";
 import { toast } from "svelte-sonner";
 
 export class TaskRepository {

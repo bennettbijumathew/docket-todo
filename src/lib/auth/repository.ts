@@ -6,7 +6,7 @@
 // anywhere to handle account management such as sign in and sign out.  
 
 import { createUserWithEmailAndPassword, onAuthStateChanged, sendEmailVerification, signInWithEmailAndPassword, updateProfile, User, } from "firebase/auth";
-import { auth } from "../config/firebase";
+import { auth } from "../shared/firebase-config";
 import { AuthError, AuthErrorType } from "./type";
 import { FirebaseError } from "firebase/app";
 

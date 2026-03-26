@@ -2,7 +2,7 @@
 	import { navigate } from "sv-router/generated";
     import { authController } from "@/lib/auth/controller";
     import { DoorOpen } from "@lucide/svelte";
-    import { getPlatform } from "@/components/util/platform";
+    import { getPlatform } from "@/lib/shared/platform";
 
     // This function logs out the account using the controller, and navigates to the home page
     function handleLogOut() {

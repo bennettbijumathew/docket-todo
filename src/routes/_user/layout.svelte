@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { getPlatform } from '@/components/util/platform';
+    import { getPlatform } from '@/lib/shared/platform';
     import { authStore } from '@/lib/auth/store.svelte';
 	import { type Snippet } from 'svelte';  
     import { Toaster } from 'svelte-sonner'

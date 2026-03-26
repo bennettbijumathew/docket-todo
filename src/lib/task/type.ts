@@ -1,4 +1,4 @@
-import { dateToTimestamp, timestampToDate } from "@/components/util/date";
+import { dateToTimestamp, timestampToDate } from "@/lib/shared/date";
 import { CalendarDateTime } from "@internationalized/date"
 import { QueryDocumentSnapshot } from "firebase/firestore";
 import { SvelteSet } from "svelte/reactivity";
