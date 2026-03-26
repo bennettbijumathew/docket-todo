@@ -3,7 +3,7 @@
     import { type Task } from "@/lib/task/type";
     import { colors } from "@/components/util/color";
     import { Calendar } from "@lucide/svelte";
-    import { formatLongDate } from "@/components/util/date";
+    import { formatLongDate } from "@/lib/shared/date";
     import { taskRepo, MAX_PLANNERS } from "@/lib/task/repository";
     import Checkbox from "@/components/ui/inputs/checkbox.svelte";
 
