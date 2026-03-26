@@ -4,7 +4,7 @@
     import { getCurrentWindow } from '@tauri-apps/api/window';
     import { X, Maximize2, Minimize2, Minus, ArrowLeft, ArrowRight } from '@lucide/svelte';
     import { routes } from "./components/util/routes";
-    import { getPlatform } from "./components/util/platform";
+    import { getPlatform } from "./lib/shared/platform";
     import { navigate } from "sv-router/generated";
     
     // This tracks the state of the application's window maximized state.

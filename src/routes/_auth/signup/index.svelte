@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { getPlatform } from "@/components/util/platform";
+    import { getPlatform } from "@/lib/shared/platform";
     import { authController } from "@/lib/auth/controller";
     import { Eye, EyeOff, UserPlus } from "@lucide/svelte";
     import { navigate } from "sv-router/generated";

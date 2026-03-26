@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { getPlatform } from "@/components/util/platform";
+    import { getPlatform } from "@/lib/shared/platform";
     import { paramKeys, paramValues, routes } from "@/components/util/routes";
     import { PanelRightClose, PanelRightOpen } from "@lucide/svelte";
     import { searchParams } from "sv-router";

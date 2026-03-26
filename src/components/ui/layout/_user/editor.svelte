@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { Snippet } from "svelte";
     import { X } from '@lucide/svelte';
-    import { getPlatform } from '@/components/util/platform';
+    import { getPlatform } from '@/lib/shared/platform';
     import { searchParams } from 'sv-router';
     import { paramKeys, paramValues } from "@/components/util/routes";
 

@@ -2,7 +2,7 @@
 	import { navigate } from "sv-router/generated";
     import { authController } from "@/lib/auth/controller";
     import { Eye, EyeOff, LogIn, UserPlus } from "@lucide/svelte";
-    import { getPlatform } from "@/components/util/platform";
+    import { getPlatform } from "@/lib/shared/platform";
     import { authStore } from "@/lib/auth/store.svelte";
 
     // Inputs for logging into the website, changes in the input changes the values.
