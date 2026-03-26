@@ -1,9 +1,9 @@
 {
     "extends": ["./.router/tsconfig.json"],
     "compilerOptions": {
-        "target": "es2024",
+        "target": "esnext",
         "useDefineForClassFields": true,
-        "module": "ESNext",
+        "module": "esnext",
         "lib": ["esnext", "DOM", "DOM.Iterable"],
         "skipLibCheck": true,
 

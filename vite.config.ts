@@ -1,3 +1,5 @@
+/// <reference types="vitest/config" />
+
 import { defineConfig } from "vite";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
 import tailwindcss from '@tailwindcss/vite'
@@ -40,6 +42,5 @@ export default defineConfig(async () => ({
         alias: {
             '@': fileURLToPath(new URL("./src", import.meta.url)), 
         },
-    },
-
+    }
 }));
