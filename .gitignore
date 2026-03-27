@@ -33,10 +33,4 @@ dist-ssr
 firebase-export*
 
 # Removing unnecessary Yarn directories and files 
-.yarn/unplugged
-.yarn/build-state.yml
-.yarn/install-state.gz
-
-# Required files for yarn (ensures that yarn's plug and play feature works well) 
-!.pnp.cjs
-!.pnp.loader.mjs
+.yarn
