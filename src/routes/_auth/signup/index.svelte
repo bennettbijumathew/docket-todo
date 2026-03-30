@@ -5,9 +5,9 @@
     import { navigate } from "sv-router/generated";
 
     // Inputs for creating a new account, changes in the input changes the values.
-    let username: string = $state("tester");
-    let email: string = $state("tester@gmail.com");
-    let password: string = $state("Testing123!");
+    let username: string = $state("");
+    let email: string = $state("");
+    let password: string = $state("");
     
     // This function creates a new account using the controller, and if successful, will navigate to a page
     async function handleSignUp(): Promise<void> {
