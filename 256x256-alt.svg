@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="32mm"
+   height="32mm"
+   viewBox="0 0 32 32"
+   version="1.1"
+   id="svg1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1">
+    <rect
+       x="23.851582"
+       y="24.589258"
+       width="52.375122"
+       height="69.095818"
+       id="rect1" />
+  </defs>
+  <g
+     id="layer1"
+     style="display:inline">
+    <rect
+       style="display:inline;fill:#f4eee6;fill-opacity:1;stroke-width:0.406552"
+       id="rect2"
+       width="32"
+       height="32"
+       x="0"
+       y="0"
+       ry="5.8932929" />
+    <text
+       xml:space="preserve"
+       transform="matrix(0.3156234,0,0,0.3156234,0.20650096,2.0097582)"
+       id="text1"
+       style="font-size:37.3333px;line-height:16.198px;font-family:'Playfair Display';-inkscape-font-specification:'Playfair Display';text-align:center;writing-mode:lr-tb;direction:ltr;white-space:pre;shape-inside:url(#rect1);fill:#1a1a1a;stroke-width:1.51181"><tspan
+         x="24.000671"
+         y="44.325743"
+         id="tspan4"><tspan
+           style="font-weight:bold;font-size:16px"
+           id="tspan1">Docket</tspan></tspan></text>
+    <rect
+       style="fill:#fe7275;fill-opacity:1;stroke-width:0.37996"
+       id="rect2-2"
+       width="2"
+       height="2"
+       x="7.0001316"
+       y="18.994238" />
+    <rect
+       style="fill:#ff8904;fill-opacity:1;stroke-width:0.37996"
+       id="rect2-2-6"
+       width="2"
+       height="2"
+       x="9.0001316"
+       y="18.994238" />
+    <rect
+       style="fill:#ffb900;fill-opacity:1;stroke-width:0.37996"
+       id="rect2-2-6-1"
+       width="2"
+       height="2"
+       x="11.000132"
+       y="18.994238" />
+    <rect
+       style="fill:#fdc700;fill-opacity:1;stroke-width:0.37996"
+       id="rect2-2-6-1-9"
+       width="2"
+       height="2"
+       x="13.000132"
+       y="18.997339" />
+    <rect
+       style="fill:#9ae600;fill-opacity:1;stroke-width:0.37996"
+       id="rect2-2-6-1-9-2"
+       width="2"
+       height="2"
+       x="15.000132"
+       y="18.997339" />
+    <rect
+       style="fill:#05df72;fill-opacity:1;stroke-width:0.37996"
+       id="rect2-2-6-1-9-2-1"
+       width="2"
+       height="2"
+       x="17.000132"
+       y="18.997339" />
+    <rect
+       style="fill:#00d492;fill-opacity:1;stroke-width:0.37996"
+       id="rect2-2-6-1-9-2-1-2"
+       width="2"
+       height="2"
+       x="19.000132"
+       y="18.997339" />
+    <rect
+       style="fill:#00d5be;fill-opacity:1;stroke-width:0.37996"
+       id="rect2-2-6-1-9-2-1-2-1"
+       width="2"
+       height="2"
+       x="21.000132"
+       y="18.997339" />
+    <rect
+       style="fill:#028399;fill-opacity:1;stroke-width:0.37996"
+       id="rect2-2-6-1-9-2-1-2-1-0"
+       width="2"
+       height="2"
+       x="23.000132"
+       y="18.997339" />
+  </g>
+</svg>
