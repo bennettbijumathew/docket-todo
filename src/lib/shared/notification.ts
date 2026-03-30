@@ -1,6 +1,15 @@
-import { isPermissionGranted, requestPermission, sendNotification } from "@tauri-apps/plugin-notification";
+import { CalendarDateTime, getLocalTimeZone } from "@internationalized/date";
+import { isPermissionGranted, requestPermission, sendNotification, Schedule } from "@tauri-apps/plugin-notification";
+import { toast } from "svelte-sonner";
 
-export async function sendNewNotification(title: string, body: string) {
+interface NotificationProps {
+    id?: number
+    title: string, 
+    body?: string, 
+    date?: CalendarDateTime
+}
+
+export async function sendNewNotification({id, title, body, date}: NotificationProps) {
     // Do you have permission to send a notification?
     let permissionGranted = await isPermissionGranted();
 
@@ -13,8 +22,10 @@ export async function sendNewNotification(title: string, body: string) {
     // Once permission has been granted we can send the notification
     if (permissionGranted) {
         sendNotification({ 
+            id: id !== undefined ? id : undefined,
             title: title, 
-            body: body
+            body: body !== undefined ? body : undefined,
+            schedule: date !== undefined ? Schedule.at(date.toDate(getLocalTimeZone())) : undefined
         });
     }
 }

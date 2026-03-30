@@ -15,6 +15,7 @@
     "core:window:allow-close",
     "core:window:allow-toggle-maximize",
     "os:allow-platform",
-    "notification:default"
+    "notification:default",
+    "notification:allow-get-pending"
   ]
 }

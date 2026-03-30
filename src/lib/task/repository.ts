@@ -1,9 +1,10 @@
 import { db } from "@/lib/shared/firebase-config"
 import { collection, query, onSnapshot, QuerySnapshot, where, doc, updateDoc, arrayRemove, DocumentReference, Query, getDoc, arrayUnion, addDoc, deleteDoc, getDocs } from "firebase/firestore";
 import { type NewTaskData, Task, createTaskConverter } from "./type";
-import { CalendarDateTime } from "@internationalized/date";
+import { CalendarDateTime, toCalendarDateTime, today, getLocalTimeZone, isSameDay } from "@internationalized/date";
 import { dateToTimestamp } from "@/lib/shared/date";
 import { toast } from "svelte-sonner";
+import { sendNewNotification } from "../shared/notification";
 
 export class TaskRepository {
     // This function is a listener that checks for tasks that are associated to the given planner ids. 
@@ -19,9 +20,28 @@ export class TaskRepository {
         const q: Query = query(collection(db, "tasks"), where("planners", "array-contains-any", plannerIds)).withConverter(createTaskConverter())
         
         // This snapshot sets the planner list while adding a visible attribute for each user 
-        return onSnapshot(q, (querySnapshot: QuerySnapshot) => {
+        return onSnapshot(q, async (querySnapshot: QuerySnapshot) => {
             const newTasks: Task[] = querySnapshot.docs.map((doc) => doc.data()) as Task[]
-            callbackFn(newTasks) 
+
+            for (let i = 0; i < newTasks.length; i++) {
+                let withinWeek = newTasks[i].dueDate <= newTasks[i].dueDate.add({days: 1}) 
+
+                // if due date is greater than or equal to today
+                // if due date is 
+                // if (isSameDay(newTasks[i].dueDate, today(getLocalTimeZone())).toString()) {
+
+                    // toast(newTasks[i].name)
+                // }
+
+                if (isSameDay(newTasks[i].dueDate, today(getLocalTimeZone()))) {
+                    sendNewNotification({
+                        title: newTasks[i].name,
+                        date: newTasks[i].dueDate
+                    })
+                }
+            }
+
+            callbackFn(newTasks)
         })            
     }
 

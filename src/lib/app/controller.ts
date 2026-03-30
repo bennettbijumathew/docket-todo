@@ -12,7 +12,7 @@ export class AppController {
     }
 
     // A function that starts the controllers that are used through the application
-    public start() {
+    public async start() {
         this.unSubFromAuth = this.authController.listenForAuth((user) => {  
             if (user) {
                 this.authController.start(user)
