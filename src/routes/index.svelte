@@ -1,7 +1,18 @@
 <script lang="ts">
-    import { routes } from "@/components/util/routes";
+    import { paramValues, routes, paramKeys } from "@/components/util/routes";
     import { authStore } from "@/lib/auth/store.svelte";
     import { ArrowRight } from "@lucide/svelte";
+    import { navigate } from "sv-router/generated";
+
+    $effect(() => {
+        if (authStore.getUser() !== null) {
+            navigate("/task", {
+                search: {
+                    [paramKeys.sidebar]: paramValues.sidebar.collapsed
+                }
+            })
+        }
+    })
 </script>
 
 <main class="flex flex-col justify-center items-center flex-1 bg-linear-to-r from-purple-100 to-blue-200 px-6 gap-y-6">
