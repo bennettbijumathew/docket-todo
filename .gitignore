@@ -34,3 +34,9 @@ firebase-export*
 
 # Removing unnecessary Yarn directories and files 
 .yarn
+
+# Keystore files
+keys
+*.jks
+*.keystore
+keystore.properties

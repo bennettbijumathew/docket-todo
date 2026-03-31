@@ -1,8 +1,8 @@
 [package]
-name = "docket-todo"
-version = "0.1.0"
-description = "A Tauri App"
-authors = ["you"]
+name = "Docket"
+version = "1.0.0"
+description = "A multi-group task management application for Windows and Android"
+authors = ["Bennett Biju Mathew"]
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
