@@ -39,3 +39,4 @@ firebase-export*
 keys
 *.jks
 *.keystore
+keystore.properties
