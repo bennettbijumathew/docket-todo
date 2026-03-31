@@ -10,19 +10,12 @@ jobs:
   build: 
     name: buidling the android application
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node_version: ['18.x', '20.x']
-        os: [android-latest]
 
     steps:
-      - uses: actions/checkout@v4
-      - name: Use Node.js ${{ matrix.node_version }}
+      - uses: actions/checkout@v5
+      - name: setting up the node modules
         uses: actions/setup-node@v4
         with:
-            node-version: ${{ matrix.node_version }}
-
-      - name: installing building using yarn
-        run: |
-          yarn install
-          yarn tauri android build
+          node-version: '20.x'
+      - name: installing dependencies using yarn
+        run: yarn
