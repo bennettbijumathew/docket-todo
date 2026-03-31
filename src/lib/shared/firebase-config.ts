@@ -12,13 +12,13 @@ import { connectAuthEmulator, getAuth } from 'firebase/auth';
 // The firebase config uses a .env file to load information, this config is then
 // used to initialize the app.
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_BACKEND_APP_ID,
-  measurementId: import.meta.env.VITE_FIREBASE_BACKEND_MEASUREMENT_ID
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_FIREBASE_TAURI_APP_ID,
+    measurementId: import.meta.env.VITE_FIREBASE_TAURI_MEASUREMENT_ID
 };
 
 const firebaseApp = initializeApp(firebaseConfig);
@@ -27,8 +27,11 @@ const firebaseApp = initializeApp(firebaseConfig);
 export const db = getFirestore(firebaseApp)
 export const auth = getAuth(firebaseApp)
 
-// // This is used for developer to connect an emulator to the instance. 
-if (import.meta.env.MODE === "development") {
-    connectFirestoreEmulator(db, '127.0.0.1', 8079);
-    connectAuthEmulator(auth, 'http://127.0.0.1:9098');
+// This is used for developer to connect an emulator to the instance. 
+if (import.meta.env.MODE === "development" && import.meta.env.DEV == true) {
+    console.info("DOCKET MESSAGE: You are in development mode. This means that you are using Firebase's Emulator as the data source.")
+
+    // Connects Firebase's database and auth instance to an emulator for storage and authentication.
+    connectFirestoreEmulator(db, import.meta.env.VITE_FIREBASE_EMULATOR_HOST, import.meta.env.VITE_FIRESTORE_EMULATOR_PORT);
+    connectAuthEmulator(auth, `http://${import.meta.env.VITE_FIREBASE_EMULATOR_HOST}:${import.meta.env.VITE_AUTH_EMULATOR_PORT}`);
 }
