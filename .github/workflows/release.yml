@@ -7,18 +7,6 @@ on:
   workflow_dispatch: 
   
 jobs:
-  get-version: 
-    name: Storing the current version of the application
-    runs-on: ubuntu-latest  
-    steps:
-    - name: Outputs the version from package.json
-      id: package_version
-      run: |
-        # Extracts the version field and saves it to a step output
-        VERSION=$(node -p "require('./package.json').version")
-        echo "version=$VERSION" >> $GITHUB_OUTPUT
-
-
   install-dependencies: 
     name: Installing dependencies for the workflow
     runs-on: ubuntu-latest  
@@ -40,12 +28,25 @@ jobs:
         run: yarn install
 
 
+  get-version: 
+    name: Storing the current version of the application
+    runs-on: ubuntu-latest  
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Outputs the version from package.json
+        id: package_version
+        run: |
+          # Extracts the version field and saves it to a step output
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
   create-android-apk: 
     name: Creating the apk file for the android release 
-    needs: [install-dependencies]
+    needs: [install-dependencies, get-version]
     runs-on: ubuntu-latest
     steps: 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v5
 
       - name: Setting up the Node.js environment
         uses: actions/setup-node@v5
@@ -161,7 +162,7 @@ jobs:
           ls -la src-tauri/gen/android/app/build/outputs/apk/universal/release/
             
       - name: Uploading android apk artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v6
         with:
           name: android-apk-artifacts
           path: src-tauri/gen/android/app/build/outputs/apk/universal/release/
@@ -169,22 +170,22 @@ jobs:
 
   create-windows-msi: 
     name: Creating the .msi file for the android release
-    needs: [install-dependencies]
+    needs: [install-dependencies, get-version]
     runs-on: ubuntu-latest
 
     steps: 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v5
 
 
   release-applications: 
     name: Releasing a draft application into the Github
     runs-on: ubuntu-latest
-    needs: [create-android-apk, create-windows-msi]
+    needs: [create-android-apk, create-windows-msi, get-version]
     steps: 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v5
 
       - name: Download build artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v8
         with:
           name: android-apk-artifacts
 
