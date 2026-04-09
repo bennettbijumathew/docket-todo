@@ -15,7 +15,8 @@ jobs:
     outputs:
       version: ${{ steps.version.outputs.version }}
     steps:
-      - uses: actions/checkout@v5
+      - name: Checking out the repository at the current moment
+        uses: actions/checkout@v5
 
       - name: Gets the version from package.json
         id: version
@@ -44,6 +45,9 @@ jobs:
       VERSION: ${{ needs.get-version.outputs.version }}
     runs-on: ${{ matrix.runner-type }}
     steps: 
+      - name: Checking out the repository at the current moment
+        uses: actions/checkout@v5
+        
       - name: Setting up the Rust toolchain with Android targets
         uses: dtolnay/rust-toolchain@stable
 
