@@ -150,18 +150,56 @@ jobs:
       - name: Uploading android apk artifacts
         uses: actions/upload-artifact@v6
         with:
-          name: android-apk-artifacts
+          name: release-artifacts
           path: src-tauri/gen/android/app/build/outputs/apk/universal/release/
 
 
   create-windows-msi: 
     name: Creating the .msi file for the windows release
     needs: [get-version]
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
-    steps: 
+    steps:
       - uses: actions/checkout@v5
 
+      - name: Setting up the application's node modules
+        uses: actions/setup-node@v5
+        with:
+          node-version: '24.x'
+          cache: 'yarn'
+      
+      - name: Enabling corepack and setting yarn to the most stable version
+        run: |
+          corepack enable
+          yarn set version stable
+
+      - name: Installing dependencies using yarn
+        run: yarn install --frozen-lockfile
+
+      - name: Adding sv-router's generated routes file
+        run: yarn run generate-routes
+
+      - name: Installing a stable version of Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Create application 
+        uses: tauri-apps/tauri-action@97cef2bd32ead607bcc2c6af5b40ce2f25d48e77
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            VITE_FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+            VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
+            VITE_FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+            VITE_FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
+            VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
+            VITE_FIREBASE_TAURI_APP_ID: ${{ secrets.FIREBASE_TAURI_APP_ID }}
+            VITE_FIREBASE_TAURI_MEASUREMENT_ID: ${{ secrets.FIREBASE_TAURI_MEASUREMENT_ID }}
+        with:
+          tagName: draft-app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version.
+          releaseName: 'draft: App v__VERSION__'
+          releaseBody: 'See the assets to download this version and install.'
+          releaseDraft: true
+          prerelease: false
+          mobile: android
 
   release-applications: 
     name: Releasing a draft application into the Github
@@ -173,7 +211,7 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifact@v8
         with:
-          name: android-apk-artifacts
+          name: release-artifacts
       
       - name: Listing the downloaded files
         shell: bash
@@ -183,6 +221,14 @@ jobs:
         shell: bash 
         run: |
           if [ ! -f "docket-${{ needs.get-version.outputs.version }}-android.apk" ]; then
+            echo "The android apk could not be downloaded from the build artifacts"
+            exit 1
+          fi 
+
+      - name: Checking to see if the windows msi has been downloaded from the artifacts
+        shell: bash 
+        run: |
+          if [ ! -f "docket-${{ needs.get-version.outputs.version }}-windows.msi" ]; then
             echo "The android apk could not be downloaded from the build artifacts"
             exit 1
           fi 
