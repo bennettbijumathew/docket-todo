@@ -1,11 +1,13 @@
 name: Release Windows and Android Application
 
+
 on: 
   push: 
     branches:
     - '**'
   workflow_dispatch: 
   
+
 jobs:
   get-version: 
     name: Storing the current version of the application
@@ -13,8 +15,6 @@ jobs:
     outputs:
       version: ${{ steps.version.outputs.version }}
     steps:
-      - uses: actions/checkout@v5
-
       - name: Gets the version from package.json
         id: version
         run: |
@@ -23,12 +23,27 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
 
-  create-android-apk: 
-    name: Creating the apk file for the android release 
-    needs: [get-version]
-    runs-on: ubuntu-latest
+  release-applications: 
+    name: Creating a release for android and windows versions of the application
+    strategy: 
+      fail-fast: false 
+      matrix: 
+        include: 
+          - platform: 'android'
+            args: '--apk'
+            runner-type: 'ubuntu-latest'
+            mobile-type: 'android'
+
+          - platform: 'windows'
+            args: '--bundles msi'
+            runner-type: 'windows-latest'
+            mobile-type: ''
+    env:
+      VERSION: ${{ needs.get-version.outputs.version }}
+    runs-on: ${{ matrix.runner-type }}
     steps: 
-      - uses: actions/checkout@v5
+      - name: Setting up the Rust toolchain with Android targets
+        uses: dtolnay/rust-toolchain@stable
 
       - name: Setting up the Node.js environment
         uses: actions/setup-node@v5
@@ -47,18 +62,21 @@ jobs:
       - name: Adding sv-router's generated routes file
         run: yarn run generate-routes
 
-      - name: Downloading Java 17
+      - name: Downloading Java 17 (ANDROID ONLY)
+        if: matrix.platform == 'android'
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
 
-      - name: Setting up the Android SDK & NDK
+      - name: Setting up the Android SDK & NDK (ANDROID ONLY)
+        if: matrix.platform == 'android'
         uses: android-actions/setup-android@v3
         with:
           packages: "tools platform-tools build-tools;34.0.0"
       
-      - name: Installing SDK, build-tools, NDK and verifying apksigner's existence
+      - name: Installing SDK, build-tools, NDK and verifying apksigner's existence (ANDROID ONLY)
+        if: matrix.platform == 'android'
         run: |
           sdkmanager --install "platforms;android-34" "build-tools;34.0.0" "ndk;25.2.9519653"
           # Add build-tools to PATH to ensure apksigner is available
@@ -67,18 +85,12 @@ jobs:
           which apksigner || echo "apksigner not found in PATH"
           apksigner --version || echo "apksigner not executable"
 
-      - name: Export the NDK_HOME variable for future use
+      - name: Export the NDK_HOME variable for the other steps (ANDROID ONLY)
+        if: matrix.platform == 'android'
         run: echo "NDK_HOME=$ANDROID_NDK_ROOT" >> $GITHUB_ENV
 
-      - name: Setting up the Rust toolchain with Android targets
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android
-
-      - name: Initialising android application using Tauri
-        run: yarn tauri android init
-
-      - name: Decoding the signing keystore
+      - name: Decoding the signing keystore (ANDROID ONLY)
+        if: matrix.platform == 'android'
         shell: bash
         run: |
           set -euo pipefail
@@ -96,12 +108,9 @@ jobs:
             echo "This usually means the base64 string in ANDROID_KEYSTORE secret is invalid."
             exit 1
           fi
-          # Show keystore info for debugging (without revealing sensitive data)
-          echo "Keystore file created successfully:"
-          ls -la docket-release-key.keystore
-          file docket-release-key.keystore
 
-      - name: Writing the signing config
+      - name: Writing the signing config (ANDROID ONLY)
+        if: matrix.platform == 'android'
         shell: bash
         run: |
           cd src-tauri/gen/android
@@ -110,55 +119,8 @@ jobs:
             echo "password=${{ secrets.ANDROID_RELEASE_KEY_PASSWORD }}"
             echo "keyAlias=${{ secrets.ANDROID_RELEASE_KEY_ALIAS }}"
           } > keystore.properties
-
-      - name: Create application 
-        uses: tauri-apps/tauri-action@97cef2bd32ead607bcc2c6af5b40ce2f25d48e77
-        env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            VITE_FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
-            VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
-            VITE_FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
-            VITE_FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
-            VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
-            VITE_FIREBASE_TAURI_APP_ID: ${{ secrets.FIREBASE_TAURI_APP_ID }}
-            VITE_FIREBASE_TAURI_MEASUREMENT_ID: ${{ secrets.FIREBASE_TAURI_MEASUREMENT_ID }}
-        with:
-          tagName: ${{ needs.get-version.outputs.version }}
-          releaseName: 'draft for ${{ needs.get-version.outputs.version }}'
-          releaseBody: 'this is an autogenerated release for ${{ needs.get-version.outputs.version }} using github actions, please test and write a message before publish'
-          releaseDraft: true
-          prerelease: false
-          mobile: android
-
-  create-windows-msi: 
-    name: Creating the .msi file for the windows release
-    needs: [get-version]
-    runs-on: windows-latest
-
-    steps:
-      - uses: actions/checkout@v5
-
-      - name: Setting up the application's node modules
-        uses: actions/setup-node@v5
-        with:
-          node-version: '24.x'
-          cache: 'yarn'
       
-      - name: Enabling corepack and setting yarn to the most stable version
-        run: |
-          corepack enable
-          yarn set version stable
-
-      - name: Installing dependencies using yarn
-        run: yarn install --frozen-lockfile
-
-      - name: Adding sv-router's generated routes file
-        run: yarn run generate-routes
-
-      - name: Installing a stable version of Rust
-        uses: dtolnay/rust-toolchain@stable
-
-      - name: Create application 
+      - name: Creating and releasing the application for ${{ matrix.type }} 
         uses: tauri-apps/tauri-action@97cef2bd32ead607bcc2c6af5b40ce2f25d48e77
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -170,8 +132,10 @@ jobs:
             VITE_FIREBASE_TAURI_APP_ID: ${{ secrets.FIREBASE_TAURI_APP_ID }}
             VITE_FIREBASE_TAURI_MEASUREMENT_ID: ${{ secrets.FIREBASE_TAURI_MEASUREMENT_ID }}
         with:
-          tagName: ${{ needs.get-version.outputs.version }}
-          releaseName: 'draft for ${{ needs.get-version.outputs.version }}'
-          releaseBody: 'this is an autogenerated release, please test and write a message before publish'
+          tagName: ${{ env.VERSION }}
+          releaseName: 'draft for ${{ env.VERSION }}'
+          releaseBody: 'this is an autogenerated release for ${{ env.VERSION }} using github actions, please tag the release and write a message before publish'
           releaseDraft: true
           prerelease: false
+          mobile: ${{ matrix.mobile-type }}
+          args: ${{ matrix.args }}
