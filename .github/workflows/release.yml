@@ -1,0 +1,153 @@
+name: Release Windows and Android Application
+
+
+on: 
+  pull_request: 
+    branches:
+      - 'main'
+    types:
+      - closed
+  workflow_dispatch: 
+  
+
+jobs:
+  get-version: 
+    name: Storing the current version of the application
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true
+    runs-on: ubuntu-latest  
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - name: Checking out the repository at the current moment
+        uses: actions/checkout@v5
+
+      - name: Gets the version from package.json
+        id: version
+        run: |
+          # Extracts the version field and saves it to a step output
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+
+  release-applications: 
+    name: Creating a release for android and windows versions of the application
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true
+    needs: [get-version]
+    strategy: 
+      fail-fast: false 
+      matrix: 
+        include: 
+          - platform: 'android'
+            args: '--apk'
+            runner-type: 'ubuntu-latest'
+            mobile-type: 'android'
+
+          - platform: 'windows'
+            args: '--bundles msi'
+            runner-type: 'windows-latest'
+            mobile-type: ''
+    env:
+      VERSION: ${{ needs.get-version.outputs.version }}
+    runs-on: ${{ matrix.runner-type }}
+    steps: 
+      - name: Checking out the repository at the current moment
+        uses: actions/checkout@v5
+
+      - name: Setting up the Rust toolchain with Android targets
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Setting up the Node.js environment
+        uses: actions/setup-node@v5
+        with:
+          node-version: '24.x'
+          cache: 'yarn'
+
+      - name: Enabling corepack and setting yarn to the most stable version
+        run: |
+          corepack enable
+          yarn set version stable
+
+      - name: Installing the application's dependencies
+        run: yarn install
+
+      - name: Adding sv-router's generated routes file
+        run: yarn run generate-routes
+
+      - name: Downloading Java 17 (ANDROID ONLY)
+        if: matrix.platform == 'android'
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Setting up the Android SDK & NDK (ANDROID ONLY)
+        if: matrix.platform == 'android'
+        uses: android-actions/setup-android@v3
+        with:
+          packages: "tools platform-tools build-tools;34.0.0"
+      
+      - name: Installing SDK, build-tools, NDK and verifying apksigner's existence (ANDROID ONLY)
+        if: matrix.platform == 'android'
+        run: |
+          sdkmanager --install "platforms;android-34" "build-tools;34.0.0" "ndk;25.2.9519653"
+          # Add build-tools to PATH to ensure apksigner is available
+          echo "$ANDROID_SDK_ROOT/build-tools/34.0.0" >> $GITHUB_PATH
+          # Verify apksigner is available
+          which apksigner || echo "apksigner not found in PATH"
+          apksigner --version || echo "apksigner not executable"
+
+      - name: Export the NDK_HOME variable for the other steps (ANDROID ONLY)
+        if: matrix.platform == 'android'
+        run: echo "NDK_HOME=$ANDROID_NDK_ROOT" >> $GITHUB_ENV
+
+      - name: Decoding the signing keystore (ANDROID ONLY)
+        if: matrix.platform == 'android'
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Check if the secret exists and is not empty
+          if [ -z "${{ secrets.ANDROID_RELEASE_KEY }}" ]; then
+            echo "Error: ANDROID_KEYSTORE secret is empty or not set."
+            echo "Please ensure the ANDROID_KEYSTORE secret is configured with a base64-encoded keystore file."
+            exit 1
+          fi
+          # Decode the keystore
+          echo "${{ secrets.ANDROID_RELEASE_KEY }}" | base64 -d > docket-release-key.keystore
+          # Verify keystore was created and has content
+          if [ ! -s docket-release-key.keystore ]; then
+            echo "Error: Keystore file is empty or was not created."
+            echo "This usually means the base64 string in ANDROID_KEYSTORE secret is invalid."
+            exit 1
+          fi
+
+      - name: Writing the signing config (ANDROID ONLY)
+        if: matrix.platform == 'android'
+        shell: bash
+        run: |
+          cd src-tauri/gen/android
+          {
+            echo "storeFile=$GITHUB_WORKSPACE/docket-release-key.keystore"
+            echo "password=${{ secrets.ANDROID_RELEASE_KEY_PASSWORD }}"
+            echo "keyAlias=${{ secrets.ANDROID_RELEASE_KEY_ALIAS }}"
+          } > keystore.properties
+      
+      - name: Creating and releasing the application for ${{ matrix.platform }} 
+        uses: tauri-apps/tauri-action@97cef2bd32ead607bcc2c6af5b40ce2f25d48e77
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            VITE_FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+            VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
+            VITE_FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+            VITE_FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
+            VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
+            VITE_FIREBASE_TAURI_APP_ID: ${{ secrets.FIREBASE_TAURI_APP_ID }}
+            VITE_FIREBASE_TAURI_MEASUREMENT_ID: ${{ secrets.FIREBASE_TAURI_MEASUREMENT_ID }}
+        with:
+          tagName: '${{ env.VERSION }}'
+          releaseName: 'draft for ${{ env.VERSION }}'
+          releaseBody: 'this is an autogenerated release for ${{ env.VERSION }} using github actions, please tag the release and write a message before publish'
+          releaseAssetNamePattern: 'docket-${{ env.VERSION }}-${{ matrix.platform }}'
+          releaseDraft: true
+          prerelease: false
+          mobile: ${{ matrix.mobile-type }}
+          args: ${{ matrix.args }}
