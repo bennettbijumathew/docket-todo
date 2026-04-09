@@ -1,5 +1,11 @@
 # docket-todo
 
+## 1.0.3
+
+### Patch Changes
+
+- Fixed an issue with the Release Workflow where files were not being built in the correct file format.
+
 ## 1.0.2
 
 ### Patch Changes
@@ -10,7 +16,7 @@
 
 ### Patch Changes
 
-- Created a build workflow that runs on each push and pull request for all branches
+- Created a build workflow that runs on each push and pull request for all branches.
 
 ## 1.0.0
 
