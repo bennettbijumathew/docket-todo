@@ -1,5 +1,11 @@
 # docket-todo
 
+## 1.0.2
+
+### Patch Changes
+
+- Created a release workflow that creates a draft release of the android and windows applications.
+
 ## 1.0.1
 
 ### Patch Changes
