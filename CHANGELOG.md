@@ -1,5 +1,11 @@
 # docket-todo
 
+## 1.0.1
+
+### Patch Changes
+
+- Created a build workflow that runs on each push and pull request for all branches
+
 ## 1.0.0
 
 ### Major Changes
