@@ -10,6 +10,8 @@ jobs:
   get-version: 
     name: Storing the current version of the application
     runs-on: ubuntu-latest  
+    outputs:
+      version: ${{ steps.version.outputs.version }}
     steps:
       - uses: actions/checkout@v5
 
@@ -51,7 +53,7 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      - name: Setup Android SDK & NDK
+      - name: Setting up the Android SDK & NDK
         uses: android-actions/setup-android@v3
         with:
           packages: "tools platform-tools build-tools;34.0.0"
@@ -81,7 +83,7 @@ jobs:
       - name: Initialising android application using Tauri
         run: yarn tauri android init
 
-      - name: Decode signing keystore
+      - name: Decoding the signing keystore
         shell: bash
         run: |
           set -euo pipefail
@@ -104,7 +106,7 @@ jobs:
           ls -la docket-release-key.keystore
           file docket-release-key.keystore
 
-      - name: Write signing config
+      - name: Writing the signing config
         shell: bash
         run: |
           cd src-tauri/gen/android
@@ -128,26 +130,22 @@ jobs:
           cd src-tauri
           yarn tauri android build --apk
 
-      - shell: bash
-        run: |
-          echo "Checking Android build outputs:"
-          ls -la src-tauri/gen/android/app/build/outputs/apk/universal/release/ || echo "APK directory not found"
+      - name: List items in the apk's release folder
+        shell: bash
+        run: ls -la src-tauri/gen/android/app/build/outputs/apk/universal/release/ || echo "APK directory not found"
 
       - name: Renaming the android apk file
         shell: bash
         run: |
-          # Rename APK file
           if [ -f "src-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release.apk" ]; then
             mv "src-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release.apk" \
                "src-tauri/gen/android/app/build/outputs/apk/universal/release/docket-${{ needs.get-version.outputs.version }}-android.apk"
             echo "Renamed APK to: docket-${{ needs.get-version.outputs.version }}-android.apk"
           fi
           
-      - shell: bash
-        run: |
-          # List renamed files
-          echo "Final Android build outputs:"
-          ls -la src-tauri/gen/android/app/build/outputs/apk/universal/release/
+      - name: List items in the apk's release folder
+        shell: bash
+        run: ls -la src-tauri/gen/android/app/build/outputs/apk/universal/release/
             
       - name: Uploading android apk artifacts
         uses: actions/upload-artifact@v6
@@ -157,7 +155,7 @@ jobs:
 
 
   create-windows-msi: 
-    name: Creating the .msi file for the android release
+    name: Creating the .msi file for the windows release
     needs: [get-version]
     runs-on: ubuntu-latest
 
@@ -176,7 +174,19 @@ jobs:
         uses: actions/download-artifact@v8
         with:
           name: android-apk-artifacts
+      
+      - name: Listing the downloaded files
+        shell: bash
+        run: ls -R
 
+      - name: Checking to see if the android apk has been downloaded from the artifacts
+        shell: bash 
+        run: |
+          if [ ! -f "docket-${{ needs.get-version.outputs.version }}-android.apk" ]; then
+            echo "The android apk could not be downloaded from the build artifacts"
+            exit 1
+          fi 
+    
       - name: Uploading the application to release
         uses: softprops/action-gh-release@v2
         if: success()
@@ -187,4 +197,4 @@ jobs:
           draft: true
 
           files: |
-            src-tauri/gen/android/app/build/outputs/apk/universal/release/docket-${{ needs.get-version.outputs.version }}-android.apk
+            docket-${{ needs.get-version.outputs.version }}-android.apk
