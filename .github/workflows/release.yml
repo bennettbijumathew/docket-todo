@@ -15,6 +15,8 @@ jobs:
     outputs:
       version: ${{ steps.version.outputs.version }}
     steps:
+      - uses: actions/checkout@v5
+
       - name: Gets the version from package.json
         id: version
         run: |
