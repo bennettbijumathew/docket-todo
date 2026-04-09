@@ -1,6 +1,6 @@
 [package]
 name = "Docket"
-version = "1.0.2"
+version = "1.0.3"
 description = "A multi-group task management application for Windows and Android"
 authors = ["Bennett Biju Mathew"]
 edition = "2021"
