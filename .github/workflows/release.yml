@@ -1,0 +1,201 @@
+name: Check for Complete Package Build
+
+on: 
+  push: 
+    branches:
+    - '**'
+  workflow_dispatch: 
+  
+jobs:
+  get-version: 
+    name: Storing the current version of the application
+    runs-on: ubuntu-latest  
+    steps:
+    - name: Outputs the version from package.json
+      id: package_version
+      run: |
+        # Extracts the version field and saves it to a step output
+        VERSION=$(node -p "require('./package.json').version")
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+
+  install-dependencies: 
+    name: Installing dependencies for the workflow
+    runs-on: ubuntu-latest  
+    steps: 
+      - uses: actions/checkout@v5
+
+      - name: Setting up the Node.js environment
+        uses: actions/setup-node@v5
+        with:
+          node-version: '24.x'
+          cache: 'yarn'
+
+      - name: Enabling corepack and setting yarn to the most stable version
+        run: |
+          corepack enable
+          yarn set version stable
+
+      - name: Installing the application's dependencies
+        run: yarn install
+
+
+  create-android-apk: 
+    name: Creating the apk file for the android release 
+    needs: [install-dependencies]
+    runs-on: ubuntu-latest
+    steps: 
+      - uses: actions/checkout@v3
+
+      - name: Setting up the Node.js environment
+        uses: actions/setup-node@v5
+        with:
+          node-version: '24.x'
+          cache: 'yarn'
+      
+      - name: Adding sv-router's generated routes file
+        run: yarn run generate-routes
+
+      - name: Downloading Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Setup Android SDK & NDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: "tools platform-tools build-tools;34.0.0"
+      
+      - name: Installing SDK, build-tools, NDK and verifying apksigner's existence
+        run: |
+          sdkmanager --install "platforms;android-34" "build-tools;34.0.0" "ndk;25.2.9519653"
+          # Add build-tools to PATH to ensure apksigner is available
+          echo "$ANDROID_SDK_ROOT/build-tools/34.0.0" >> $GITHUB_PATH
+          # Verify apksigner is available
+          which apksigner || echo "apksigner not found in PATH"
+          apksigner --version || echo "apksigner not executable"
+
+      - name: Export the NDK_HOME variable for future use
+        run: echo "NDK_HOME=$ANDROID_NDK_ROOT" >> $GITHUB_ENV
+
+      - name: Setting up the Rust toolchain with Android targets
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android
+
+      - name: Caching the Rust / Android build artifacts
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: ./src-tauri -> target
+
+      - name: Initialising android application using Tauri
+        run: yarn tauri android init
+
+      - name: Decode signing keystore
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Check if the secret exists and is not empty
+          if [ -z "${{ secrets.ANDROID_RELEASE_KEY }}" ]; then
+            echo "Error: ANDROID_KEYSTORE secret is empty or not set."
+            echo "Please ensure the ANDROID_KEYSTORE secret is configured with a base64-encoded keystore file."
+            exit 1
+          fi
+          # Decode the keystore
+          echo "${{ secrets.ANDROID_RELEASE_KEY }}" | base64 -d > docket-release-key.keystore
+          # Verify keystore was created and has content
+          if [ ! -s docket-release-key.keystore ]; then
+            echo "Error: Keystore file is empty or was not created."
+            echo "This usually means the base64 string in ANDROID_KEYSTORE secret is invalid."
+            exit 1
+          fi
+          # Show keystore info for debugging (without revealing sensitive data)
+          echo "Keystore file created successfully:"
+          ls -la docket-release-key.keystore
+          file docket-release-key.keystore
+
+      - name: Write signing config
+        shell: bash
+        run: |
+          cd src-tauri/gen/android
+          {
+            echo "storeFile=$GITHUB_WORKSPACE/docket-release-key.keystore"
+            echo "password=${{ secrets.ANDROID_RELEASE_KEY_PASSWORD }}"
+            echo "keyAlias=${{ secrets.ANDROID_RELEASE_KEY_ALIAS }}"
+          } > keystore.properties
+
+      - name: Building the apk for the Docket application
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            VITE_FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+            VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
+            VITE_FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+            VITE_FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
+            VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
+            VITE_FIREBASE_TAURI_APP_ID: ${{ secrets.FIREBASE_TAURI_APP_ID }}
+            VITE_FIREBASE_TAURI_MEASUREMENT_ID: ${{ secrets.FIREBASE_TAURI_MEASUREMENT_ID }}
+        run: |
+          cd src-tauri
+          yarn tauri android build --apk
+
+      - shell: bash
+        run: |
+          echo "Checking Android build outputs:"
+          ls -la src-tauri/gen/android/app/build/outputs/apk/universal/release/ || echo "APK directory not found"
+
+      - name: Renaming the android apk file
+        shell: bash
+        run: |
+          # Rename APK file
+          if [ -f "src-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release.apk" ]; then
+            mv "src-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release.apk" \
+               "src-tauri/gen/android/app/build/outputs/apk/universal/release/docket-${{ steps.package_version.outputs.version }}-android.apk"
+            echo "Renamed APK to: docket-${{ steps.package_version.outputs.version }}-android.apk"
+          fi
+          
+      - shell: bash
+        run: |
+          # List renamed files
+          echo "Final Android build outputs:"
+          ls -la src-tauri/gen/android/app/build/outputs/apk/universal/release/
+            
+      - name: Uploading android apk artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: android-apk-artifacts
+          path: src-tauri/gen/android/app/build/outputs/apk/universal/release/
+
+
+  create-windows-msi: 
+    name: Creating the .msi file for the android release
+    needs: [install-dependencies]
+    runs-on: ubuntu-latest
+
+    steps: 
+      - uses: actions/checkout@v3
+
+
+  release-applications: 
+    name: Releasing a draft application into the Github
+    runs-on: ubuntu-latest
+    needs: [create-android-apk, create-windows-msi]
+    steps: 
+      - uses: actions/checkout@v3
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: android-apk-artifacts
+
+      - name: Uploading the application to release
+        uses: softprops/action-gh-release@v2
+        if: success()
+        with:
+          name: 'draft-version'
+          tag_name: "${{ steps.package_version.outputs.version }}"
+          body: 'THIS IS A GENERATED DRAFT RELEASE CREATED FROM A GITHUB ACTION. PLEASE UPDATE OR DELETE.'
+          draft: true
+
+          files: |
+            src-tauri/gen/android/app/build/outputs/apk/universal/release/docket-${{ steps.package_version.outputs.version }}-android.apk
