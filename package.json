@@ -1,7 +1,7 @@
 {
     "name": "docket-todo",
     "private": true,
-    "version": "0.1.0",
+    "version": "1.0.0",
     "type": "module",
     "scripts": {
         "dev": "vite",
@@ -10,7 +10,6 @@
         "tauri": "tauri",
         "firebase": "firebase emulators:start --import=./firebase-export --export-on-exit=./firebase-export",
         "test:frontend": "vitest",
-
         "add-version": "yarn changeset add",
         "set-versions": "yarn changeset version && node .changeset/sync-version-numbers.ts"
     },
