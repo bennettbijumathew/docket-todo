@@ -1,4 +1,4 @@
-name: Check for Complete Package Build
+name: Release Windows and Android Application
 
 on: 
   push: 
