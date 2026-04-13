@@ -1,7 +1,7 @@
 {
     "name": "docket-todo",
     "private": true,
-    "version": "1.0.3",
+    "version": "2.0.0",
     "type": "module",
     "scripts": {
         "dev": "vite",
@@ -23,6 +23,8 @@
         "@tauri-apps/api": "^2.10.1",
         "@tauri-apps/plugin-opener": "^2",
         "@tauri-apps/plugin-os": "^2.3.2",
+        "@tauri-apps/plugin-process": "~2",
+        "@tauri-apps/plugin-updater": "~2",
         "bits-ui": "^2.15.5",
         "firebase": "^12.7.0",
         "sv-router": "^0.14.0",
