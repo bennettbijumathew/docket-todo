@@ -1,4 +1,4 @@
-import { type Icon, House, DoorOpen, UserPlus, ClipboardCheck, Notebook, LogIn } from '@lucide/svelte';
+import { type Icon, House, DoorOpen, UserPlus, ClipboardCheck, Notebook, LogIn, Cog } from '@lucide/svelte';
 
 // A type for the title for each route
 type RouteNames =
@@ -7,7 +7,8 @@ type RouteNames =
     | "Log Out"
     | "Sign Up"
     | "Task"
-    | "Planner";
+    | "Planner"
+    | "Settings";
 
 // A type for the path of each route
 export type RoutePath = 
@@ -16,7 +17,8 @@ export type RoutePath =
     | "/logout"
     | "/signup"
     | "/task"
-    | "/planner";
+    | "/planner"
+    | "/settings";
     
 // An interface representing the metadata of the route
 interface RouteDetails {
@@ -56,6 +58,11 @@ routes.set("Task", {
 routes.set("Planner", { 
     link: "/planner", 
     icon: Notebook,
+    hasSidebar: true
+});
+routes.set("Settings", { 
+    link: "/settings", 
+    icon: Cog,
     hasSidebar: true
 });
 
