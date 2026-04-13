@@ -1,19 +1,23 @@
 <!-- CODE -->
 <script lang="ts">
-    import Sidebar from "@/components/ui/layout/_user/sidebar.svelte";
     import Main from "@/components/ui/layout/_user/main.svelte";
-    import { DownloadIcon, Hourglass, type Icon, RefreshCcw } from "@lucide/svelte"
+    import { DownloadIcon, Hourglass, type Icon, LoaderCircle, RefreshCcw } from "@lucide/svelte";
     import { check, Update } from '@tauri-apps/plugin-updater';
     import { relaunch } from '@tauri-apps/plugin-process';
 
+    // This represents the loading state of the page.
+    let loading: boolean = $state(false);
+
     // This represents the upcoming update of the application.
-    let update: Update | null = $state(null)
-    type UpdateStatus = "Idle" | "Started" | "Progress" | "Finished" 
-    let updateStatus: UpdateStatus = $state("Idle")
+    let update: Update | null = $state(null);
+    type UpdateStatus = "Idle" | "Started" | "Progress" | "Finished" ;
+    let updateStatus: UpdateStatus = $state("Idle");
 
     // This changes the update variable to the latest update.
     async function checkForUpdates(): Promise<void> {
-        update = await check()
+        loading = true;
+        update = await check();
+        loading = false;
     }
 
     // This downloads and installs the updates.
@@ -42,7 +46,7 @@
     }
 
     // On running the page, this is called to see if there are updates
-    checkForUpdates()
+    checkForUpdates();
 </script>
 
 <!-- COMPONENTS -->
@@ -52,18 +56,25 @@
     <div class="flex items-center justify-center rounded-lg {color} size-4">
         <StatusIcon class="size-2"/>
     </div>
-
+    
     {name}
 {/snippet}
 
 <!-- VIEW -->
-<main class="
-    flex flex-col flex-1 inset *:inset-shadow-b-md
-    sm:min-h-0 sm:flex-row *:sm:inset-shadow-l-md
-">
-    <Sidebar/>
-        
-    <Main>
+<Main>
+    {#if loading == true}
+        <h2 class="
+            font-title font-semibold text-lg
+            text-center
+            sm:text-left
+        "> 
+            Settings 
+        </h2>
+
+        <section class="flex justify-center items-center h-full">
+            <LoaderCircle class="animate-spin"/>
+        </section>
+    {:else}
         <h2 class="
             font-title font-semibold text-lg
             text-center
@@ -119,7 +130,7 @@
                             {@render statusSymbol("Finished Update", "bg-green-500", Hourglass)}
                         {/if}
                     </button>
-                    {:else}
+                {:else}
                     <button 
                         class="rounded-lg p-1.5 px-3 bg-background-200 hover:bg-background-300 hover:cursor-pointer"
                         onclick={checkForUpdates}
@@ -129,5 +140,5 @@
                 {/if}
             </div>
         </section>
-    </Main>
-</main>
+    {/if}
+</Main>
