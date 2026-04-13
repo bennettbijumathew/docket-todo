@@ -18,7 +18,11 @@
             }
         ],
         "security": {
-            "csp": null
+            "csp": null,
+            "capabilities": [
+                "default",
+                "desktop"
+            ]
         }
     },
     "bundle": {
@@ -30,6 +34,19 @@
             "icons/128x128@2x.png",
             "icons/icon.icns",
             "icons/icon.ico"
-        ]
+        ],
+        "createUpdaterArtifacts": true
+    },
+    "plugins": {
+        "updater": {
+            "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEJFRTk4N0FCN0UwQzlGNTAKUldSUW53eCtxNGZwdmxFOW1tMWRXeHprN2M0ZU42RFFiTGFsNGdJWHJWeHozbm4rVzZaVzRESDQK",
+            "endpoints": [
+                "https://github.com/bennettbijumathew/docket-todo/releases/latest/download/latest.json"
+            ],
+            "windows": {
+                "dangerousInsecureTransportProtocol": false,
+                "installMode": "passive"
+            }
+        }
     }
 }
