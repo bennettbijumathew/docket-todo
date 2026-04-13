@@ -4,26 +4,25 @@
     import Main from "@/components/ui/layout/_user/main.svelte";
     import { DownloadIcon, Hourglass, type Icon, RefreshCcw } from "@lucide/svelte"
     import { check, Update } from '@tauri-apps/plugin-updater';
+    import { relaunch } from '@tauri-apps/plugin-process';
 
-    // This represents the upcoming update of the application
+    // This represents the upcoming update of the application.
     let update: Update | null = $state(null)
-
-    // This represents the statuses that the update can go through
     type UpdateStatus = "Idle" | "Started" | "Progress" | "Finished" 
     let updateStatus: UpdateStatus = $state("Idle")
 
-    // This changes the update variable to the latest update
+    // This changes the update variable to the latest update.
     async function checkForUpdates(): Promise<void> {
         update = await check()
     }
 
-    // This downloads and installs the updates
+    // This downloads and installs the updates.
     async function installUpdate(): Promise<void> {
         if (update == null) {
             return; 
         }
 
-        // Status is updated as the download and install progress
+        // Status is updated as the download and install progress.
         await update.downloadAndInstall((event) => {
             switch (event.event) {
                 case 'Started':
@@ -37,6 +36,9 @@
                     break;
                 }
         });
+
+        // This relaunches the application on installation of the app.
+        await relaunch();
     }
 
     // On running the page, this is called to see if there are updates
