@@ -1,7 +1,7 @@
 <!-- CODE -->
 <script lang="ts">
     import Main from "@/components/ui/layout/_user/main.svelte";
-    import { DownloadIcon, Hourglass, type Icon, LoaderCircle, RefreshCcw } from "@lucide/svelte";
+    import { Check, DownloadIcon, Hourglass, type Icon, LoaderCircle, RefreshCcw } from "@lucide/svelte";
     import { check, Update } from '@tauri-apps/plugin-updater';
     import { relaunch } from '@tauri-apps/plugin-process';
 
@@ -109,7 +109,7 @@
                             {#if update == null}
                                 View Current Release Notes
                             {:else}
-                                View Release Notes for Version {update.currentVersion}
+                                View Newest Release Notes 
                             {/if}
                         </a>
                     </div>
@@ -120,6 +120,7 @@
                         class="flex justify-between items-center gap-x-3 rounded-lg p-1.5 px-3 bg-background-200 hover:bg-background-300 hover:cursor-pointer"
                         onclick={installUpdate}
                     >
+                        <!-- Shows different icons for different moments of the install and download -->
                         {#if updateStatus == "Idle"}
                             {@render statusSymbol("Install Update", "bg-yellow-400", DownloadIcon)}
                         {:else if updateStatus == "Started"}
@@ -127,7 +128,7 @@
                         {:else if updateStatus == "Progress"}
                             {@render statusSymbol("Installing Update", "bg-yellow-500", Hourglass)}
                         {:else if updateStatus == "Finished"}
-                            {@render statusSymbol("Finished Update", "bg-green-500", Hourglass)}
+                            {@render statusSymbol("Finished Update", "bg-green-500", Check)}
                         {/if}
                     </button>
                 {:else}
