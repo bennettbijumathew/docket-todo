@@ -4,6 +4,7 @@
     import { Check, DownloadIcon, Hourglass, type Icon, LoaderCircle, RefreshCcw } from "@lucide/svelte";
     import { check, Update } from '@tauri-apps/plugin-updater';
     import { relaunch } from '@tauri-apps/plugin-process';
+    import { getPlatform } from "@/lib/shared/platform";
 
     // This represents the loading state of the page.
     let loading: boolean = $state(false);
@@ -62,27 +63,24 @@
 
 <!-- VIEW -->
 <Main>
+    <h2 class="
+        font-title font-semibold text-lg
+        text-center
+        sm:text-left
+    "> 
+        Settings 
+    </h2>
+        
     {#if loading == true}
-        <h2 class="
-            font-title font-semibold text-lg
-            text-center
-            sm:text-left
-        "> 
-            Settings 
-        </h2>
-
         <section class="flex justify-center items-center h-full">
             <LoaderCircle class="animate-spin"/>
         </section>
+    {:else if loading == false && getPlatform() !== "windows"}
+        <section class="flex flex-col justify-center items-center h-full">
+            <h3 class="font-title text-md font-medium mb-2"> Settings are unavailable </h3>
+            <p> This platform does not have any settings at the current moment. </p>
+        </section>
     {:else}
-        <h2 class="
-            font-title font-semibold text-lg
-            text-center
-            sm:text-left
-        "> 
-            Settings 
-        </h2>
-
         <section class="gap-y-4 my-6">
             <h3 class="font-title text-md font-medium mb-2"> Updates </h3>
 
