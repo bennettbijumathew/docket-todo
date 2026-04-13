@@ -2,7 +2,7 @@
 <script lang="ts">
     import Sidebar from "@/components/ui/layout/_user/sidebar.svelte";
     import Main from "@/components/ui/layout/_user/main.svelte";
-    import { Check, DownloadIcon, Hourglass, type Icon, RefreshCcw } from "@lucide/svelte"
+    import { DownloadIcon, Hourglass, type Icon, RefreshCcw } from "@lucide/svelte"
     import { check, Update } from '@tauri-apps/plugin-updater';
 
     // This represents the upcoming update of the application
