@@ -1,5 +1,5 @@
 {
-    "extends": ["./.router/tsconfig.json"],
+    "extends": "./.router/tsconfig.json",
     "compilerOptions": {
         "target": "esnext",
         "useDefineForClassFields": true,
@@ -26,5 +26,12 @@
         }
 
     },
-    "include": ["src", ".router"]
+    "include": [
+        "src/**/*.ts",
+        "src/**/*.js",
+        "src/**/*.svelte",
+        "src/**/*.svelte.ts",
+        ".router/**/*.ts"
+    ],
+    "files": []
 }
