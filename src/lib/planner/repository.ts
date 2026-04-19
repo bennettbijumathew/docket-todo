@@ -1,47 +1,41 @@
 import { db } from "@/lib/shared/firebase-config"
-import { collection, query, orderBy, onSnapshot, QuerySnapshot, doc, Unsubscribe, updateDoc, addDoc, deleteDoc, where } from "firebase/firestore";
+import { collection, query, onSnapshot, QuerySnapshot, doc, Unsubscribe, updateDoc, addDoc, deleteDoc, where, CollectionReference, DocumentData, Query, FirestoreDataConverter } from "firebase/firestore";
 import { createPlannerConverter, NewPlannerData, Planner } from "./type";
 import { ColorKey } from "@/components/util/color";
 import { taskRepo } from "../task/repository";
 import { toast } from "svelte-sonner";
 
-export class PlannerRepository {
-    // This returns a listeners that returns the list of planners that are related to the user.
-    public onChange(userId: string, callbackFn: (planner: Planner[]) => void): Unsubscribe {
-        // Gets a list of planners where user has a visibility (represented as a boolean value) in the users field. 
-        // Applies a converter to help transition from Firestore to code.
-        const q = query(collection(db, "planners"), where(`users.${userId}`, "in", [true, false]), orderBy(`users.${userId}`)).withConverter(createPlannerConverter(userId));
+const plannerDbName: string = import.meta.env.VITE_FIRESTORE_PLANNER_DB;
 
-        // This snapshot sets the planner list while adding a visible attribute for each user 
-        return onSnapshot(q, (querySnapshot: QuerySnapshot) => {
-            let newPlanners: Planner[] = querySnapshot.docs.map((doc) => doc.data()) as Planner[]
+// This returns a listeners that returns the list of planners that are related to the user.
+export function listenForPlannerChanges(userId: string, callbackFn: (planner: Planner[]) => void): Unsubscribe {
+    const databaseRef: CollectionReference<DocumentData, DocumentData> = collection(db, plannerDbName)
+    const dataConverter: FirestoreDataConverter<NewPlannerData> = createPlannerConverter(userId)
 
-            // Sorts the new planners by name then id.
-            // If the names are the same, then the id are compared rather than name. This ensures the same placement of planners 
-            let sortedPlanners = newPlanners.sort((a, b) => { 
-                if (a.name !== b.name) {
-                    return a.name.localeCompare(b.name) 
-                }
+    // Query - Gets list of planners from database where the current user is enrolled into the planners' user field.
+    // Converter - Converts data from Firestore to the Planner object.
+    const q: Query<NewPlannerData> = query(databaseRef, where(`users.${userId}`, "in", [true, false])).withConverter(dataConverter);
 
-                return a.id.localeCompare(b.id)
-            })
+    // This snapshot sets the planner list while adding a visible attribute for each user.
+    return onSnapshot(q, (querySnapshot: QuerySnapshot) => {
+        let planners: Planner[] = querySnapshot.docs.map((doc) => doc.data()) as Planner[]
 
-            callbackFn(sortedPlanners)
-        })            
-    }
-
-
-    // This adds a new planner into the planners database
-    public async createPlanner(newPlanner: NewPlannerData): Promise<void> {
-        // A guard clause to prevent a new task being added if there is no name
-        // or planners attached to the task.
-        if (newPlanner.name.trim() == "") {
-            toast.error("To create a new planner, the title requires a non-empty field")
-            return 
-        }
+        // Mutates the planners to be sorted by name then id. This ensures the same positioning of planners.
+        planners.sort((a, b) => {
+            const nameCompare = a.name.localeCompare(b.name)
+            return nameCompare !== 0 ? nameCompare : a.id.localeCompare(b.id)
+        })
         
+        // This sends the planner into the callback function. 
+        callbackFn(planners)
+    })            
+}
+
+// This adds a new planner into the planners collection
+export async function writeNewPlanner(newPlanner: NewPlannerData): Promise<void> {
+    try {
         // Grabs the planner collection from Firestore and adds a new document using the converter. 
-        const newPlannerRef = collection(db, "planners").withConverter(createPlannerConverter())
+        const newPlannerRef = collection(db, plannerDbName).withConverter(createPlannerConverter())
         
         await addDoc(newPlannerRef, {
             name: newPlanner.name,
@@ -49,7 +43,12 @@ export class PlannerRepository {
             color: newPlanner.color            
         });
     }
+    catch (error) {
+        throw error
+    }
+}
 
+export class PlannerRepository {
     // This removes a planner from the planners database
     public async deletePlanner(plannerId: string): Promise<void> {
         // A guard clause to stop the function when there is no planner id.
@@ -122,4 +121,4 @@ export class PlannerRepository {
     }
 }
     
-    export const plannerRepo = new PlannerRepository()
+export const plannerRepo =  new PlannerRepository()

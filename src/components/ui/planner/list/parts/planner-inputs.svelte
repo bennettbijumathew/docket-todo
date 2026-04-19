@@ -2,7 +2,7 @@
     import ColorPicker from "@/components/ui/inputs/color-picker.svelte";
     import { type ColorKey } from "@/components/util/color";
     import { authStore } from "@/lib/auth/store.svelte";
-    import { plannerRepo } from "@/lib/planner/repository";
+    import { writeNewPlanner } from "@/lib/planner/repository";
     import { type NewPlannerData } from "@/lib/planner/type";
     import { Plus } from "@lucide/svelte";
 
@@ -19,7 +19,7 @@
             [authStore.getUserId()]:  false
         }
 
-        plannerRepo.createPlanner(newPlanner)
+        writeNewPlanner(newPlanner)
         
         newPlanner = {
             name: "",

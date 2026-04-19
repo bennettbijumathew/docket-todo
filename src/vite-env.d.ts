@@ -11,6 +11,9 @@ interface ImportMetaEnv {
     readonly VITE_FIREBASE_TAURI_APP_ID: string,
     readonly VITE_FIREBASE_TAURI_MEASUREMENT_ID: string,
 
+    readonly VITE_FIRESTORE_PLANNER_DB: string,
+    readonly VITE_FIRESTORE_TASK_DB: string,
+
     readonly VITE_FIREBASE_EMULATOR_HOST: string,
     readonly VITE_FIRESTORE_EMULATOR_PORT: number,
     readonly VITE_AUTH_EMULATOR_PORT: number,

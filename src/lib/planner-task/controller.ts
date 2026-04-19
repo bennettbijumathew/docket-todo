@@ -1,4 +1,4 @@
-import { plannerRepo, PlannerRepository } from "../planner/repository";
+import { listenForPlannerChanges, plannerRepo, PlannerRepository } from "../planner/repository";
 import { PlannerDataStore, plannerStore } from "../planner/store.svelte";
 import { taskRepo, TaskRepository } from "../task/repository";
 import { TaskDataStore, taskStore } from "../task/store.svelte";
@@ -21,7 +21,7 @@ export class PlannerTaskController {
     public start(userId: string) {
         this.unSubFromPlannerUpdates?.()
         
-        this.unSubFromPlannerUpdates = this.plannerRepo.onChange(userId, (planners) => {
+        this.unSubFromPlannerUpdates = listenForPlannerChanges(userId, (planners) => {
             this.unSubFromTaskUpdates?.()
 
             this.plannerStore.setList(planners)
