@@ -5,7 +5,6 @@
     import { type ColorKey } from "@/components/util/color";
     import { editPlannerColor, editPlannerName, removePlanner } from "@/lib/planner/service";
 
-
     // The component receives the selected planner id with a function that 
     // handles the behavior of the open and close state of the editor. 
     interface EditorProps {
@@ -22,9 +21,7 @@
     // Gets the planner that is derived from the state array.
     const planner: Planner | null = $derived(initialPlanner);
 
-
-    // Inputs of this editor are initialized with effect used to 
-    // ensure that inputs are synced with the state variables.
+    // Inputs of this editor are initialized with effect used to ensure that inputs are synced with the state variables.
     let inputs = $state({
         name: "", 
         color: "red" as ColorKey
@@ -43,7 +40,8 @@
     <div class="flex flex-col flex-1 gap-y-4">
         <!-- Form to update name changes for the planner -->
         <form 
-            onblur={() => {
+            onsubmit={(e) => {
+                e.preventDefault(); 
                 if (planner.name != inputs.name) {
                     editPlannerName({
                         id: planner.id,
@@ -57,6 +55,14 @@
                 type="text" 
                 class="bg-background-50 hover:bg-background-100 focus:bg-background-200 outline-none rounded-lg p-1 px-1.5 w-full shadow-md"
                 bind:value={inputs.name}
+                onblur={() => {
+                    if (planner.name != inputs.name) {
+                        editPlannerName({
+                            id: planner.id,
+                            name: inputs.name
+                        })
+                    }
+                }}
             >
         </form>
 

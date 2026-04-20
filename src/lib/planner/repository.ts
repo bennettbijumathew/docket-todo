@@ -102,6 +102,7 @@ export async function updatePlannerColor({id, color}: updateColorArgs): Promise<
         })
     }
     catch (error) {
+        console.error(error);
         throw error
     }
 }
@@ -124,6 +125,7 @@ export async function updatePlannerVisibility({id, userId, visibility}: updateVi
         })
     }
     catch (error) {
+        console.error(error);
         throw error
     }
 }
