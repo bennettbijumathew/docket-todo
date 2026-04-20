@@ -51,12 +51,12 @@ export async function writeNewPlanner(newPlanner: NewPlannerData): Promise<void>
 
 // This deletes a planner from the planners collection using a planner id.
 type deleteArgs = {
-    plannerId: string
+    id: string
 }
 
-export async function deletePlanner({ plannerId }: deleteArgs): Promise<void> {
+export async function deletePlanner({ id }: deleteArgs): Promise<void> {
     try {        
-        const plannerRef = doc(db, plannerDb, plannerId);
+        const plannerRef = doc(db, plannerDb, id);
         
         await deleteDoc(plannerRef);
     }
@@ -69,16 +69,16 @@ export async function deletePlanner({ plannerId }: deleteArgs): Promise<void> {
 
 // This updates the name of planner within the planner collection using an id and new name. 
 type updateNameArgs = {
-    plannerId: string
-    newName: string
+    id: string
+    name: string
 }
 
-export async function updatePlannerName({plannerId, newName}: updateNameArgs): Promise<void> {
+export async function updatePlannerName({id, name}: updateNameArgs): Promise<void> {
     try {
-        const plannerRef = doc(db, plannerDb, plannerId)
+        const plannerRef = doc(db, plannerDb, id)
         
         await updateDoc(plannerRef, {
-            name: newName
+            name: name
         })
     }
     catch (error) {
@@ -89,16 +89,16 @@ export async function updatePlannerName({plannerId, newName}: updateNameArgs): P
 
 // This updates the color of planner within the planner collection using an id and a color key. 
 type updateColorArgs = {
-    plannerId: string
-    newColor: ColorKey
+    id: string
+    color: ColorKey
 }
 
-export async function updatePlannerColor({plannerId, newColor}: updateColorArgs): Promise<void> {
+export async function updatePlannerColor({id, color}: updateColorArgs): Promise<void> {
     try {
-        const plannerRef = doc(db, plannerDb, plannerId)
+        const plannerRef = doc(db, plannerDb, id)
         
         await updateDoc(plannerRef, {
-            color: newColor
+            color: color
         })
     }
     catch (error) {
@@ -109,18 +109,18 @@ export async function updatePlannerColor({plannerId, newColor}: updateColorArgs)
 
 // This changes a users' planner visible status through the "user" field.
 type updateVisibleArgs = {
-    plannerId: string
-    uid: string
-    newValue: boolean
+    id: string
+    userId: string
+    value: boolean
 }
 
-export async function updatePlannerVisibility({uid, plannerId, newValue}: updateVisibleArgs): Promise<void> {
+export async function updatePlannerVisibility({id, userId, value}: updateVisibleArgs): Promise<void> {
     try {
         // This toggles the planner to have a new visibility for the user.
-        const plannerRef = doc(db, plannerDb, plannerId)
+        const plannerRef = doc(db, plannerDb, id)
         
         await updateDoc(plannerRef, {
-            [`users.${uid}`]: newValue
+            [`users.${userId}`]: value
         })
     }
     catch (error) {
