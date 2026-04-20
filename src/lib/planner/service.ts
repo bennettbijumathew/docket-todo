@@ -1,3 +1,7 @@
+// Purpose:
+// The planner service functions are used by the user interface. These functions usually interact 
+// with the repository function while handling validation, toasts and errors.
+
 import { ColorKey } from "@/components/util/color";
 import { deletePlanner, updatePlannerColor, updatePlannerName, updatePlannerVisibility } from "@/lib/planner/repository";
 import { toast } from "svelte-sonner";
@@ -22,7 +26,7 @@ export function removePlanner({id}: deleteArgs): void {
 }
 
 
-// This functions edit the planner name by using the repository.
+// This functions edit the planner name.
 type editNameArgs = {
     id: string
     name: string
@@ -46,7 +50,7 @@ export function editPlannerName({id, name}: editNameArgs): void {
 }
 
 
-// This functions edit the planner color by using the repository.
+// This functions edit the planner color
 type editColorArgs = {
     id: string
     color: ColorKey
@@ -65,6 +69,7 @@ export function editPlannerColor({id, color}: editColorArgs): void {
 }
 
 
+// This function edits the user's visibility status of the planner. 
 type editVisibleArgs = {
     id: string
     visibility: boolean

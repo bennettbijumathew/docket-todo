@@ -1,3 +1,7 @@
+// Purpose:
+// The planner repository functions are used to interact with Firestore directly. 
+// In this case, the functions can edit, listen, write, delete and update a planner in the planners collection.
+
 import { db } from "@/lib/shared/firebase-config"
 import { collection, query, onSnapshot, QuerySnapshot, doc, Unsubscribe, updateDoc, addDoc, deleteDoc, where, CollectionReference, DocumentData, Query, FirestoreDataConverter } from "firebase/firestore";
 import { createPlannerConverter, NewPlannerData, Planner } from "./type";
