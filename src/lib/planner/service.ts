@@ -1,6 +1,7 @@
 import { ColorKey } from "@/components/util/color";
-import { deletePlanner, updatePlannerColor, updatePlannerName } from "@/lib/planner/repository";
+import { deletePlanner, updatePlannerColor, updatePlannerName, updatePlannerVisibility } from "@/lib/planner/repository";
 import { toast } from "svelte-sonner";
+import { authStore } from "../auth/store.svelte";
 
 // This function deletes the planner by using the repository.
 type deleteArgs = {
@@ -19,6 +20,7 @@ export function removePlanner({id}: deleteArgs): void {
     
     toast.success("Task has been deleted");
 }
+
 
 // This functions edit the planner name by using the repository.
 type editNameArgs = {
@@ -46,7 +48,7 @@ export function editPlannerName({id, name}: editNameArgs): void {
 
 // This functions edit the planner color by using the repository.
 type editColorArgs = {
-    id: string, 
+    id: string
     color: ColorKey
 }
 
@@ -60,4 +62,23 @@ export function editPlannerColor({id, color}: editColorArgs): void {
         id: id,
         color: color
     });
+}
+
+
+type editVisibleArgs = {
+    id: string
+    visibility: boolean
+}
+
+export function editPlannerVisibility({id, visibility}: editVisibleArgs): void {
+    if (id.trim() === "") {
+        toast.error("Can't edit the visibility of the planner");
+        return;
+    }
+
+    updatePlannerVisibility({
+        id: id, 
+        userId: authStore.getUserId(), 
+        visibility: visibility
+    })
 }

@@ -111,16 +111,16 @@ export async function updatePlannerColor({id, color}: updateColorArgs): Promise<
 type updateVisibleArgs = {
     id: string
     userId: string
-    value: boolean
+    visibility: boolean
 }
 
-export async function updatePlannerVisibility({id, userId, value}: updateVisibleArgs): Promise<void> {
+export async function updatePlannerVisibility({id, userId, visibility}: updateVisibleArgs): Promise<void> {
     try {
         // This toggles the planner to have a new visibility for the user.
         const plannerRef = doc(db, plannerDb, id)
         
         await updateDoc(plannerRef, {
-            [`users.${userId}`]: value
+            [`users.${userId}`]: visibility
         })
     }
     catch (error) {

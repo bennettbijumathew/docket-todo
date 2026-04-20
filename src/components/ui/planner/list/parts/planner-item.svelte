@@ -1,8 +1,7 @@
 <script lang="ts">
     import Checkbox from "@/components/ui/inputs/checkbox.svelte";
     import { colors } from "@/components/util/color";
-    import { authStore } from "@/lib/auth/store.svelte";
-    import { plannerRepo } from "@/lib/planner/repository";
+    import { editPlannerVisibility } from "@/lib/planner/service";
     import { type Planner } from "@/lib/planner/type";
     import { PaintBucket } from "@lucide/svelte";
 
@@ -28,12 +27,15 @@
         <!-- On clicking the checkbox, the planner's visibility is toggled -->
         <Checkbox 
             value={planner.visible}
-            onChangeFn={() => { 
-                plannerRepo.editVisibility(authStore.getUserId(), planner.id, !planner.visible) 
-            }}
             stopPropagation={true}
             checkedStyle="size-6 bg-{colors[planner.color]}"
             unCheckedStyle="size-6 border-{colors[planner.color]}"
+            onChangeFn={() => { 
+                editPlannerVisibility({
+                    id: planner.id, 
+                    visibility: !planner.visible
+                }) 
+            }}
         />
 
         <div>

@@ -1,4 +1,4 @@
-import { listenForPlannerChanges, plannerRepo, PlannerRepository } from "../planner/repository";
+import { listenForPlannerChanges } from "../planner/repository";
 import { PlannerDataStore, plannerStore } from "../planner/store.svelte";
 import { taskRepo, TaskRepository } from "../task/repository";
 import { TaskDataStore, taskStore } from "../task/store.svelte";
@@ -8,11 +8,9 @@ export class PlannerTaskController {
     private unSubFromTaskUpdates?: () => void
     private taskRepo: TaskRepository;
     private taskStore: TaskDataStore;
-    private plannerRepo: PlannerRepository;
     private plannerStore: PlannerDataStore;
 
-    constructor(plannerRepo: PlannerRepository, plannerStore: PlannerDataStore, taskRepo: TaskRepository, taskStore: TaskDataStore) {
-        this.plannerRepo = plannerRepo;
+    constructor(plannerStore: PlannerDataStore, taskRepo: TaskRepository, taskStore: TaskDataStore) {
         this.plannerStore = plannerStore;
         this.taskRepo = taskRepo;
         this.taskStore = taskStore;
@@ -42,4 +40,4 @@ export class PlannerTaskController {
     }
 }
 
-export const plannerTaskController = new PlannerTaskController(plannerRepo, plannerStore, taskRepo, taskStore)
+export const plannerTaskController = new PlannerTaskController(plannerStore, taskRepo, taskStore)
