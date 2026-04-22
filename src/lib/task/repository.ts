@@ -26,45 +26,47 @@ export function listenForTaskChanges(visiblePlanners: string[], callbackFn: (tas
     })
 }
 
-export class TaskRepository {
-    // This adds a new task into the tasks database
-    public async createTask(newTask: NewTaskData): Promise<void> {
-        // A guard clause to prevent a new task being added if there is no name
-        // or planners attached to the task.
-        if (newTask.name.trim() == "") {
-            toast.error("To create a new task, the title requires a non-empty field")
-            return 
-        }
-        else if (newTask.planners.size <= MIN_PLANNERS) {
-            toast.error("To create a new task, the task requires more than 0 planners")
-            return 
-        }
 
+// This adds a new task into the tasks collection
+export async function writeNewTask({name, planners, dueDate}: NewTaskData): Promise<void> {
+    try {
         // Grabs the tasks collection from Firestore and adds a new document using the converter. 
-        const newTaskRef = collection(db, "tasks").withConverter(createTaskConverter())
-                
+        const newTaskRef = collection(db, taskDb).withConverter(createTaskConverter());
+        
         await addDoc(newTaskRef, {
-            name: newTask.name,
-            planners: newTask.planners,
-            dueDate: newTask.dueDate            
+            name: name,
+            planners: planners,
+            dueDate: dueDate            
         });
     }
+    catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
 
-    // This removes a new task into the tasks database
-    public async deleteTask(taskId: string): Promise<void> {
-        // A guard clause to stop the function when there is no task id.
-        if (taskId.trim() == "") {
-            toast.error("The task could not be deleted")
-            return
-        }
 
+// This removes a new task from the list of tasks
+type deleteArgs = {
+    id: string
+}
+
+export async function deleteTask({id}: deleteArgs): Promise<void> {
+    try {
         // Using the task id, the document is deleted of the tasks collection. 
-        const taskRef: DocumentReference = doc(db, "tasks", taskId)
-
+        const taskRef: DocumentReference = doc(db, "tasks", id)
+        
         await deleteDoc(taskRef)
     }
+    catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
 
 
+
+export class TaskRepository {
     // This adds a planner from a task. 
     public async addPlannerToTask(taskId: string, plannerId: string): Promise<void> {
         // A guard clause to stop the function when there is no task id.

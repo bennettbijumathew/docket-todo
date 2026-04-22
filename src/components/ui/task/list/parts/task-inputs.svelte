@@ -4,7 +4,7 @@
     import DatePicker from "@/components/ui/inputs/date-picker.svelte";
     import { getLocalTimeZone, Time, toCalendarDateTime, today } from "@internationalized/date";
     import PlannerPicker from "@/components/ui/inputs/planner-picker.svelte";
-    import { taskRepo } from "@/lib/task/repository";
+    import { createTask } from "@/lib/task/service";
     import { SvelteSet } from "svelte/reactivity";
 
     // This variable is used to handle new tasks that come in from the inputs
@@ -16,7 +16,7 @@
     
     // This is a function for adding a new task and resetting the inputs
     function addNewTask(): void {
-        taskRepo.createTask(newTask);
+        createTask(newTask);
         
         newTask.name = ""; 
         newTask.planners.clear(); 

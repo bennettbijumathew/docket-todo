@@ -5,6 +5,7 @@
     import { Trash } from "@lucide/svelte";
     import DatePicker from "../../inputs/date-picker.svelte";
     import TaskPlannersPicker from "../../inputs/task-planners-picker.svelte";
+    import { removeTask } from "@/lib/task/service";
 
     // The component receives the selected task id with a function that 
     // closes the editor. 
@@ -80,7 +81,9 @@
         }
 
         // Deletes the task using the task id.
-        taskRepo.deleteTask(taskId) 
+        removeTask({
+            id: taskId
+        }) 
 
         // Closes the sidebar using the sidebar's close function
         onClose?.()
