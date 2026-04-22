@@ -3,9 +3,25 @@
 // with the repository function while handling validation, toasts and errors.
 
 import { ColorKey } from "@/components/util/color";
-import { deletePlanner, updatePlannerColor, updatePlannerName, updatePlannerVisibility } from "@/lib/planner/repository";
+import { deletePlanner, updatePlannerColor, updatePlannerName, updatePlannerVisibility, writeNewPlanner } from "@/lib/planner/repository";
 import { toast } from "svelte-sonner";
 import { authStore } from "../auth/store.svelte";
+import { NewPlannerData } from "./type";
+
+// This function deletes the planner by using the repository.
+export function createPlanner(newPlanner: NewPlannerData): void {
+    if (newPlanner.name.trim() == "") {
+        toast.error("To create a new task, the title requires a non-empty field")
+        return 
+    }
+
+    writeNewPlanner({
+        name: newPlanner.name,
+        users: newPlanner.users,
+        color: newPlanner.color
+    });
+}
+
 
 // This function deletes the planner by using the repository.
 type deleteArgs = {

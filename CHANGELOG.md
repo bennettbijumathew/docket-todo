@@ -1,14 +1,25 @@
 # docket-todo
 
-## 2.0.1
-This patch internally cleans up the planner side of the code.  
+## 2.0.2
+This patch internally cleans up the task side of the code.
 
 ### Patch Changes
 
 #### Updates
+- Refactored the code of the task repository to have clearer responsiblitiies.
+
+## 2.0.1
+
+This patch internally cleans up the planner side of the code.
+
+### Patch Changes
+
+#### Updates
+
 - Refactored the code of the planner repository to have clearer responsibilities.
 
 ## 2.0.0
+
 This release introduces update infrastructure for Windows, enabling smoother future updates.
 
 ### Major Changes
@@ -30,6 +41,7 @@ This release introduces update infrastructure for Windows, enabling smoother fut
 3. Run the installer to update to the newest version
 
 ## 1.0.3
+
 This patch fixes a few issues with the builds from the release workflow.
 
 ### Patch Changes
@@ -39,6 +51,7 @@ This patch fixes a few issues with the builds from the release workflow.
 - Fixed an issue with the Release Workflow where files were not being built in the correct file format.
 
 ## 1.0.2
+
 This patch creates a workflow that drafts windows and android applications.
 
 ### Patch Changes
@@ -52,6 +65,7 @@ This patch creates a workflow that drafts windows and android applications.
 - Allows for faster and more frequent future updates
 
 ## 1.0.1
+
 This patch adds a simple build workflow for easier development.
 
 ### Patch Changes
@@ -61,6 +75,7 @@ This patch adds a simple build workflow for easier development.
 - Created a build workflow that runs on each push and pull request for all branches.
 
 ## 1.0.0
+
 This is the first release of the application. It is the first fully working version of the application.
 
 ### Major Changes

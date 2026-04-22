@@ -4,8 +4,9 @@
     import { colors } from "@/components/util/color";
     import { Calendar } from "@lucide/svelte";
     import { formatLongDate } from "@/lib/shared/date";
-    import { taskRepo, MAX_PLANNERS } from "@/lib/task/repository";
+    import { MAX_PLANNERS } from "@/lib/task/repository";
     import Checkbox from "@/components/ui/inputs/checkbox.svelte";
+    import { updateTaskComplete } from "@/lib/task/service";
 
     // The item receives the task's details and a optional function that can be used by the caller. 
     interface ItemProps {
@@ -36,7 +37,10 @@
         <Checkbox 
             value={task.completed}
             onChangeFn={() => { 
-                taskRepo.editComplete(task.id, !task.completed) 
+                updateTaskComplete({
+                    id: task.id, 
+                    complete: !task.completed
+                }) 
             }}
             stopPropagation={true}
             checkedStyle="size-6 bg-content-900 text-background"

@@ -1,18 +1,16 @@
 import { listenForPlannerChanges } from "../planner/repository";
 import { PlannerDataStore, plannerStore } from "../planner/store.svelte";
-import { taskRepo, TaskRepository } from "../task/repository";
+import { listenForTaskChanges } from "../task/repository";
 import { TaskDataStore, taskStore } from "../task/store.svelte";
 
 export class PlannerTaskController { 
     private unSubFromPlannerUpdates?: () => void
     private unSubFromTaskUpdates?: () => void
-    private taskRepo: TaskRepository;
     private taskStore: TaskDataStore;
     private plannerStore: PlannerDataStore;
 
-    constructor(plannerStore: PlannerDataStore, taskRepo: TaskRepository, taskStore: TaskDataStore) {
+    constructor(plannerStore: PlannerDataStore, taskStore: TaskDataStore) {
         this.plannerStore = plannerStore;
-        this.taskRepo = taskRepo;
         this.taskStore = taskStore;
     }
 
@@ -25,7 +23,7 @@ export class PlannerTaskController {
             this.plannerStore.setList(planners)
             let currentPlanners = planners.filter((item) => item.users[userId] === true).map((item) => item.id)
 
-            this.unSubFromTaskUpdates = this.taskRepo.onChange(currentPlanners, (tasks) => {
+            this.unSubFromTaskUpdates = listenForTaskChanges(currentPlanners, (tasks) => {
                 this.taskStore.setList(tasks)
             })
         })
@@ -40,4 +38,4 @@ export class PlannerTaskController {
     }
 }
 
-export const plannerTaskController = new PlannerTaskController(plannerStore, taskRepo, taskStore)
+export const plannerTaskController = new PlannerTaskController(plannerStore, taskStore)
