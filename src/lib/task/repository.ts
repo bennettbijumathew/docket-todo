@@ -1,5 +1,5 @@
 import { db } from "@/lib/shared/firebase-config"
-import { collection, query, onSnapshot, QuerySnapshot, where, doc, updateDoc, arrayRemove, DocumentReference, Query, getDoc, arrayUnion, addDoc, deleteDoc, getDocs } from "firebase/firestore";
+import { collection, query, onSnapshot, QuerySnapshot, where, doc, updateDoc, arrayRemove, DocumentReference, Query, getDoc, arrayUnion, addDoc, deleteDoc } from "firebase/firestore";
 import { type NewTaskData, Task, createTaskConverter } from "./type";
 import { CalendarDateTime } from "@internationalized/date";
 import { dateToTimestamp } from "@/lib/shared/date";
@@ -63,6 +63,7 @@ export async function deleteTask({id}: deleteArgs): Promise<void> {
         throw error;
     }
 }
+
 
 // This adds a planner towards the tasks' list of associated planners
 type appendPlannerArgs = {
@@ -179,6 +180,7 @@ export async function editComplete({id, complete}: editCompleteArgs): Promise<vo
         throw error; 
     }
 }
+
 
 // This variable is the maximum amount of planners that can be added to a task. The limit is placed as
 // as there is a limit of items for Firebase's array-contains-any query.
