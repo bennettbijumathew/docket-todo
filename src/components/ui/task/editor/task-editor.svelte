@@ -1,11 +1,10 @@
 <script lang="ts">
-    import { taskRepo } from "@/lib/task/repository";
     import { type Task } from "@/lib/task/type";
     import { getLocalTimeZone, Time, toCalendarDateTime, today } from "@internationalized/date";
     import { Trash } from "@lucide/svelte";
     import DatePicker from "../../inputs/date-picker.svelte";
     import TaskPlannersPicker from "../../inputs/task-planners-picker.svelte";
-    import { addPlannerToTask, removePlannerFromTask, removeTask } from "@/lib/task/service";
+    import { addPlannerToTask, removePlannerFromTask, removeTask, updateTaskDate, updateTaskName } from "@/lib/task/service";
 
     // The component receives the selected task id with a function that 
     // closes the editor. 
@@ -36,16 +35,6 @@
     })
 
 
-    // Functions to update the task' name
-    function submitNameChange() {
-        // Doesn't edit the name if task doesn't exist or if input and task names are the same
-        if (task === null || task.name === inputs.name || inputs.name.trim() === "" ) {
-            return 
-        }
-
-        taskRepo.editName(task.id, inputs.name) 
-    }
-
     // Function to add a planner to the task's planner list
     function submitPlannerAddChange(plannerId: string) {
         if (task === null || plannerId.trim() == "") { 
@@ -69,6 +58,19 @@
         });
     }
 
+    // Functions to update the task' name
+    function submitNameChange() {
+        // Doesn't edit the name if task doesn't exist or if input and task names are the same
+        if (task === null || task.name === inputs.name || inputs.name.trim() === "" ) {
+            return 
+        }
+
+        updateTaskName({
+            id: task.id, 
+            name: inputs.name
+        }) 
+    }
+
     // Functions to update the planners' name
     function submitDateChange() {
         // Doesn't edit the name if planner doesn't exist or if input and planner names are the same
@@ -76,7 +78,10 @@
             return 
         }
         
-        taskRepo.editDate(task.id, inputs.dueDate) 
+        updateTaskDate({
+            id: task.id, 
+            date: inputs.dueDate
+        })
     }
 
     // Functions to delete the planner

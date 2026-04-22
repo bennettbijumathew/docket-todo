@@ -3,9 +3,9 @@ import { collection, query, onSnapshot, QuerySnapshot, where, doc, updateDoc, ar
 import { type NewTaskData, Task, createTaskConverter } from "./type";
 import { CalendarDateTime } from "@internationalized/date";
 import { dateToTimestamp } from "@/lib/shared/date";
-import { toast } from "svelte-sonner";
 
 const taskDb: string = import.meta.env.VITE_FIRESTORE_TASK_DB;
+const plannerDb: string = import.meta.env.VITE_FIRESTORE_PLANNER_DB;
 
 // This returns a listeners that returns the list of tasks based on the visible planners.
 export function listenForTaskChanges(visiblePlanners: string[], callbackFn: (tasks: Task[]) => void) {
@@ -54,7 +54,7 @@ type deleteArgs = {
 export async function deleteTask({id}: deleteArgs): Promise<void> {
     try {
         // Using the task id, the document is deleted of the tasks collection. 
-        const taskRef: DocumentReference = doc(db, "tasks", id)
+        const taskRef: DocumentReference = doc(db, taskDb, id)
         
         await deleteDoc(taskRef)
     }
@@ -65,19 +65,19 @@ export async function deleteTask({id}: deleteArgs): Promise<void> {
 }
 
 // This adds a planner towards the tasks' list of associated planners
-type writePlannerArgs = {
+type appendPlannerArgs = {
     taskId: string
     newPlannerId: string
 }
 
-export async function appendPlannerToTask({taskId, newPlannerId}: writePlannerArgs): Promise<void> {
+export async function appendPlannerToTask({taskId, newPlannerId}: appendPlannerArgs): Promise<void> {
     try {
-        const plannerRef: DocumentReference = doc(db, "planners", newPlannerId);
+        const plannerRef: DocumentReference = doc(db, plannerDb, newPlannerId);
         const isPlannerReal: boolean = (await getDoc(plannerRef)).exists();
         
         // This adds a new planner only if the planner document exists in the planners database.
         if (isPlannerReal === true) {
-            const taskRef = doc(db, "tasks", taskId);
+            const taskRef = doc(db, taskDb, taskId);
             
             // The "arrayUnion" function prevents duplicate ids from being added to the array.
             await updateDoc(taskRef, {
@@ -93,14 +93,14 @@ export async function appendPlannerToTask({taskId, newPlannerId}: writePlannerAr
 
 
 // This removes a planner from the tasks' list of associated planners
-type removePlannerArgs = {
+type detachPlannerArgs = {
     taskId: string
     oldPlannerId: string
 }
 
-export async function detachPlannerFromTask({taskId, oldPlannerId}: removePlannerArgs): Promise<void> {
+export async function detachPlannerFromTask({taskId, oldPlannerId}: detachPlannerArgs): Promise<void> {
     try {
-        const taskRef: DocumentReference = doc(db, "tasks", taskId)
+        const taskRef: DocumentReference = doc(db, taskDb, taskId)
         const currentTask = await getDoc(taskRef)
     
         // Only removes the planner from the task, if tasks exists 
@@ -118,61 +118,67 @@ export async function detachPlannerFromTask({taskId, oldPlannerId}: removePlanne
 }
 
 
-
-export class TaskRepository {    
-    // This changes a task's name
-    public async editName(taskId: string, newName: string): Promise<void> {
-        // A guard clause to stop the function when there is no task id or new name.
-        if (taskId.trim() == "") {
-            toast.error("The task's name could not be edited")
-            return
-        }
-        else if (newName.trim() == "") {
-            toast.error("To edit the task, the title requires a non-empty field")
-            return 
-        }
-
-        // This updates the task to have a new name.
-        const taskRef = doc(db, "tasks", taskId)
-        
-        await updateDoc(taskRef, {
-            name: newName
-        })
-    } 
-
-    // This changes a task's date
-    public async editDate(taskId: string, newDate: CalendarDateTime): Promise<void> {
-        // A guard clause to stop the function when there is no task id.
-        if (taskId.trim() == "") {
-            toast.error("The task's date could not be edited")
-            return
-        }
-
-        // This updates the task to have a new name.
-        const taskRef = doc(db, "tasks", taskId)
-        
-        await updateDoc(taskRef, {
-            dueDate: dateToTimestamp(newDate)
-        })
-    } 
-
-    // This changes a task to be complete status
-    public async editComplete(taskId: string, newValue: boolean): Promise<void> {
-        // A guard clause to stop the function when there is no task id.
-        if (taskId.trim() == "") {
-            toast.error("The task's completed status could not be edited")
-            return
-        }
-
-        const taskRef = doc(db, "tasks", taskId)
-        
-        await updateDoc(taskRef, {
-            completed: newValue
-        })
-    } 
+// This updates the name of a task
+type editNameArgs = {
+    id: string, 
+    name: string
 }
 
-export const taskRepo = new TaskRepository()
+export async function editName({id, name}: editNameArgs): Promise<void> {
+    try {
+        const taskRef = doc(db, taskDb, id)
+        
+        await updateDoc(taskRef, {
+            name: name
+        })
+    }
+    catch (error) {
+        console.log(error);
+        throw error; 
+    }
+}
+
+
+// This updates the name of a task
+type editDateArgs = {
+    id: string, 
+    date: CalendarDateTime
+}
+
+export async function editDate({id, date}: editDateArgs): Promise<void> {
+    try {
+        const taskRef = doc(db, taskDb, id)
+        
+        await updateDoc(taskRef, {
+            dueDate: dateToTimestamp(date)
+        })
+    }
+    catch (error) {
+        console.log(error);
+        throw error; 
+    }
+}
+
+
+// This updates the name of a task
+type editCompleteArgs = {
+    id: string, 
+    complete: boolean
+}
+
+export async function editComplete({id, complete}: editCompleteArgs): Promise<void> {
+    try {
+        const taskRef = doc(db, taskDb, id)
+        
+        await updateDoc(taskRef, {
+            completed: complete
+        })
+    }
+    catch (error) {
+        console.log(error);
+        throw error; 
+    }
+}
 
 // This variable is the maximum amount of planners that can be added to a task. The limit is placed as
 // as there is a limit of items for Firebase's array-contains-any query.

@@ -1,6 +1,7 @@
 import { toast } from "svelte-sonner"
 import { NewTaskData } from "./type"
-import { deleteTask, MIN_PLANNERS, writeNewTask, appendPlannerToTask, detachPlannerFromTask } from "./repository"
+import { deleteTask, MIN_PLANNERS, writeNewTask, appendPlannerToTask, detachPlannerFromTask, editName, editDate, editComplete } from "./repository"
+import { CalendarDateTime } from "@internationalized/date"
 
 // This creates a new task and updates the user interface on errors
 export function createTask(newTask: NewTaskData): void {
@@ -19,6 +20,7 @@ export function createTask(newTask: NewTaskData): void {
         dueDate: newTask.dueDate            
     });
 }
+
 
 // This removes a task while updating the interface on errors
 type removeArgs = {
@@ -56,6 +58,7 @@ export async function addPlannerToTask({taskId, newPlannerId}: addPlannerArgs): 
     })
 }
 
+
 // This function remove a planner from the task's list of associated planners. 
 type removePlannerArgs = {
     taskId: string
@@ -74,3 +77,65 @@ export async function removePlannerFromTask({taskId, oldPlannerId}: removePlanne
         oldPlannerId: oldPlannerId
     })
 }
+
+
+// This updates the name of a task
+type updateNameArgs = {
+    id: string, 
+    name: string
+}
+
+export async function updateTaskName({id, name}: updateNameArgs): Promise<void> {
+    // A guard clause to stop the function when there is no task id or new name.
+    if (id.trim() == "") {
+        toast.error("The task's name could not be edited")
+        return
+    }
+    else if (name.trim() == "") {
+        toast.error("To edit the task, the title requires a non-empty field")
+        return 
+    }
+
+    editName({
+        id: id, 
+        name: name
+    })
+} 
+
+// This updates a task's date.
+type updateDateArgs = {
+    id: string, 
+    date: CalendarDateTime
+}
+
+export async function updateTaskDate({id, date}: updateDateArgs): Promise<void> {
+    // A guard clause to stop the function when there is no task id.
+    if (id.trim() == "") {
+        toast.error("The task's date could not be edited")
+        return
+    }
+
+    editDate({
+        id: id, 
+        date: date
+    })
+} 
+
+// This changes a task to be complete status
+type updateCompleteArgs = {
+    id: string, 
+    complete: boolean
+}
+
+export async function updateTaskComplete({id, complete}: updateCompleteArgs): Promise<void> {
+    // A guard clause to stop the function when there is no task id.
+    if (id.trim() == "") {
+        toast.error("The task's completed status could not be edited")
+        return
+    }
+
+    editComplete({
+        id: id, 
+        complete: complete
+    })
+} 
