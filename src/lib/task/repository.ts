@@ -5,27 +5,28 @@ import { CalendarDateTime } from "@internationalized/date";
 import { dateToTimestamp } from "@/lib/shared/date";
 import { toast } from "svelte-sonner";
 
-export class TaskRepository {
-    // This function is a listener that checks for tasks that are associated to the given planner ids. 
-    // Using the callback function, the user can use the given tasks in any manner.
-    public onChange(plannerIds: string[], callbackFn: (tasks: Task[]) => void) {
-        // If there is no planners, an empty array and empty function are given for the caller.
-        if (plannerIds.length <= MIN_PLANNERS) {
-            callbackFn([])
-            return () => {}
-        }
+const taskDb: string = import.meta.env.VITE_FIRESTORE_TASK_DB;
 
-        // The query gets a list of tasks that are related to the planners. It is then ordered by name and converted to the Task type.
-        const q: Query = query(collection(db, "tasks"), where("planners", "array-contains-any", plannerIds)).withConverter(createTaskConverter())
-        
-        // This snapshot sets the planner list while adding a visible attribute for each user 
-        return onSnapshot(q, (querySnapshot: QuerySnapshot) => {
-            const newTasks: Task[] = querySnapshot.docs.map((doc) => doc.data()) as Task[]
-            callbackFn(newTasks) 
-        })            
+// This returns a listeners that returns the list of tasks based on the visible planners.
+export function listenForTaskChanges(visiblePlanners: string[], callbackFn: (tasks: Task[]) => void) {
+    // If there is no planners, an empty array and empty function are given for the caller.
+    if (visiblePlanners.length <= MIN_PLANNERS) {
+        callbackFn([])
+        return () => {}
     }
 
+    // Query - Gets tasks which are related to the visible planners.
+    // Converter - Converts data from Firestore to the Planner object.
+    const q: Query = query(collection(db, taskDb), where("planners", "array-contains-any", visiblePlanners)).withConverter(createTaskConverter())
 
+    // This snapshot sets the planner list while adding a visible attribute for each user 
+    return onSnapshot(q, (querySnapshot: QuerySnapshot) => {
+        const newTasks: Task[] = querySnapshot.docs.map((doc) => doc.data()) as Task[]
+        callbackFn(newTasks) 
+    })
+}
+
+export class TaskRepository {
     // This adds a new task into the tasks database
     public async createTask(newTask: NewTaskData): Promise<void> {
         // A guard clause to prevent a new task being added if there is no name
