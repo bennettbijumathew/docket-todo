@@ -64,52 +64,62 @@ export async function deleteTask({id}: deleteArgs): Promise<void> {
     }
 }
 
+// This adds a planner towards the tasks' list of associated planners
+type writePlannerArgs = {
+    taskId: string
+    newPlannerId: string
+}
 
-
-export class TaskRepository {
-    // This adds a planner from a task. 
-    public async addPlannerToTask(taskId: string, plannerId: string): Promise<void> {
-        // A guard clause to stop the function when there is no task id.
-        if (taskId.trim() == "") {
-            toast.error("The planner could not be added to the task")
-            return
-        }
-
-        const plannerRef: DocumentReference = doc(db, "planners", plannerId)
+export async function appendPlannerToTask({taskId, newPlannerId}: writePlannerArgs): Promise<void> {
+    try {
+        const plannerRef: DocumentReference = doc(db, "planners", newPlannerId);
         const isPlannerReal: boolean = (await getDoc(plannerRef)).exists();
-
+        
         // This adds a new planner only if the planner document exists in the planners database.
         if (isPlannerReal === true) {
-            const taskRef = doc(db, "tasks", taskId)
-
+            const taskRef = doc(db, "tasks", taskId);
+            
             // The "arrayUnion" function prevents duplicate ids from being added to the array.
             await updateDoc(taskRef, {
-                planners: arrayUnion(plannerId)
-            })
+                planners: arrayUnion(newPlannerId)
+            });
         }
     }
+    catch (error) {
+        console.log(error);
+        throw error; 
+    }
+}
 
-    // This removes a planner from a task. 
-    public async removePlannerFromTask(taskId: string, plannerId: string): Promise<void> {
-        // A guard clause to stop the function when there is no task id.
-        if (taskId.trim() == "") {
-            toast.error("The planner could not be removed from the task")
-            return
-        }
 
+// This removes a planner from the tasks' list of associated planners
+type removePlannerArgs = {
+    taskId: string
+    oldPlannerId: string
+}
+
+export async function detachPlannerFromTask({taskId, oldPlannerId}: removePlannerArgs): Promise<void> {
+    try {
         const taskRef: DocumentReference = doc(db, "tasks", taskId)
         const currentTask = await getDoc(taskRef)
-
+    
         // Only removes the planner from the task, if tasks exists 
         // and if there is more than 0 planners in the tasks. 
         if (currentTask.exists() && currentTask.data().planners.length - 1 > MIN_PLANNERS) {
             await updateDoc(taskRef, {
-                planners: arrayRemove(plannerId)
+                planners: arrayRemove(oldPlannerId)
             })
         }
     }
+    catch (error) {
+        console.log(error);
+        throw error; 
+    }
+}
 
-    
+
+
+export class TaskRepository {    
     // This changes a task's name
     public async editName(taskId: string, newName: string): Promise<void> {
         // A guard clause to stop the function when there is no task id or new name.
@@ -160,19 +170,6 @@ export class TaskRepository {
             completed: newValue
         })
     } 
-
-
-    // Remove all planners from group of tasks
-    public async removePlannerFromAllTasks(plannerId: string) {
-        // Queries all of the tasks that has the planner in the planners array
-        const q = query(collection(db, "tasks"), where("planners", "array-contains-any", [plannerId])).withConverter(createTaskConverter());
-        const result = await getDocs(q);
-
-        // Removes the planner id from the task's array
-        result.docs.map((doc) => {
-            this.removePlannerFromTask(doc.id, plannerId)
-        })
-    }
 }
 
 export const taskRepo = new TaskRepository()

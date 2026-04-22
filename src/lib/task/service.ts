@@ -1,6 +1,6 @@
 import { toast } from "svelte-sonner"
 import { NewTaskData } from "./type"
-import { deleteTask, MIN_PLANNERS, writeNewTask } from "./repository"
+import { deleteTask, MIN_PLANNERS, writeNewTask, appendPlannerToTask, detachPlannerFromTask } from "./repository"
 
 // This creates a new task and updates the user interface on errors
 export function createTask(newTask: NewTaskData): void {
@@ -34,4 +34,43 @@ export function removeTask({id}: removeArgs): void {
     deleteTask({
         id: id
     });
+}
+
+
+// This function adds a new planner to the task's list of associated planners. 
+type addPlannerArgs = {
+    taskId: string
+    newPlannerId: string
+}
+
+export async function addPlannerToTask({taskId, newPlannerId}: addPlannerArgs): Promise<void> {
+    // A guard clause to stop the function when there is no proper id.
+    if (taskId.trim() == "" || newPlannerId.trim() == "") {
+        toast.error("The planner could not be added to the task")
+        return
+    }
+    
+    appendPlannerToTask({
+        taskId: taskId, 
+        newPlannerId: newPlannerId
+    })
+}
+
+// This function remove a planner from the task's list of associated planners. 
+type removePlannerArgs = {
+    taskId: string
+    oldPlannerId: string
+}
+
+export async function removePlannerFromTask({taskId, oldPlannerId}: removePlannerArgs) {
+    // A guard clause to stop the function when there is no proper id.
+    if (taskId.trim() == "" || oldPlannerId.trim() == "") {
+        toast.error("The planner could not be removed from the task")
+        return
+    }
+
+    detachPlannerFromTask({
+        taskId: taskId, 
+        oldPlannerId: oldPlannerId
+    })
 }

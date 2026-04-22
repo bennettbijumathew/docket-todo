@@ -5,7 +5,7 @@
     import { Trash } from "@lucide/svelte";
     import DatePicker from "../../inputs/date-picker.svelte";
     import TaskPlannersPicker from "../../inputs/task-planners-picker.svelte";
-    import { removeTask } from "@/lib/task/service";
+    import { addPlannerToTask, removePlannerFromTask, removeTask } from "@/lib/task/service";
 
     // The component receives the selected task id with a function that 
     // closes the editor. 
@@ -52,7 +52,10 @@
             return;
         }
 
-        taskRepo.addPlannerToTask(task.id, plannerId);
+        addPlannerToTask({
+            taskId: task.id, 
+            newPlannerId: plannerId
+        });
     }
 
     function submitPlannerRemoveChange(plannerId: string) {
@@ -60,7 +63,10 @@
             return;
         }
 
-        taskRepo.removePlannerFromTask(task.id, plannerId);
+        removePlannerFromTask({
+            taskId: task.id, 
+            oldPlannerId: plannerId
+        });
     }
 
     // Functions to update the planners' name
