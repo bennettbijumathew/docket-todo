@@ -1,3 +1,4 @@
+import { listenForAuthChanges } from "../auth/repository";
 import { authController, AuthController } from "../auth/service";
 import { PlannerTaskController, plannerTaskController } from "../planner-task/controller";
 
@@ -13,7 +14,7 @@ export class AppController {
 
     // A function that starts the controllers that are used through the application
     public start() {
-        this.unSubFromAuth = this.authController.listenForAuth((user) => {  
+        this.unSubFromAuth = listenForAuthChanges((user) => {  
             if (user) {
                 this.authController.start(user)
                 this.plannerTaskController.start(user.uid);
