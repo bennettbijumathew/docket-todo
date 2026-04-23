@@ -1,7 +1,7 @@
 <script lang="ts">
     import { colors } from "@/components/util/color";
     import { type Task } from "@/lib/task/type";
-    import { plannerStore } from "@/lib/planner/store.svelte";
+    import { planners } from "@/lib/planner/store.svelte";
     import { taskStore } from "@/lib/task/store.svelte";
     import { type Planner } from "@/lib/planner/type";
     import { MAX_PLANNERS } from "@/lib/task/repository";
@@ -31,21 +31,17 @@
     
     // Using the task id from the props, the task is fetched from store to ensure proper reactive state.
     const task = $derived(taskStore.getList().find(t => t.id === initialTask.id) ?? initialTask);
-    
-    // Create a variable that derives from the planner list.
-    const taskPlanners: Planner[] = $derived(plannerStore.getList());
-    
+        
     // Deriving from the task related planners, a list is created with only selected planners for a task.
     const selectedTaskPlanners = $derived(
-        taskPlanners.filter((item) => isPlannerSelected(item.id) == true)
+        planners.all.filter((item) => isPlannerSelected(item.id) == true)
     );
-
 
     // Using the search input, the list of planners are filtered.
     let searchInput: string = $state("");
 
     const searchedPlanners: Planner[] = $derived(
-        taskPlanners.filter((item) => item.name.toLowerCase().includes(searchInput.toLowerCase()))
+        planners.all.filter((item) => item.name.toLowerCase().includes(searchInput.toLowerCase()))
     );
 
 

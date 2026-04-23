@@ -1,6 +1,6 @@
 <script lang="ts">
     import { colors } from "@/components/util/color";
-    import { plannerStore } from "@/lib/planner/store.svelte";
+    import { planners } from "@/lib/planner/store.svelte";
     import { type Planner } from "@/lib/planner/type";
     import { ArrowDown, ArrowUp, Notebook } from "@lucide/svelte";
     import { Combobox } from "bits-ui";
@@ -22,20 +22,20 @@
         pickerStyle = "bg-background",
     }: PickerProps = $props()
 
-
-    // A variable for fetching the list of planners
-    const planners: Planner[] = $derived(plannerStore.getList());
     
     // Gets a list of planners selected by the user. It shows hidden and visible planners. 
     const selectedPlanners: Planner[] = $derived(
-        plannerStore.getItemsById(value, true)
+        planners.getItemsById({
+            idList: value,
+            includeHidden: true
+        })
     )
 
     // Using the search input, the list of planners are filtered. 
     let searchInput: string = $state("");
 
     const searchedPlanners: Planner[] = $derived(
-        planners.filter((item) => item.name.toLowerCase().includes(searchInput.toLowerCase()))
+        planners.all.filter((item) => item.name.toLowerCase().includes(searchInput.toLowerCase()))
     );
 
 

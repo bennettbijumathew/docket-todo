@@ -3,7 +3,7 @@
     import Checkbox from '../../inputs/checkbox.svelte';
     import { authStore } from '@/lib/auth/store.svelte';
     import { colors } from '@/components/util/color';
-    import { plannerStore } from '@/lib/planner/store.svelte';
+    import { planners } from '@/lib/planner/store.svelte';
     import { editPlannerVisibility } from '@/lib/planner/service';
 </script>
 
@@ -42,7 +42,7 @@
     flex flex-col flex-1 overflow-y-auto gap-y-1 h-fit 
     scrollbar-thin scrollbar-track-background
 ">
-    {#each plannerStore.getList() as planner, index (index)}
+    {#each planners.all as planner, index (index)}
         {@render plannerTile(planner)}
     {/each}
 </div>

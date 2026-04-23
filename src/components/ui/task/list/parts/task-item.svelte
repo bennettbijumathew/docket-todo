@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { plannerStore } from "@/lib/planner/store.svelte";
+    import { planners } from "@/lib/planner/store.svelte";
     import { type Task } from "@/lib/task/type";
     import { colors } from "@/components/util/color";
     import { Calendar } from "@lucide/svelte";
@@ -17,7 +17,12 @@
     let { task, onTaskSelect }: ItemProps = $props() 
 
     // Gets a list of 10 visible planners that are related to the task
-    let taskPlanners = $derived(plannerStore.getItemsById(task.planners, false).slice(0, MAX_PLANNERS))
+    let taskPlanners = $derived(
+        planners.getItemsById({
+            idList: task.planners, 
+            includeHidden: false
+        }).slice(0, MAX_PLANNERS)
+    )
 
     // The minimum number of slots shown on the row of the task's planner grid.
     let colsInPlannerRow = MAX_PLANNERS / 2
