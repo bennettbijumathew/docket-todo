@@ -1,12 +1,22 @@
 # docket-todo
 
+## 2.0.3
+
+This patch internally cleans up the authentication side of the code.
+
+### Patch Changes
+
+- - Refactored the code of the auth repository to have clearer responsibilities.
+
 ## 2.0.2
+
 This patch internally cleans up the task side of the code.
 
 ### Patch Changes
 
 #### Updates
-- Refactored the code of the task repository to have clearer responsiblitiies.
+
+- Refactored the code of the task repository to have clearer responsibilities.
 
 ## 2.0.1
 
