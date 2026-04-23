@@ -2,7 +2,7 @@
     import { colors } from "@/components/util/color";
     import { type Task } from "@/lib/task/type";
     import { planners } from "@/lib/planner/store.svelte";
-    import { taskStore } from "@/lib/task/store.svelte";
+    import { tasks } from "@/lib/task/store.svelte";
     import { type Planner } from "@/lib/planner/type";
     import { MAX_PLANNERS } from "@/lib/task/repository";
     import { Combobox } from "bits-ui";
@@ -30,7 +30,7 @@
 
     
     // Using the task id from the props, the task is fetched from store to ensure proper reactive state.
-    const task = $derived(taskStore.getList().find(t => t.id === initialTask.id) ?? initialTask);
+    const task = $derived(tasks.all.find(t => t.id === initialTask.id) ?? initialTask);
         
     // Deriving from the task related planners, a list is created with only selected planners for a task.
     const selectedTaskPlanners = $derived(

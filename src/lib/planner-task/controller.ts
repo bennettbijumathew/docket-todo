@@ -1,16 +1,11 @@
 import { listenForPlannerChanges } from "../planner/repository";
 import { planners } from "../planner/store.svelte";
 import { listenForTaskChanges } from "../task/repository";
-import { TaskDataStore, taskStore } from "../task/store.svelte";
+import { tasks } from "../task/store.svelte";
 
 export class PlannerTaskController { 
     private unSubFromPlannerUpdates?: () => void
     private unSubFromTaskUpdates?: () => void
-    private taskStore: TaskDataStore;
-
-    constructor(taskStore: TaskDataStore) {
-        this.taskStore = taskStore;
-    }
 
     public start(userId: string) {
         this.unSubFromPlannerUpdates?.()
@@ -22,8 +17,8 @@ export class PlannerTaskController {
 
             let currentPlanners = planners.visible.map((item) => item.id);
 
-            this.unSubFromTaskUpdates = listenForTaskChanges(currentPlanners, (tasks) => {
-                this.taskStore.setList(tasks)
+            this.unSubFromTaskUpdates = listenForTaskChanges(currentPlanners, (newTasks) => {
+                tasks.all = newTasks
             })
         })
     }
@@ -31,9 +26,11 @@ export class PlannerTaskController {
     public stop() {
         this.unSubFromPlannerUpdates?.()
         this.unSubFromTaskUpdates?.()
+
+        // Clears the user's view of the planners and tasks.
         planners.all = [];
-        this.taskStore.clearList()
+        tasks.all = [];
     }
 }
 
-export const plannerTaskController = new PlannerTaskController(taskStore)
+export const plannerTaskController = new PlannerTaskController()
