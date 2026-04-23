@@ -1,4 +1,4 @@
-import { authController, AuthController } from "../auth/controller";
+import { authController, AuthController } from "../auth/service";
 import { PlannerTaskController, plannerTaskController } from "../planner-task/controller";
 
 export class AppController {

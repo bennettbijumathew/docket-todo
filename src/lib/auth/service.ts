@@ -1,19 +1,12 @@
-// Purpose: 
-// AuthController is responsible for managing authentication using a
-// Svelte store class (AuthStore) and a repository class (AuthRepository) that has 
-// access to Firebase Authentication Functions.
-
-// Context:
-// An AuthController object is only initialized in a root layout. The authentication
-// session is handled using start() and stop() and these functions handles 
-// the AuthStore and AuthRepository objects.
-
 import { type User } from "firebase/auth";
 import { authRepo, AuthRepository } from "./repository.ts";
-import { authStore, AuthDataStore } from "./store.svelte";
+import { authStore, AuthDataStore } from "./store.svelte.ts";
 import { AuthError } from "./type.ts";
 import { isEmailValid, isPasswordValid, isUsernameValid } from "../shared/input-validation.ts";
 import { toast } from "svelte-sonner";
+
+
+
 
 export class AuthController {
     // The authRepo class is one that provides services from Firebase Authentication, 

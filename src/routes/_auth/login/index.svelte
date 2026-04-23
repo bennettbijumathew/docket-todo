@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { navigate } from "sv-router/generated";
-    import { authController } from "@/lib/auth/controller";
+    import { authController } from "@/lib/auth/service";
     import { Eye, EyeOff, LogIn, UserPlus } from "@lucide/svelte";
     import { getPlatform } from "@/lib/shared/platform";
     import { authStore } from "@/lib/auth/store.svelte";

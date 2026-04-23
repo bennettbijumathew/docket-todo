@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { appController } from '@/lib/app/controller';
+    import { appController } from '@/lib/app/service';
     import { check } from '@tauri-apps/plugin-updater';
     import { onDestroy, onMount, type Snippet } from 'svelte';  
 
