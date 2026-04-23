@@ -1,14 +1,12 @@
-import { listenForAuthChanges } from "../auth/repository";
-import { authController, AuthController } from "../auth/service";
-import { PlannerTaskController, plannerTaskController } from "../planner-task/controller";
+import { listenForAuthChanges } from "@/lib/auth/repository";
+import { startAuthSession, endAuthSession } from "@/lib/auth/service";
+import { PlannerTaskController, plannerTaskController } from "@/lib/planner-task/controller";
 
 export class AppController {
     private unSubFromAuth?: () => void
-    private authController: AuthController;
     private plannerTaskController: PlannerTaskController;
     
-    constructor(authControl: AuthController, plannerTaskControl: PlannerTaskController) {
-        this.authController = authControl;
+    constructor(plannerTaskControl: PlannerTaskController) {
         this.plannerTaskController = plannerTaskControl
     }
 
@@ -16,7 +14,10 @@ export class AppController {
     public start() {
         this.unSubFromAuth = listenForAuthChanges((user) => {  
             if (user) {
-                this.authController.start(user)
+                startAuthSession({ 
+                    user: user
+                });
+
                 this.plannerTaskController.start(user.uid);
             }
 
@@ -28,10 +29,10 @@ export class AppController {
 
     // A function that resets the controllers of the application. 
     public stop() {
-        this.authController.stop();
+        endAuthSession(); 
         this.plannerTaskController.stop();
         this.unSubFromAuth?.()
     }
 }
 
-export const appController = new AppController(authController, plannerTaskController);
+export const appController = new AppController(plannerTaskController);

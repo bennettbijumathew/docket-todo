@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { navigate } from "sv-router/generated";
-    import { authController } from "@/lib/auth/service";
+    import { signInWithEmail } from "@/lib/auth/service";
     import { Eye, EyeOff, LogIn, UserPlus } from "@lucide/svelte";
     import { getPlatform } from "@/lib/shared/platform";
     import { authStore } from "@/lib/auth/store.svelte";
@@ -11,7 +11,11 @@
 
     // This function logs in the account using the controller, and if successful, will navigate to a page
     async function handleLogIn() {
-        const logInResult = await authController.logInWithEmail(email.trim(), password)
+        const logInResult = await signInWithEmail({ 
+            email: email, 
+            password: password 
+
+        })
 
         if (logInResult === true && authStore.getReady() == true) {
             navigate("/task")

@@ -1,6 +1,6 @@
 <script lang="ts">
     import { getPlatform } from "@/lib/shared/platform";
-    import { authController } from "@/lib/auth/service";
+    import { createEmailAccount } from "@/lib/auth/service";
     import { Eye, EyeOff, UserPlus } from "@lucide/svelte";
     import { navigate } from "sv-router/generated";
 
@@ -11,7 +11,11 @@
     
     // This function creates a new account using the controller, and if successful, will navigate to a page
     async function handleSignUp(): Promise<void> {
-        const isAccountCreated = await authController.createEmailAccount(username, email, password)
+        const isAccountCreated = await createEmailAccount({
+            username: username, 
+            email: email,
+            password: password
+        });
 
         if (isAccountCreated === true) {
             navigate("/login")
