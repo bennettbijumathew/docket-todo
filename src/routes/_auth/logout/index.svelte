@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { navigate } from "sv-router/generated";
-    import { authController } from "@/lib/auth/controller";
+    import { signOut } from "@/lib/auth/service";
     import { DoorOpen } from "@lucide/svelte";
     import { getPlatform } from "@/lib/shared/platform";
 
     // This function logs out the account using the controller, and navigates to the home page
     function handleLogOut() {
-        authController.logOut();
+        signOut();
         navigate("/");
     }
 </script>
