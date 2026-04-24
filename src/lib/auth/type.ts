@@ -46,3 +46,10 @@ export const authErrorMessages: Record<AuthErrorType, string> = {
     "input-validation/no-special-characters": "Password must have a special character of $, %, ^, &, *, !, #, /.",
     "verification/account-not-verified": "Your account is not verified, a link will be sent to your email",
 }
+
+export type AuthStatus = 
+    | "loading"  
+    | "error"
+    | "unauthenticated" 
+    | "authenticated" 
+; 

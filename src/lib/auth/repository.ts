@@ -5,7 +5,7 @@ import { FirebaseError } from "firebase/app";
 
 
 // Returns a listener that uses a callback function to listen on the user's auth state.
-export function listenForAuthChanges(callbackFn: (user: User | null) => void) {
+export function listenAuth(callbackFn: (user: User | null) => void) {
     return onAuthStateChanged(auth, callbackFn)
 }
     

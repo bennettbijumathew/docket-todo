@@ -3,7 +3,7 @@
     import { signInWithEmail } from "@/lib/auth/service";
     import { Eye, EyeOff, LogIn, UserPlus } from "@lucide/svelte";
     import { getPlatform } from "@/lib/shared/platform";
-    import { authStore } from "@/lib/auth/store.svelte";
+    import { authentication } from "@/lib/auth/store.svelte";
 
     // Inputs for logging into the website, changes in the input changes the values.
     let email: string = $state("");
@@ -14,10 +14,9 @@
         const logInResult = await signInWithEmail({ 
             email: email, 
             password: password 
-
         })
 
-        if (logInResult === true && authStore.getReady() == true) {
+        if (logInResult === true && authentication.status === "authenticated") {
             navigate("/task")
         }
     }

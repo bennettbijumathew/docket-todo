@@ -1,7 +1,7 @@
 <script lang="ts">
     import ColorPicker from "@/components/ui/inputs/color-picker.svelte";
     import { type ColorKey } from "@/components/util/color";
-    import { authStore } from "@/lib/auth/store.svelte";
+    import { authentication } from "@/lib/auth/store.svelte";
     import { createPlanner } from "@/lib/planner/service";
     import { type NewPlannerData } from "@/lib/planner/type";
     import { Plus } from "@lucide/svelte";
@@ -16,7 +16,7 @@
     // This is a function for adding a new planner and resetting the inputs
     function addNewPlanner(): void {
         newPlanner.users = {
-            [authStore.getUserId()]:  false
+            [authentication.userId]:  false
         }
 
         createPlanner(newPlanner)

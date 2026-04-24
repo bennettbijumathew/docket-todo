@@ -7,7 +7,9 @@ import { collection, query, onSnapshot, QuerySnapshot, doc, Unsubscribe, updateD
 import { createPlannerConverter, NewPlannerData, Planner } from "./type";
 import { ColorKey } from "@/components/util/color";
 
+
 const plannerDb: string = import.meta.env.VITE_FIRESTORE_PLANNER_DB;
+
 
 // This returns a listeners that returns the list of planners that are related to the user.
 export function listenForPlannerChanges(userId: string, callbackFn: (planner: Planner[]) => void): Unsubscribe {
@@ -18,6 +20,7 @@ export function listenForPlannerChanges(userId: string, callbackFn: (planner: Pl
     // Converter - Converts data from Firestore to the Planner object.
     const q: Query<NewPlannerData> = query(databaseRef, where(`users.${userId}`, "in", [true, false])).withConverter(dataConverter);
 
+    
     // This snapshot sets the planner list while adding a visible attribute for each user.
     return onSnapshot(q, (querySnapshot: QuerySnapshot) => {
         let planners: Planner[] = querySnapshot.docs.map((doc) => doc.data()) as Planner[];

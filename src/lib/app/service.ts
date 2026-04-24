@@ -1,6 +1,6 @@
-import { listenForAuthChanges } from "@/lib/auth/repository";
-import { startAuthSession, endAuthSession } from "@/lib/auth/service";
+import { listenForAuth } from "@/lib/auth/service";
 import { PlannerTaskController, plannerTaskController } from "@/lib/planner-task/controller";
+import { User } from "firebase/auth";
 
 export class AppController {
     private unSubFromAuth?: () => void
@@ -12,24 +12,19 @@ export class AppController {
 
     // A function that starts the controllers that are used through the application
     public start() {
-        this.unSubFromAuth = listenForAuthChanges((user) => {  
-            if (user) {
-                startAuthSession({ 
-                    user: user
-                });
-
+        this.unSubFromAuth = listenForAuth({
+            authenticatedFn: (user: User) => {
                 this.plannerTaskController.start(user.uid);
-            }
-
-            else {
+            },
+            
+            unauthenticatedFn: () => {
                 this.plannerTaskController.stop();
             }
-        });
+        })
     }
 
     // A function that resets the controllers of the application. 
     public stop() {
-        endAuthSession(); 
         this.plannerTaskController.stop();
         this.unSubFromAuth?.()
     }

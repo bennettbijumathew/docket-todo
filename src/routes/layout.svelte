@@ -11,14 +11,12 @@
     onMount(async () => {
         appController.start();
         isUpdateAvailable = await check() !== null ? true : false ;
-
     })
 
     // On the page being unmounted from the DOM, the authentication controller stops.
     onDestroy(() => {
         appController.stop();
     })
-
 </script>
 
 <!-- VIEW -->

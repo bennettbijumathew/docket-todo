@@ -1,26 +1,25 @@
 import { Task } from "./type";
 
-export class TaskDataStore {
-    private list: Task[];
+export class TaskStore {
+    #list: Task[] = $state([])
+    #completeTasks: Task[] = $derived(this.#list.filter((item) => item.completed === true))
+    #incompleteTasks: Task[] = $derived(this.#list.filter((item) => item.completed === false))
 
-    constructor() {
-        this.list = $state([]);
+    set all(newList: Task[]) {
+        this.#list = newList;
     }
 
-    // This function grabs the task list from the state array.
-    public getList(): Task[] {
-        return this.list;
+    get all() {
+        return this.#list
     }
 
-    // This functions replaces the current array with a new array. 
-    public setList(newList: Task[]): void {
-        this.list = newList;
+    get complete () {
+        return this.#completeTasks
     }
 
-    // Clears the list.
-    public clearList(): void {
-        this.list = [];
+    get incomplete () {
+        return this.#incompleteTasks
     }
 }
 
-export const taskStore = new TaskDataStore()
+export const tasks = new TaskStore()
