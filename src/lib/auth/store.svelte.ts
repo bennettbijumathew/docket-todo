@@ -5,7 +5,6 @@ export class AuthStore {
     public error: string = $state("");
     #authStatus: AuthStatus = $state("authenticated");
     #user: User | null = $state(null); 
-    #loadingTimeout: ReturnType<typeof setTimeout> | null = null;
 
     get status() {
         return this.#authStatus;

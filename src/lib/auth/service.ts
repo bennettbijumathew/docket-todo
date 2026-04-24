@@ -1,37 +1,34 @@
 import { type User } from "firebase/auth";
-import { logInWithEmail, logOut, sendVerifyEmail, updateUsername, writeNewEmailAccount } from "./repository.ts";
+import { listenAuth, logInWithEmail, logOut, sendVerifyEmail, updateUsername, writeNewEmailAccount } from "./repository.ts";
 import { authentication } from "./store.svelte.ts";
 import { AuthError } from "./type.ts";
 import { isEmailValid, isPasswordValid, isUsernameValid } from "../shared/input-validation.ts";
 import { toast } from "svelte-sonner";
 
-// This function starts the user's authenticated session with the application. 
-type startSessionArgs = {
-    user: User | null
+
+// This functions returns a listener that calls function based on the user's authentication status.
+// To unsubscribe, set a variable with this function as a value, and call the variable as a function.
+type listenAuthArgs = {
+    authenticatedFn: (user: User) => void, 
+    unauthenticatedFn: () => void
 }
 
-export function startAuthSession({user}: startSessionArgs): void {
-    if (user == null) {
-        authentication.status == "unauthenticated"
-    }
-    else {
-        authentication.status == "authenticated"
-    }
+export function listenForAuth({authenticatedFn, unauthenticatedFn}: listenAuthArgs) {
+    // The listenAuth function tracks the current user using Firebase's listener. 
+    return listenAuth((user) => {
+        if (user) {
+            authentication.status = "authenticated";
+            authentication.user = user;
 
-    authentication.user = user;
-}
+            authenticatedFn(user);
+        }
+        else {
+            authentication.status = "unauthenticated";
+            authentication.user = null;
 
-
-// This function ends the authenticated session of the application.
-export function endAuthSession(): void {
-    authentication.status = "unauthenticated"; 
-    authentication.error = ""; 
-
-    // Removes the user from the state, This leads to the UI being updated without any user.
-    authentication.user = null; 
-
-    // Logs the user out from Firebase. 
-    logOut(); 
+            unauthenticatedFn();
+        }
+    })
 }
 
 
