@@ -50,6 +50,6 @@ export const authErrorMessages: Record<AuthErrorType, string> = {
 export type AuthStatus = 
     | "loading"  
     | "error"
-    | "unauthorized" 
-    | "authorized" 
+    | "unauthenticated" 
+    | "authenticated" 
 ; 

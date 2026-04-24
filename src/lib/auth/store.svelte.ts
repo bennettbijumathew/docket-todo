@@ -17,7 +17,7 @@ export class AuthStore {
     }
 }
 
-export const auth = new AuthStore();
+export const authentication = new AuthStore();
 
 export class AuthDataStore {
     // If logged in, the user variable will use Firebase's "User" Type. If not, then the variable will be null.
