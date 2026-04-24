@@ -5,8 +5,8 @@
 import { ColorKey } from "@/components/util/color";
 import { deletePlanner, updatePlannerColor, updatePlannerName, updatePlannerVisibility, writeNewPlanner } from "@/lib/planner/repository";
 import { toast } from "svelte-sonner";
-import { authStore } from "../auth/store.svelte";
-import { NewPlannerData } from "./type";
+import { authentication } from "@/lib/auth/store.svelte";
+import { NewPlannerData } from "@/lib/planner/type";
 
 // This function deletes the planner by using the repository.
 export function createPlanner(newPlanner: NewPlannerData): void {
@@ -99,7 +99,7 @@ export function editPlannerVisibility({id, visibility}: editVisibleArgs): void {
 
     updatePlannerVisibility({
         id: id, 
-        userId: authStore.getUserId(), 
+        userId: authentication.userId, 
         visibility: visibility
     })
 }

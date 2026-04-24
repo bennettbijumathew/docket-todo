@@ -1,6 +1,6 @@
 import { type User } from "firebase/auth";
 import { logInWithEmail, logOut, sendVerifyEmail, updateUsername, writeNewEmailAccount } from "./repository.ts";
-import { authStore } from "./store.svelte.ts";
+import { authentication } from "./store.svelte.ts";
 import { AuthError } from "./type.ts";
 import { isEmailValid, isPasswordValid, isUsernameValid } from "../shared/input-validation.ts";
 import { toast } from "svelte-sonner";
@@ -11,16 +11,16 @@ type startSessionArgs = {
 }
 
 export function startAuthSession({user}: startSessionArgs): void {
-    authStore.setUser(user);
+    authentication.user = user;
 }
 
 
 // This function ends the authenticated session of the application.
 export function endAuthSession(): void {
-    authStore.setError(""); 
+    authentication.error = ""; 
 
     // Removes the user from the state, This leads to the UI being updated without any user.
-    authStore.clearUser(); 
+    authentication.user = null; 
 
     // Logs the user out from Firebase. 
     logOut(); 
@@ -35,9 +35,8 @@ type emailSignInArgs = {
 
 export async function signInWithEmail({email, password}: emailSignInArgs): Promise<boolean> {
     // This sets the user interface to an unready and loading state without an error.
-    authStore.setReady(false);
-    authStore.setLoading(true);
-    authStore.setError("");
+    authentication.status = "loading"; 
+    authentication.error = ""; 
 
     try {
         // This logs the account using the repository, the auth listener updates. 
@@ -65,31 +64,29 @@ export async function signInWithEmail({email, password}: emailSignInArgs): Promi
     catch (error) {
         // If an error is encountered, the auth error is updated. 
         if (error instanceof AuthError) {
-            authStore.setError(error.message);
+            authentication.error = error.message;
         }
         else {
-            authStore.setError("An unknown error has been encountered.");
+            authentication.error = "An unknown error has been encountered.";
         }
 
         // Sends a small notification in the page about the error
-        toast.error(authStore.getError() ?? "");
+        toast.error(authentication.error);
 
         // Since an error was encountered, the account creation has failed. 
         return false;
     }
     finally {
-        authStore.setReady(true);
-        authStore.setLoading(false);
+        authentication.status = "authenticated"
     }
 }
 
 
 // This functions logs the user out from the authentication session for the UI and Firebase
 export function signOut(): void {
-    authStore.setError("");
-
-    // Removes the user from the state, This leads to the UI being updated without any user.
-    authStore.clearUser();
+    // Resets user and error message before account is created.
+    authentication.error = "";
+    authentication.user = null;
 
     // Logs the user out from Firebase. 
     logOut();
@@ -108,7 +105,7 @@ type createEmailArgs = {
 
 export async function createEmailAccount({username, email, password}: createEmailArgs): Promise<boolean> {        
     // Resets error message before account is created.
-    authStore.setError("");
+    authentication.error = "";
 
     try {
         // These are functions that validate the given input. 
@@ -145,14 +142,14 @@ export async function createEmailAccount({username, email, password}: createEmai
     catch (error: any) { 
         // If an error is encountered, the auth error is updated. 
         if (error instanceof AuthError) {
-            authStore.setError(error.message)
+            authentication.error = error.message
         }
         else {
-            authStore.setError("An unknown error has been encountered.")
+            authentication.error = "An unknown error has been encountered."
         }
 
         // Sends a small notification in the page about the error
-        toast.error(authStore.getError() ?? "Unknown Error")
+        toast.error(authentication.error)
                         
         // Since an error was encountered, the account creation has failed. 
         return false;

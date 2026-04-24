@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { Planner } from '@/lib/planner/type';
-    import Checkbox from '../../inputs/checkbox.svelte';
-    import { authStore } from '@/lib/auth/store.svelte';
+    import Checkbox from '@/components/ui/inputs/checkbox.svelte';
+    import { authentication } from '@/lib/auth/store.svelte';
     import { colors } from '@/components/util/color';
     import { planners } from '@/lib/planner/store.svelte';
     import { editPlannerVisibility } from '@/lib/planner/service';
@@ -26,7 +26,7 @@
     >
         <!-- Value of the checkbox updates on pressing the outer button. This works due to the planner being used a svelte state variable  -->
         <Checkbox 
-            value={planner.users[authStore.getUserId()]} 
+            value={planner.users[authentication.userId]} 
             checkedStyle="size-5 bg-{colors[planner.color]}"
             unCheckedStyle="size-5 border-{colors[planner.color]}"
         />
