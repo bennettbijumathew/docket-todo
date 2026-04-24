@@ -1,5 +1,6 @@
 <script lang="ts">
     import { appController } from '@/lib/app/service';
+    import { authentication } from '@/lib/auth/store.svelte';
     import { check } from '@tauri-apps/plugin-updater';
     import { onDestroy, onMount, type Snippet } from 'svelte';  
 
@@ -9,6 +10,8 @@
 
     // On the page being mounted to the DOM, the authentication controller starts.
     onMount(async () => {
+        authentication.status = "loading"; 
+
         appController.start();
         isUpdateAvailable = await check() !== null ? true : false ;
 
@@ -39,3 +42,5 @@
         </a>
     </section>
 {/if}
+
+{authentication.status}

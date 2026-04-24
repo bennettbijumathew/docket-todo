@@ -1,6 +1,7 @@
 import { listenForAuthChanges } from "@/lib/auth/repository";
 import { startAuthSession, endAuthSession } from "@/lib/auth/service";
 import { PlannerTaskController, plannerTaskController } from "@/lib/planner-task/controller";
+import { authentication } from "../auth/store.svelte";
 
 export class AppController {
     private unSubFromAuth?: () => void
@@ -14,6 +15,8 @@ export class AppController {
     public start() {
         this.unSubFromAuth = listenForAuthChanges((user) => {  
             if (user) {
+                authentication.status="authenticated"
+                
                 startAuthSession({ 
                     user: user
                 });
@@ -22,6 +25,8 @@ export class AppController {
             }
 
             else {
+                authentication.status="unauthenticated"
+
                 this.plannerTaskController.stop();
             }
         });

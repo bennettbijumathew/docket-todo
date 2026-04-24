@@ -2,9 +2,18 @@ import { User } from "firebase/auth";
 import { AuthStatus } from "@/lib/auth/type";
 
 export class AuthStore {
-    public status: AuthStatus = "loading";
-    public error: string = "";
-    #user: User | null = null; 
+    public error: string = $state("");
+    #authStatus: AuthStatus = $state("authenticated");
+    #user: User | null = $state(null); 
+    #loadingTimeout: ReturnType<typeof setTimeout> | null = null;
+
+    get status() {
+        return this.#authStatus;
+    }
+
+    set status(newStatus: AuthStatus) {
+        this.#authStatus = newStatus;
+    }
 
     get userId() {
         if (this.#user === null) {

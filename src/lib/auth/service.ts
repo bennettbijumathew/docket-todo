@@ -7,16 +7,24 @@ import { toast } from "svelte-sonner";
 
 // This function starts the user's authenticated session with the application. 
 type startSessionArgs = {
-    user: User
+    user: User | null
 }
 
 export function startAuthSession({user}: startSessionArgs): void {
+    if (user == null) {
+        authentication.status == "unauthenticated"
+    }
+    else {
+        authentication.status == "authenticated"
+    }
+
     authentication.user = user;
 }
 
 
 // This function ends the authenticated session of the application.
 export function endAuthSession(): void {
+    authentication.status = "unauthenticated"; 
     authentication.error = ""; 
 
     // Removes the user from the state, This leads to the UI being updated without any user.
@@ -58,6 +66,9 @@ export async function signInWithEmail({email, password}: emailSignInArgs): Promi
             throw new AuthError("verification/account-not-verified");
         }
 
+        // Sets user interface's authentication state to authenticated
+        authentication.status = "authenticated"; 
+
         // Returns true, as all of the guard clauses have been passed.
         return true;
     }
@@ -70,14 +81,14 @@ export async function signInWithEmail({email, password}: emailSignInArgs): Promi
             authentication.error = "An unknown error has been encountered.";
         }
 
+        // Sets user interface's authentication state to unauthenticated
+        authentication.status = "unauthenticated"; 
+
         // Sends a small notification in the page about the error
         toast.error(authentication.error);
 
         // Since an error was encountered, the account creation has failed. 
         return false;
-    }
-    finally {
-        authentication.status = "authenticated"
     }
 }
 
