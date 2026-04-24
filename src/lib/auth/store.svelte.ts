@@ -1,11 +1,23 @@
-// Purpose: 
-// AuthStore is responsible for managing the state of the user. 
-
-// Context:
-// An AuthStore object is used to create an AuthController object. The AuthStore object can be used
-// anywhere to update state of the User by providing a Firebase User variable. 
-
 import { User } from "firebase/auth";
+import { AuthStatus } from "./type";
+
+export class AuthStore {
+    public status: AuthStatus = "loading";
+    public error: string = "";
+    #user: User | null = null; 
+
+    get user() {
+        if (this.#user === null) {
+            return null
+        }
+
+        return { 
+            id: this.#user.uid
+        }
+    }
+}
+
+export const auth = new AuthStore();
 
 export class AuthDataStore {
     // If logged in, the user variable will use Firebase's "User" Type. If not, then the variable will be null.
