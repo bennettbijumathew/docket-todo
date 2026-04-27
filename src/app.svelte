@@ -4,8 +4,8 @@
     import { getCurrentWindow } from '@tauri-apps/api/window';
     import { X, Maximize2, Minimize2, Minus, ArrowLeft, ArrowRight } from '@lucide/svelte';
     import { routes } from "./components/util/routes";
-    import { getPlatform } from "./lib/shared/platform";
     import { navigate } from "sv-router/generated";
+    import { app } from "@/lib/app/main";
     
     // This tracks the state of the application's window maximized state.
     let maximizedState: boolean = $state(false) 
@@ -17,7 +17,7 @@
     }
 </script>
 
-{#if getPlatform() === "windows"}
+{#if app.platform === "windows"}
     <header data-tauri-drag-region class="bg-transparent fixed top-0 left-0 w-full h-6 flex items-center justify-between z-100">
         <div class="flex items-center transition-colors">
             <button 

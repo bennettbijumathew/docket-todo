@@ -1,6 +1,6 @@
 
 <script lang="ts">
-    import { getPlatform } from "@/lib/shared/platform";
+    import { app } from "@/lib/app/main";
     import type { Snippet } from "svelte";
     import { Toaster } from "svelte-sonner";
 
@@ -21,10 +21,10 @@
     toastOptions={{
         unstyled: true,
         classes: {
-            toast: `border-0 flex justify-between items-center gap-x-4 px-3 py-2 rounded-lg shadow-md ${getPlatform() === "android" ? "mt-8" : ""}`,
+            toast: `border-0 flex justify-between items-center gap-x-4 px-3 py-2 rounded-lg shadow-md ${app.platform === "android" ? "mt-8" : ""}`,
             title: 'font-default',
         }
     }}
-    offset={getPlatform() === "android" ? "100px" : undefined}
-    position={getPlatform() === "android" ? "top-center" : "bottom-right"}
+    offset={app.platform === "android" ? "100px" : undefined}
+    position={app.platform === "android" ? "top-center" : "bottom-right"}
 />

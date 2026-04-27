@@ -1,14 +1,12 @@
 <script lang="ts">
-    import { getPlatform } from '@/lib/shared/platform';
     import { authentication } from '@/lib/auth/store.svelte';
 	import { type Snippet } from 'svelte';  
     import { Toaster } from 'svelte-sonner'
     import { routes } from '@/components/util/routes';
     import { ArrowRight, House, LoaderCircle } from '@lucide/svelte';
+    import { app } from '@/lib/app/main';
 
 	let { children }: { children: Snippet } = $props();
-
-    $inspect(authentication.status)
 </script>
 
 {#if authentication.status === "authenticated"}
@@ -24,12 +22,12 @@
             toastOptions={{
                 unstyled: true,
                 classes: {
-                    toast: `border-0 flex justify-between items-center gap-x-4 px-3 py-2 rounded-lg shadow-md ${getPlatform() === "android" ? "mt-8" : ""}`,
+                    toast: `border-0 flex justify-between items-center gap-x-4 px-3 py-2 rounded-lg shadow-md ${app.platform === "android" ? "mt-8" : ""}`,
                     title: 'font-default',
                 }
             }}
-            offset={getPlatform() === "android" ? "100px" : undefined}
-            position={getPlatform() === "android" ? "top-center" : "bottom-right"}
+            offset={app.platform === "android" ? "100px" : undefined}
+            position={app.platform === "android" ? "top-center" : "bottom-right"}
         />
     </main>
 {:else if authentication.status === "unauthenticated"}

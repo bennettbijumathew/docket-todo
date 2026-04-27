@@ -1,10 +1,10 @@
 <script lang="ts">
-    import { getPlatform } from "@/lib/shared/platform";
     import { paramKeys, paramValues, routes } from "@/components/util/routes";
     import { PanelRightClose, PanelRightOpen } from "@lucide/svelte";
     import { searchParams } from "sv-router";
     import { isActive, p } from "sv-router/generated";
     import type { Snippet } from "svelte";
+    import { app } from "@/lib/app/main";
 
     interface LayoutProps {
         children?: Snippet
@@ -34,7 +34,7 @@
         fixed w-screen h-screen
         sm:static sm:min-w-50 sm:h-auto sm:flex-1
         lg:w-130
-        {(getPlatform() === "windows" || getPlatform() === "android" ) ? "pt-10 sm:pt-12" : ""}
+        {(app.platform === "windows" || app.platform === "android" ) ? "pt-10 sm:pt-12" : ""}
     ">
         <section class="flex justify-between items-center gap-x-4">
             <!-- Title and redirection back to the website's home  -->
@@ -91,7 +91,7 @@
 {:else if isSidebarCollapsed}
     <aside class="
         bg-background flex flex-col justify-between gap-y-6 p-6
-        {(getPlatform() === "windows" || getPlatform() === "android" ) ? "pt-10 sm:pt-12" : ""}
+        {(app.platform === "windows" || app.platform === "android" ) ? "pt-10 sm:pt-12" : ""}
     ">
         <section class="flex justify-between items-center gap-x-4">
             <!-- Title and redirection back to the website's home  -->

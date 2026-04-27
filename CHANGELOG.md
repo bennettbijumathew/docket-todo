@@ -1,12 +1,18 @@
 # docket-todo
 
+## 2.0.4
+
+### Patch Changes
+
+- Refactored the application and the planner to task controller to have similar design to other refactored components
+
 ## 2.0.3
 
 This patch internally cleans up the authentication side of the code.
 
 ### Patch Changes
 
-- - Refactored the code of the auth repository to have clearer responsibilities.
+- Refactored the code of the auth repository to have clearer responsibilities.
 
 ## 2.0.2
 

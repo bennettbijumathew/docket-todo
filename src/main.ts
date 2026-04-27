@@ -1,8 +1,8 @@
 import { mount } from 'svelte'
 import svelteApp from './app.svelte'
 
-const app = mount(svelteApp, {
+const application = mount(svelteApp, {
   target: document.getElementById('app')!,
 })
 
-export default app
+export default application

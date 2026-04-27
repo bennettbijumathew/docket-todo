@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { appController } from '@/lib/app/service';
+    import { app } from '@/lib/app/main';
     import { check } from '@tauri-apps/plugin-updater';
     import { onDestroy, onMount, type Snippet } from 'svelte';  
 
@@ -9,13 +9,13 @@
 
     // On the page being mounted to the DOM, the authentication controller starts.
     onMount(async () => {
-        appController.start();
+        app.start();
         isUpdateAvailable = await check() !== null ? true : false ;
     })
 
     // On the page being unmounted from the DOM, the authentication controller stops.
     onDestroy(() => {
-        appController.stop();
+        app.stop();
     })
 </script>
 
