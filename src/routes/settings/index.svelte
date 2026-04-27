@@ -4,7 +4,7 @@
     import { Check, DownloadIcon, Hourglass, type Icon, LoaderCircle, RefreshCcw } from "@lucide/svelte";
     import { check, Update } from '@tauri-apps/plugin-updater';
     import { relaunch } from '@tauri-apps/plugin-process';
-    import { getPlatform } from "@/lib/shared/platform";
+    import { app } from "@/lib/app/main";
 
     // This represents the loading state of the page.
     let loading: boolean = $state(false);
@@ -75,7 +75,7 @@
         <section class="flex justify-center items-center h-full">
             <LoaderCircle class="animate-spin"/>
         </section>
-    {:else if loading == false && getPlatform() !== "windows"}
+    {:else if loading == false && app.platform !== "windows"}
         <section class="flex flex-col justify-center items-center h-full">
             <h3 class="font-title text-md font-medium mb-2"> Settings are unavailable </h3>
             <p> This platform does not have any settings at the current moment. </p>

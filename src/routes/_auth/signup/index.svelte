@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { getPlatform } from "@/lib/shared/platform";
     import { createEmailAccount } from "@/lib/auth/service";
     import { Eye, EyeOff, UserPlus } from "@lucide/svelte";
     import { navigate } from "sv-router/generated";
+    import { app } from "@/lib/app/main";
 
     // Inputs for creating a new account, changes in the input changes the values.
     let username: string = $state("");
@@ -43,7 +43,7 @@
     <section class="
         p-6 flex flex-col
         justify-between
-        {(getPlatform() === "android" ) ? "pb-12" : ""}
+        {(app.platform === "android" ) ? "pb-12" : ""}
         sm:flex-1 sm:justify-center sm:h-auto
     ">
         <div class="

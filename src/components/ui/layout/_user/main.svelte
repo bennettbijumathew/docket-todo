@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { getPlatform } from "@/lib/shared/platform";
+    import { app } from "@/lib/app/main";
     import type { Snippet } from "svelte";
 
     interface LayoutProps {
@@ -14,7 +14,7 @@
 <!-- Adds padding for the windows application so that window bar has the same background. -->
 <section class="
     flex flex-col flex-3 p-6 
-    {(getPlatform() === "windows" || getPlatform() === "android" ) ? "sm:pt-12" : ""}
+    {(app.platform === "windows" || app.platform === "android" ) ? "sm:pt-12" : ""}
 ">
     {@render children?.()}
 </section>
