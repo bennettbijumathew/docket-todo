@@ -7,8 +7,6 @@
     import { ArrowRight, House, LoaderCircle } from '@lucide/svelte';
 
 	let { children }: { children: Snippet } = $props();
-
-    $inspect(authentication.status)
 </script>
 
 {#if authentication.status === "authenticated"}

@@ -12,7 +12,7 @@ const plannerDb: string = import.meta.env.VITE_FIRESTORE_PLANNER_DB;
 
 
 // This returns a listeners that returns the list of planners that are related to the user.
-export function listenForPlannerChanges(userId: string, callbackFn: (planner: Planner[]) => void): Unsubscribe {
+export function listenPlanners(userId: string, callbackFn: (planner: Planner[]) => void): Unsubscribe {
     const databaseRef: CollectionReference<DocumentData, DocumentData> = collection(db, plannerDb);
     const dataConverter: FirestoreDataConverter<NewPlannerData> = createPlannerConverter(userId);
 

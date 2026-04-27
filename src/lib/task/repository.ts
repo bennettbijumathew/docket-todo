@@ -8,7 +8,7 @@ const taskDb: string = import.meta.env.VITE_FIRESTORE_TASK_DB;
 const plannerDb: string = import.meta.env.VITE_FIRESTORE_PLANNER_DB;
 
 // This returns a listeners that returns the list of tasks based on the visible planners.
-export function listenForTaskChanges(visiblePlanners: string[], callbackFn: (tasks: Task[]) => void) {
+export function listenTasks(visiblePlanners: string[], callbackFn: (tasks: Task[]) => void) {
     // If there is no planners, an empty array and empty function are given for the caller.
     if (visiblePlanners.length <= MIN_PLANNERS) {
         callbackFn([])
