@@ -7,6 +7,7 @@ type RouteNames =
     | "Log Out"
     | "Sign Up"
     | "Task"
+    | "Test"
     | "Planner"
     | "Settings";
 
@@ -17,6 +18,7 @@ export type RoutePath =
     | "/logout"
     | "/signup"
     | "/task"
+    | "/test"
     | "/planner"
     | "/settings";
     
@@ -62,6 +64,11 @@ routes.set("Planner", {
 });
 routes.set("Settings", { 
     link: "/settings", 
+    icon: Cog,
+    hasSidebar: true
+});
+routes.set("Test", { 
+    link: "/test", 
     icon: Cog,
     hasSidebar: true
 });
