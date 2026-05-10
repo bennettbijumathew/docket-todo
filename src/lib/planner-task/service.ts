@@ -1,4 +1,5 @@
 import { authentication } from "../auth/store.svelte";
+import { notifications } from "../notification/store.svelte";
 import { listenPlanners } from "../planner/repository";
 import { planners } from "../planner/store.svelte"
 import { listenTasks } from "../task/repository";
@@ -24,6 +25,7 @@ export function startPlannerTasks({userId}: startArgs) {
 
         unSubFromTaskUpdates = listenTasks(planners.ids, (newTasks) => {
             tasks.all = newTasks
+            notifications.syncTasks(newTasks)
         })
     })
 
