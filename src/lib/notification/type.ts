@@ -1,16 +1,20 @@
 import { CalendarDateTime } from "@internationalized/date";
 
-export interface WindowsNotif {
+export interface Notif {
     id: number;
     title: string;
     body: string;
 }
 
-export type AndroidNotif = WindowsNotif & {
-    dueDate: CalendarDateTime
+export type NotifWithDate = Notif & {
+    dueDate: CalendarDateTime;
+}
+
+export type RemoveNotif = {
+    id: number;
 }
 
 export interface Scheduler {
-    push: () => void, 
-    pop: () => void
+    push: ({ id, title, body, dueDate }: NotifWithDate) => void, 
+    pop: ({ id }: RemoveNotif) => void
 } 
