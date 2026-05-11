@@ -1,6 +1,7 @@
 <script lang="ts">
     import { app } from '@/lib/app/main';
-    import { isPermissionGranted, requestPermission } from '@tauri-apps/plugin-notification';
+    import { isAndroidPermissionsGranted } from '@/lib/notification/repository';
+    import { getPlatform } from '@/lib/shared/platform';
     import { check } from '@tauri-apps/plugin-updater';
     import { onDestroy, onMount, type Snippet } from 'svelte';  
 
@@ -13,17 +14,12 @@
         app.start();
 
         // This checks if update is available for the windows application. 
-        if (app.platform === "windows") {
+        if (getPlatform() === "windows") {
             isUpdateAvailable = await check() !== null ? true : false;
         }
-        
-        // Requests permission to send notifications for the android.
-        if (app.platform === "android") {
-            let permissionGranted = await isPermissionGranted();
 
-            if (!permissionGranted) {
-                await requestPermission();
-            }
+        if (getPlatform() === "android") {
+            isAndroidPermissionsGranted()
         }
     })
 

@@ -34,7 +34,7 @@ class NotificationScheduler {
         }
     }
 
-    send({ index, title, body, dueDate }: {index: string, title: string, body: string, dueDate: CalendarDateTime}) {
+    async send({ index, title, body, dueDate }: {index: string, title: string, body: string, dueDate: CalendarDateTime}) {
         // If string index doesn't exist, a new entry is added to ensure that the correct notification is being edited.
         if (!this.idList.has(index)) {
             this.idList.set(index, createNotifId(index))
