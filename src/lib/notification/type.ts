@@ -9,3 +9,8 @@ export interface WindowsNotif {
 export type AndroidNotif = WindowsNotif & {
     dueDate: CalendarDateTime
 }
+
+export interface Scheduler {
+    push: () => void, 
+    pop: () => void
+} 
