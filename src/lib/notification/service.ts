@@ -3,7 +3,6 @@ import { getPlatform, PlatformType } from "@/lib/shared/platform";
 import { AndroidScheduler } from "@/lib/notification/schedulers/android.service";
 import { WindowsScheduler } from "@/lib/notification/schedulers/windows.service";
 import { CalendarDateTime, getLocalTimeZone, now, toCalendarDateTime, today } from "@internationalized/date";
-import { cancelNotif } from "@/lib/notification/repository";
 import { Task } from "@/lib//task/type";
 import { formatLongDate } from "@/lib/shared/date";
 
@@ -20,6 +19,8 @@ function createNotifId(id: string): number {
     return hash;
 }
 
+// This class schedules notifications and defers the responsibility to a platform schedule (i.e. Android).
+// This approach was taken due to tauri-plugin-notifications' limitation in scheduling tasks in Windows
 class NotificationScheduler { 
     scheduler: Scheduler
     idList: Map<string, number> = new Map<string, number>();
@@ -33,7 +34,7 @@ class NotificationScheduler {
         }
     }
 
-    push({ index, title, body, dueDate }: {index: string, title: string, body: string, dueDate: CalendarDateTime}) {
+    send({ index, title, body, dueDate }: {index: string, title: string, body: string, dueDate: CalendarDateTime}) {
         // If string index doesn't exist, a new entry is added to ensure that the correct notification is being edited.
         if (!this.idList.has(index)) {
             this.idList.set(index, createNotifId(index))
@@ -49,7 +50,7 @@ class NotificationScheduler {
     }
 
     // Removes a notification from the list of notifications. 
-    pop({ index }: { index: string}) {
+    remove({ index }: { index: string }) {
         if (!this.idList.has(index)) {
             return;     
         }
@@ -58,7 +59,7 @@ class NotificationScheduler {
         let notifId = this.idList.get(index)
 
         if (notifId != undefined) {
-            cancelNotif({
+            this.scheduler.pop({
                 id: notifId
             })
         }
@@ -71,7 +72,7 @@ class NotificationScheduler {
         // Pushes notifications based on if it is due within the next day from today.
         newTasks.map((task: Task) => {
             if (task.dueDate >= currentDay && task.dueDate <= currentDay.add({days: 1})) {
-                this.push({
+                this.send({
                     index: task.id, 
                     title: `DUE: ${task.name}`, 
                     body: `The task is due on the ${formatLongDate(task.dueDate)}.`,
@@ -79,7 +80,7 @@ class NotificationScheduler {
                 })
             }
             else {
-                this.pop({
+                this.remove({
                     index: task.id
                 })
             }
@@ -88,4 +89,5 @@ class NotificationScheduler {
 
 }
 
+// Creates notification object based on platform type (i.e. Android or Windows). 
 export const notifications = new NotificationScheduler(getPlatform())

@@ -1,4 +1,4 @@
-import { CalendarDateTime, getLocalTimeZone } from "@internationalized/date";
+import { getLocalTimeZone } from "@internationalized/date";
 import { cancel, Schedule, sendNotification } from "@tauri-apps/plugin-notification";
 import { NotifWithDate, Notif, RemoveNotif } from "@/lib/notification/type";
 
