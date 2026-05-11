@@ -68,7 +68,7 @@ class NotificationStore {
         })
     }
 
-    // Removes
+    // Removes a notification from the list of notifications. 
     private pop({index}: popArgs): void {
         if (!this.idList.has(index)) {
             return;     
