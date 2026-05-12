@@ -28,7 +28,7 @@ jobs:
           yarn set version stable
 
       - name: Installing dependencies using yarn
-        run: yarn install
+        run: yarn install --immutable
 
       - name: Adding sv-router's generated routes file
         run: yarn run generate-routes
