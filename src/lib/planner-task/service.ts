@@ -1,8 +1,9 @@
-import { authentication } from "../auth/store.svelte";
-import { listenPlanners } from "../planner/repository";
-import { planners } from "../planner/store.svelte"
-import { listenTasks } from "../task/repository";
-import { tasks } from "../task/store.svelte"
+import { authentication } from "@/lib/auth/store.svelte";
+import { notifications } from "@/lib/notification/service";
+import { listenPlanners } from "@/lib/planner/repository";
+import { planners } from "@/lib/planner/store.svelte"
+import { listenTasks } from "@/lib/task/repository";
+import { tasks } from "@/lib/task/store.svelte"
 
 let unSubFromPlannerUpdates: () => void = () => {};
 let unSubFromTaskUpdates: () => void = () => {};
@@ -24,6 +25,7 @@ export function startPlannerTasks({userId}: startArgs) {
 
         unSubFromTaskUpdates = listenTasks(planners.ids, (newTasks) => {
             tasks.all = newTasks
+            notifications.syncTasks(newTasks)
         })
     })
 

@@ -1,7 +1,7 @@
 {
     "name": "docket-todo",
     "private": true,
-    "version": "2.0.4",
+    "version": "2.1.0",
     "type": "module",
     "scripts": {
         "dev": "vite",
@@ -20,8 +20,9 @@
         "@lucide/svelte": "^0.563.1",
         "@sveltejs/vite-plugin-svelte": "^6.2.1",
         "@tailwindcss/vite": "^4.1.18",
-        "@tauri-apps/api": "^2.10.1",
-        "@tauri-apps/plugin-opener": "^2",
+        "@tauri-apps/api": "^2.11.0",
+        "@tauri-apps/plugin-notification": "~2",
+        "@tauri-apps/plugin-opener": "^2.5.4",
         "@tauri-apps/plugin-os": "^2.3.2",
         "@tauri-apps/plugin-process": "~2",
         "@tauri-apps/plugin-updater": "~2",
@@ -33,11 +34,12 @@
         "tailwindcss": "^4.1.18"
     },
     "devDependencies": {
-        "@tauri-apps/cli": "^2",
+        "@tauri-apps/cli": "^2.11.0",
         "svelte-check": "^4.4.6",
         "tailwind-scrollbar": "^4.0.2",
         "typescript": "~5.6.2",
         "vite": "^6.0.3",
         "vitest": "^4.1.1"
-    }
+    },
+    "packageManager": "yarn@4.14.1"
 }
