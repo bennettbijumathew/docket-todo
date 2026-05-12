@@ -1,5 +1,5 @@
 import { NotifWithDate, RemoveNotif, Scheduler } from "@/lib/notification/type";
-import { cancelNotif, isAndroidPermissionsGranted, sendAndroidNotif } from "@/lib/notification/repository";
+import { cancelNotif, sendAndroidNotif } from "@/lib/notification/repository";
 
 // This is a notification scheduler used for the android users. Since tauri-plugin-notification allows
 // scheduling for Android, timeouts are not used to schedule notifications. 
