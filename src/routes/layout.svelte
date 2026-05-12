@@ -47,5 +47,3 @@
         </a>
     </section>
 {/if}
-
-<p> {process.env.NODE_ENV} </p>
