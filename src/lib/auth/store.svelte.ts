@@ -3,7 +3,7 @@ import { AuthStatus } from "@/lib/auth/type";
 
 export class AuthStore {
     public error: string = $state("");
-    #authStatus: AuthStatus = $state("authenticated");
+    #authStatus: AuthStatus = $state("unauthenticated");
     #user: User | null = $state(null); 
 
     get status() {
