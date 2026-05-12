@@ -161,6 +161,7 @@ jobs:
           VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
           VITE_FIREBASE_TAURI_APP_ID: ${{ secrets.FIREBASE_TAURI_APP_ID }}
           VITE_FIREBASE_TAURI_MEASUREMENT_ID: ${{ secrets.FIREBASE_TAURI_MEASUREMENT_ID }}
+          NODE_ENV: ${{ secrets.NODE_ENV }}
         with:
           tagName: '${{ env.VERSION }}'
           releaseName: 'draft for ${{ env.VERSION }}'
