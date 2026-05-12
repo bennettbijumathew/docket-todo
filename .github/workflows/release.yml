@@ -42,16 +42,17 @@ jobs:
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
       # NODE AND YARN SETUP
+      - name: Enabling corepack and setting yarn to the most stable version
+        run: |
+          corepack enable
+          yarn set version stable
+
       - name: Setting up the Node.js environment
         uses: actions/setup-node@v5
         with:
           node-version: '24.x'
           cache: 'yarn'
 
-      - name: Enabling corepack and setting yarn to the most stable version
-        run: |
-          corepack enable
-          yarn set version stable
 
       - name: Installing the application's dependencies
         run: yarn install --immutable

@@ -15,17 +15,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Enabling corepack and setting yarn to the most stable version
+        run: |
+          corepack enable
+          yarn set version stable
+
       - uses: actions/checkout@v5
       - name: Setting up the application's node modules
         uses: actions/setup-node@v5
         with:
           node-version: '24.x'
           cache: 'yarn'
-
-      - name: Enabling corepack and setting yarn to the most stable version
-        run: |
-          corepack enable
-          yarn set version stable
 
       - name: Installing dependencies using yarn
         run: yarn install --immutable
