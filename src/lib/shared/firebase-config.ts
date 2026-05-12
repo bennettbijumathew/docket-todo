@@ -6,7 +6,7 @@
 // The exported objects are mainly used in controllers, repositories, and stores.  
 
 import { initializeApp } from 'firebase/app';
-import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
+import { connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
 import { connectAuthEmulator, getAuth } from 'firebase/auth';
 
 // The firebase config uses a .env file to load information, this config is then
