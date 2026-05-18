@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+import { defineConfig } from 'vitest/config';
 import { svelte } from "@sveltejs/vite-plugin-svelte";
 import tailwindcss from '@tailwindcss/vite'
 import { router } from 'sv-router/vite-plugin'; 
@@ -36,6 +36,7 @@ export default defineConfig(async () => ({
     ],
     envDir: "./",
     resolve: {
+        conditions: process.env.VITEST ? ['browser'] : undefined,
         // This is reflected in the tsconfig.json
         alias: {
             '@': fileURLToPath(new URL("./src", import.meta.url)), 
