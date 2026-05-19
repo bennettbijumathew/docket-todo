@@ -1,20 +1,17 @@
-import { deletePlanner, listenPlanners, updatePlannerColor, updatePlannerName, updatePlannerVisibility, writeNewPlanner } from '@/lib/planner/repository'
+import { deletePlanner, listenPlanners, updatePlannerColor, updatePlannerName, updatePlannerVisibility } from '@/lib/planner/repository'
 import { collection, doc, getDoc, getDocs, Query, query, where } from 'firebase/firestore'
-import { createPlannerConverter, NewPlannerData, Planner } from '@/lib/planner/type';
+import { createPlannerConverter, Planner } from '@/lib/planner/type';
 import { afterAll, assert, beforeAll, describe, expect, test } from 'vitest'
 import { logInWithEmail, logOut } from '@/lib/auth/repository';
 import { db } from "@/lib/shared/firebase-config"
 import { User } from 'firebase/auth';
+import { createTestPlanner, deleteTestPlanners } from '@/test/utils/planners';
 
 const reference = collection(db, import.meta.env.VITE_FIRESTORE_PLANNER_DB)
 let user: User;  
 let readPlannerQuery: Query
 
-describe("Planner - Repository ", () => {
-    let testPlanners: string[] = [];
-
-    
-    // LIFECYCLE FUNCTIONS:
+describe("Planner - Repository ", () => {    
     // This function runs before the test cases have begun.
     beforeAll(async () => {
         const loggedInUser = await logInWithEmail({
@@ -34,53 +31,17 @@ describe("Planner - Repository ", () => {
     // This function runs after all test cases are complete.
     afterAll(async () => {
         logOut();
-
-        // Deletes all of the test planners created during the test. 
-        testPlanners.forEach(async (item) => {
-            await deletePlanner({
-                id: item
-            })
-        })
+        
+        deleteTestPlanners()
     })
 
 
-    // UTILITY FUNCTIONS:
-    // A utility function to create a new planner for every test. 
-    async function createTestPlanner(): Promise<Planner> {
-        const newPlanner: NewPlannerData = {
-            name: `planner-test-${crypto.randomUUID()}`,
-            color: "red",
-            users: {
-                [`${user.uid}`]: true
-            },
-        }
-
-        // This creates a new planner using the planner repository functions
-        await writeNewPlanner(newPlanner)
-
-        const newPlannerList = (await getDocs(readPlannerQuery)).docs.map((doc) => doc.data()) as Planner[]
-
-        // Finds the created test planner. 
-        const createdPlanner = newPlannerList.find(
-            (item) => item.name === newPlanner.name
-        )
-
-        assert(createdPlanner, "The created test planner does not exist.")
-
-        testPlanners.push(createdPlanner.id)
-
-        // Returns the new planner for the test to use. 
-        return createdPlanner
-    }
-    
-
-    // TEST CASES:
     test('Writing a new planner into a list of planners', async () => {
         // Gets the previous length of the user's visible queries
         let oldLength = (await getDocs(readPlannerQuery)).size
 
         // Calls the create test planner function which then calls the planner repository's writeNewPlanner function. 
-        const testPlanner = await createTestPlanner();
+        const testPlanner = await createTestPlanner(user.uid);
 
         // Gets the list of planners after new planner is added. 
         let newPlannerList = (await getDocs(readPlannerQuery)).docs.map((doc) => doc.data())
@@ -111,7 +72,7 @@ describe("Planner - Repository ", () => {
         })
 
         // Creates a test planner to see if the 
-        await createTestPlanner()   
+        await createTestPlanner(user.uid)   
 
         // Unsubscribes the listener so resources aren't being taken. 
         unSubFromPlanner?.()
@@ -125,7 +86,7 @@ describe("Planner - Repository ", () => {
 
     test('Updating all attributes of a single planner', async () => { 
         // Creates a new test planner.
-        let testPlanner = await createTestPlanner();
+        let testPlanner = await createTestPlanner(user.uid);
         const oldPlanner = testPlanner; 
 
         await updatePlannerName({
@@ -164,7 +125,7 @@ describe("Planner - Repository ", () => {
 
     test('Deleting a planner from the list of planners', async () => {
         // Creates a new test planner.
-        const testPlanner = await createTestPlanner();
+        const testPlanner = await createTestPlanner(user.uid);
 
         // Gets the previous length of the user's visible queries
         let oldLength = (await getDocs(readPlannerQuery)).size
@@ -185,7 +146,6 @@ describe("Planner - Repository ", () => {
         // Test cases which see if the new planner is deleted from the list.
         let newLength = plannerList.length
         expect(newLength, "New planner has not been deleted from the database").toEqual(oldLength - 1)
-        
         expect(deletedPlanner, "New planner has not been deleted from the database").toBeUndefined()
     })
 })
