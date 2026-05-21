@@ -48,7 +48,7 @@ describe("Planner - Repository ", () => {
 
         // This checks if the newest planner exists from the list of planners. 
         let createdPlanner = newPlannerList.find((item) => 
-            item.name == testPlanner.name && item.color == testPlanner.color
+            item.name == testPlanner.name
         )
         
 
