@@ -1,13 +1,19 @@
 # docket-todo
 
+## 2.1.1
+
+### Patch Changes
+
+- Created a test suite to test the repository function
+
 ## 2.1.0
 
 ### Minor Changes
 
 - Implemented a notifications scheduler for the android and windows applications
-    - Notifications run based on the task's due date.
-    - Windows Notification Scheduler runs while the app is open. This will be improved upon in future updates.
-    - Android Notification Scheduler works even while the application is closed.
+  - Notifications run based on the task's due date.
+  - Windows Notification Scheduler runs while the app is open. This will be improved upon in future updates.
+  - Android Notification Scheduler works even while the application is closed.
 
 ## 2.0.4
 
