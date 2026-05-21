@@ -1,8 +1,6 @@
 import { logInWithEmail, logOut } from "@/lib/auth/repository";
-import { Planner } from "@/lib/planner/type";
 import { db } from "@/lib/shared/firebase-config";
 import { deleteTask, editComplete, editDate, editName, listenTasks } from "@/lib/task/repository";
-import { updateTaskComplete, updateTaskDate, updateTaskName } from "@/lib/task/service";
 import { createTaskConverter, Task } from "@/lib/task/type";
 import { createTestPlanner, deleteTestPlanners } from "@/test/utils/planners";
 import { createTestTask, deleteTestTasks } from "@/test/utils/task";
