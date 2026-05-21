@@ -90,9 +90,6 @@ describe("Auth - Repository", () => {
         const newUser = await logInWithEmail(testAccount)
 
         if (newUser !== null) {        
-            console.log(oldUsername)    
-            console.log(newUser.displayName)    
-
             expect(oldUsername).not.toEqual(newUser.displayName)
         }
         else {
