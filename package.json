@@ -8,7 +8,7 @@
         "build": "tsc && vite build",
         "preview": "vite preview",
         "tauri": "tauri",
-        "firebase": "firebase emulators:start --import=./firebase-export --export-on-exit=./firebase-export",
+        "firebase": "firebase emulators:start --import=./firebase/exports",
         "test": "vitest",
         "generate-routes": "sv-router",
         "add-version": "yarn changeset add",

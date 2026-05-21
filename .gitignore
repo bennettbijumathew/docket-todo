@@ -29,9 +29,6 @@ dist-ssr
 # Secrets
 .env*
 
-# Firebase emulator exported state 
-firebase-export*
-
 # Removing unnecessary Yarn directories and files 
 .yarn
 
