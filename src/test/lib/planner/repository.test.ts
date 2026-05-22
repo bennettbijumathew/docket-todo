@@ -1,35 +1,40 @@
 import { deletePlanner, listenPlanners, updatePlannerColor, updatePlannerName, updatePlannerVisibility } from '@/lib/planner/repository'
 import { collection, doc, getDoc, getDocs, Query, query, where } from 'firebase/firestore'
+import { createTestPlanner, deleteTestPlanners } from '@/test/utils/planners';
+import { afterEach, assert, beforeEach, describe, expect, test } from 'vitest'
 import { createPlannerConverter, Planner } from '@/lib/planner/type';
-import { afterAll, assert, beforeAll, describe, expect, test } from 'vitest'
 import { logInWithEmail, logOut } from '@/lib/auth/repository';
+import { testUserA } from '@/test/utils/test-users';
 import { db } from "@/lib/shared/firebase-config"
 import { User } from 'firebase/auth';
-import { createTestPlanner, deleteTestPlanners } from '@/test/utils/planners';
 
-const reference = collection(db, import.meta.env.VITE_FIRESTORE_PLANNER_DB)
-let user: User;  
-let readPlannerQuery: Query
+describe("Planner - Repository", () => {    
+    let testUser: User;  
+    let readPlannerQuery: Query
 
-describe("Planner - Repository ", () => {    
     // This function runs before the test cases have begun.
-    beforeAll(async () => {
+    beforeEach(async () => {
         const loggedInUser = await logInWithEmail({
-            email: import.meta.env.VITE_ACCOUNT_TEST_A_EMAIL,
-            password: import.meta.env.VITE_ACCOUNT_TEST_PASSWORD,
+            email: testUserA.email,
+            password: testUserA.password,
         })
 
-        if (!loggedInUser) {
+        // Places new test user as newly logged in user.
+        if (loggedInUser == null) {
             throw new Error('Failed to authenticate test user')
         }
 
-        user = loggedInUser; 
+        testUser = loggedInUser
 
-        readPlannerQuery = query(reference, where(`users.${user.uid}`, "in", [true, false])).withConverter(createPlannerConverter(user.uid));
+        // Once the user id is collected, the query grabs planners related to the user.
+        readPlannerQuery = query(
+            collection(db, import.meta.env.VITE_FIRESTORE_PLANNER_DB), 
+            where(`users.${testUser.uid}`, "in", [true, false])
+        ).withConverter(createPlannerConverter(testUser.uid));
     })
 
     // This function runs after all test cases are complete.
-    afterAll(async () => {
+    afterEach(async () => {
         logOut();
         
         deleteTestPlanners()
@@ -41,7 +46,7 @@ describe("Planner - Repository ", () => {
         let oldLength = (await getDocs(readPlannerQuery)).size
 
         // Calls the create test planner function which then calls the planner repository's writeNewPlanner function. 
-        const testPlanner = await createTestPlanner(user.uid);
+        const testPlanner = await createTestPlanner(testUser.uid);
 
         // Gets the list of planners after new planner is added. 
         let newPlannerList = (await getDocs(readPlannerQuery)).docs.map((doc) => doc.data())
@@ -50,6 +55,7 @@ describe("Planner - Repository ", () => {
         let createdPlanner = newPlannerList.find((item) => 
             item.name == testPlanner.name
         )
+
 
         // Test cases which see if the new planner is added into the list.
         let newLength = newPlannerList.length
@@ -64,14 +70,14 @@ describe("Planner - Repository ", () => {
 
         // This creates a listeners that places the old data into an array
         // with the new data being placed in the current planners array.
-        let unSubFromPlanner = listenPlanners(user.uid, (newPlanners) => {
+        let unSubFromPlanner = listenPlanners(testUser.uid, (newPlanners) => {
             previousPlanners = currentPlanners
 
             currentPlanners = newPlanners
         })
 
         // Creates a test planner to see if the 
-        await createTestPlanner(user.uid)   
+        await createTestPlanner(testUser.uid)   
 
         // Unsubscribes the listener so resources aren't being taken. 
         unSubFromPlanner?.()
@@ -85,7 +91,7 @@ describe("Planner - Repository ", () => {
 
     test('Updating all attributes of a single planner', async () => { 
         // Creates a new test planner.
-        let testPlanner = await createTestPlanner(user.uid);
+        let testPlanner = await createTestPlanner(testUser.uid);
         const oldPlanner = testPlanner; 
 
         await updatePlannerName({
@@ -100,12 +106,12 @@ describe("Planner - Repository ", () => {
 
         await updatePlannerVisibility({
             id: testPlanner.id, 
-            userId: user.uid,
+            userId: testUser.uid,
             visibility: !testPlanner.visible
         })
 
         // Gets the newest planner document'
-        let plannerDoc = await getDoc(doc(db, import.meta.env.VITE_FIRESTORE_PLANNER_DB, testPlanner.id).withConverter(createPlannerConverter(user.uid)));
+        let plannerDoc = await getDoc(doc(db, import.meta.env.VITE_FIRESTORE_PLANNER_DB, testPlanner.id).withConverter(createPlannerConverter(testUser.uid)));
         let newPlanner = plannerDoc.data() as Planner;
         
 
@@ -119,12 +125,12 @@ describe("Planner - Repository ", () => {
         expect(oldPlanner.users, "Planner after update has the same user field.").not.toEqual(newPlanner.users)
 
         // Checks if the current users's visibility reflects the visible variable. 
-        expect(newPlanner.users[user.uid], "Updated Planner's user visibility does not reflect visible field").toEqual(newPlanner.visible)
+        expect(newPlanner.users[testUser.uid], "Updated Planner's user visibility does not reflect visible field").toEqual(newPlanner.visible)
     })
 
     test('Deleting a planner from the list of planners', async () => {
         // Creates a new test planner.
-        const testPlanner = await createTestPlanner(user.uid);
+        const testPlanner = await createTestPlanner(testUser.uid);
 
         // Gets the previous length of the user's visible queries
         let oldLength = (await getDocs(readPlannerQuery)).size

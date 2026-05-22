@@ -8,8 +8,9 @@
         "build": "tsc && vite build",
         "preview": "vite preview",
         "tauri": "tauri",
-        "firebase": "firebase emulators:start --import=./firebase/exports",
-        "test": "vitest",
+        "firebase-emulators": "firebase emulators:start --import=./firebase/exports",
+        "ci-test": "firebase emulators:exec 'vitest run' --import=./firebase/exports",
+        "dev-test": "firebase emulators:exec 'vitest' --import=./firebase/exports",
         "generate-routes": "sv-router",
         "add-version": "yarn changeset add",
         "set-versions": "yarn changeset version && node .changeset/sync-version-numbers.ts"
@@ -35,6 +36,7 @@
     },
     "devDependencies": {
         "@tauri-apps/cli": "^2.11.0",
+        "firebase-admin": "^13.10.0",
         "svelte-check": "^4.4.6",
         "tailwind-scrollbar": "^4.0.2",
         "typescript": "~5.6.2",

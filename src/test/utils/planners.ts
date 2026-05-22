@@ -5,7 +5,6 @@ import { collection, getDocs, query, where } from "firebase/firestore"
 
 const reference = collection(db, import.meta.env.VITE_FIRESTORE_PLANNER_DB)
 
-
 // A list of test planners that have been created. Used to help clean up test planners
 let testPlanners: string[] = [];
 
@@ -18,7 +17,7 @@ export async function createTestPlanner(userId: string): Promise<Planner> {
             [`${userId}`]: true
         },
     }
-
+    
     // This creates a new planner using the planner repository functions
     await writeNewPlanner(newPlanner)
     
@@ -30,7 +29,7 @@ export async function createTestPlanner(userId: string): Promise<Planner> {
     const createdPlanner = newPlannerList.find(
         (item) => item.name === newPlanner.name
     )
-    
+
     if (createdPlanner === undefined) {
         throw new Error("The created test planner does not exist.")
     }
