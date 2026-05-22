@@ -11,7 +11,7 @@ on:
   
 jobs: 
   build: 
-    name: Building the application's frontend package.
+    name: Building and testing the application's frontend package.
     runs-on: ubuntu-latest
 
     steps:
@@ -39,7 +39,7 @@ jobs:
         run: yarn run build
 
       - name: Installing Firebase Tools for upcoming tests
-        run: yarn dlx firebase-tools
+        run: yarn add -D firebase-tools
 
       - name: Running the application's tests
         run: yarn run ci-test
