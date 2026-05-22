@@ -33,7 +33,6 @@
         "src/**/*.svelte.ts",
         ".router/**/*.ts",
         "vite.config.ts",
-        "vitest.config.ts"
     ],
     "files": []
 }
