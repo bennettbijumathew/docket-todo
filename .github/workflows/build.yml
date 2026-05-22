@@ -34,9 +34,12 @@ jobs:
 
       - name: Adding sv-router's generated routes file
         run: yarn run generate-routes
-
+        
       - name: Checking types and building the window's application
         run: yarn run build
+
+      - name: Installing Firebase Tools for upcoming tests
+        run: yarn dlx firebase-tools
 
       - name: Running the application's tests
         run: yarn run ci-test
