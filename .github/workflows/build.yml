@@ -60,7 +60,7 @@ jobs:
 
       - name: Running the application's tests
         run: 
-          firebase emulators:exec --project docket-6f1df --only firestore,auth --import=./firebase/exports "yarn run ci-test"
+          yarn run ci-test
         env:
           JAVA_HOME: ${{ env.JAVA_HOME }}
           VITE_FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
