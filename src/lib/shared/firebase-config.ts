@@ -28,10 +28,8 @@ export const db = getFirestore(firebaseApp)
 export const auth = getAuth(firebaseApp)
 
 // This is used for developer to connect an emulator to the instance. 
+// Connects Firebase's database and auth instance to an emulator for storage and authentication.
 if (process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test") {
-    console.info("DOCKET MESSAGE: You are in development mode. This means that you are using Firebase's Emulator as the data source.")
-
-    // Connects Firebase's database and auth instance to an emulator for storage and authentication.
     connectFirestoreEmulator(db, import.meta.env.VITE_FIREBASE_EMULATOR_HOST, import.meta.env.VITE_FIRESTORE_EMULATOR_PORT);
     connectAuthEmulator(auth, `http://${import.meta.env.VITE_FIREBASE_EMULATOR_HOST}:${import.meta.env.VITE_AUTH_EMULATOR_PORT}`);
 }

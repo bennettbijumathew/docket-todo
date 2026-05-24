@@ -41,5 +41,9 @@ export default defineConfig(async () => ({
         alias: {
             '@': fileURLToPath(new URL("./src", import.meta.url)), 
         },
+    },
+    test: {
+        testTimeout: 15000,
+        hookTimeout: 15000,
     }
 }));

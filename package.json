@@ -8,8 +8,9 @@
         "build": "tsc && vite build",
         "preview": "vite preview",
         "tauri": "tauri",
-        "firebase": "firebase emulators:start --import=./firebase-export --export-on-exit=./firebase-export",
-        "test": "vitest",
+        "firebase-emulators": "firebase emulators:start --import=./firebase/exports --only 'firestore,auth'",
+        "ci-test": "firebase emulators:exec --project docket-6f1df --only firestore,auth --import=./firebase/exports 'vitest run'",
+        "dev-test": "firebase emulators:exec 'vitest' --import=./firebase/exports --only 'firestore,auth'",
         "generate-routes": "sv-router",
         "add-version": "yarn changeset add",
         "set-versions": "yarn changeset version && node .changeset/sync-version-numbers.ts"

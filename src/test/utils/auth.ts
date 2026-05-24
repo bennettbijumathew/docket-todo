@@ -1,21 +1,27 @@
 import { writeNewEmailAccount } from "@/lib/auth/repository"
+import { auth } from "@/lib/shared/firebase-config";
 import { deleteUser, User } from "firebase/auth";
 
-export const testAccount = {
-    email: "email@email.com",
-    password: "password"
+export type TestAccount = {
+    user: User, 
+    email: string, 
+    password: string
 }
 
-export async function createTestAccount(): Promise<User | null>  {
-    const user = await writeNewEmailAccount(testAccount)
+// This function created an unverified test account. 
+export async function createTestAccount(email: string, password: string): Promise<TestAccount>  {
+    const user = await writeNewEmailAccount({email, password})
 
     if (user === null) {
         throw new Error("The created test account does not exist.")
     }
 
-    return user;
+    return { user, email, password };
 }
 
-export async function deleteTestAccount(user: User): Promise<void> {
-    await deleteUser(user)
+// This function deletes the currently logged in account. 
+export async function deleteTestAccount(): Promise<void> {
+    if (auth.currentUser !== null) {
+        await deleteUser(auth.currentUser)
+    }
 }

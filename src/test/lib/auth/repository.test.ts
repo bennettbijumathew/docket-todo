@@ -1,20 +1,20 @@
 import { listenAuth, logInWithEmail, logOut, updateUsername } from "@/lib/auth/repository";
-import { createTestAccount, deleteTestAccount, testAccount } from "@/test/utils/auth";
+import { createTestAccount, deleteTestAccount, TestAccount } from "@/test/utils/auth";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { auth } from "@/lib/shared/firebase-config";
 import { User } from "firebase/auth";
 
 describe("Auth - Repository", () => {
+    let testUser: TestAccount;
+    
     // Creates a test account for the test to use.
     beforeAll(async () => {
-        await createTestAccount()
+        testUser = await createTestAccount(`${crypto.randomUUID()}@test.com`, 'password')
     })
     
     // Deletes the test after test is completed.
     afterAll(async () => {
-        if (auth.currentUser !== null) {
-            await deleteTestAccount(auth.currentUser)
-        }
+        await deleteTestAccount()
     })
 
     
@@ -30,7 +30,11 @@ describe("Auth - Repository", () => {
             }
         })
 
-        await logInWithEmail(testAccount)
+        await logInWithEmail({
+            email: testUser.email, 
+            password: testUser.password
+        })
+
 
         // Unsubscribes the listener, preventing memory leaks. 
         unSubFromAuth?.()
@@ -41,20 +45,27 @@ describe("Auth - Repository", () => {
     })
 
     test("Logging into an account", async () => {
-        const user = await logInWithEmail(testAccount)
+        const loggedInUser: User | null = await logInWithEmail({
+            email: testUser.email, 
+            password: testUser.password
+        })
 
-        expect(user, "User has not been logged in").toBeDefined()
-        expect(user?.uid, "Account User ID has not been identified").toEqual(auth.currentUser?.uid)
-        expect(user?.email, "Email Account has not been identified").toEqual(auth.currentUser?.email)
-        expect(user?.emailVerified, "Email verification state has not been identified").toEqual(auth.currentUser?.emailVerified)
-        expect(user?.displayName, "Display name has not been identified").toEqual(auth.currentUser?.displayName)
+
+        expect(loggedInUser, "User has not been logged in").toBeDefined()
+        expect(loggedInUser?.uid, "Account User ID has not been identified").toEqual(auth.currentUser?.uid)
+        expect(loggedInUser?.email, "Email Account has not been identified").toEqual(auth.currentUser?.email)
+        expect(loggedInUser?.emailVerified, "Email verification state has not been identified").toEqual(auth.currentUser?.emailVerified)
+        expect(loggedInUser?.displayName, "Display name has not been identified").toEqual(auth.currentUser?.displayName)
     })
 
     test("Logging out of the account", async () => {
         // Logs into an account.
-        const user: User | null = await logInWithEmail(testAccount)
+        const loggedInUser: User | null = await logInWithEmail({
+            email: testUser.email, 
+            password: testUser.password
+        })
 
-        expect(user, "User has not been logged in").toBeDefined()
+        expect(loggedInUser, "User has not been logged in in log out test case").toBeDefined()
         
         // Logs out of the account.
         await logOut()
@@ -65,31 +76,41 @@ describe("Auth - Repository", () => {
     })
 
     test("Creating a new email account", async () => {
-        // Logs into the email using the account created in the before test function.
-        const user = await logInWithEmail(testAccount)
+        const loggedInUser: User | null = await logInWithEmail({
+            email: testUser.email, 
+            password: testUser.password
+        })
 
-        expect(user, "User has not been logged in").toBeDefined()
+        expect(loggedInUser, "User has not been logged into new account").toBeDefined()
     })
 
     test("Updating attributes of the account", async () => {
-        const oldUser = await logInWithEmail(testAccount)
+        const oldUser: User | null = await logInWithEmail({
+            email: testUser.email, 
+            password: testUser.password
+        })
+
         let oldUsername; 
 
         if (oldUser !== null) {
-            oldUsername = oldUser.displayName
+            oldUsername = oldUser.displayName ?? "old-username"
 
             updateUsername({
                 user: oldUser,
-                username: `${oldUser.displayName}-update`, 
+                username: crypto.randomUUID(), 
             })
         }
         else {
             throw new Error("Cannot update email attribute as account doesn't exist")
         }
         
-        const newUser = await logInWithEmail(testAccount)
+        const newUser: User | null = await logInWithEmail({
+            email: testUser.email, 
+            password: testUser.password
+        })
 
-        if (newUser !== null) {        
+
+        if (newUser !== null) {
             expect(oldUsername).not.toEqual(newUser.displayName)
         }
         else {
