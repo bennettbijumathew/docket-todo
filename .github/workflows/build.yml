@@ -1,4 +1,4 @@
-name: Check for Complete Package Build
+name: Testing the application package
 
 on: 
   pull_request: 
