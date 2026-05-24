@@ -3,7 +3,6 @@ import { createTestAccount, deleteTestAccount, TestAccount } from "@/test/utils/
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { auth } from "@/lib/shared/firebase-config";
 import { User } from "firebase/auth";
-import { terminate } from "firebase/firestore";
 
 describe("Auth - Repository", () => {
     let testUser: TestAccount;

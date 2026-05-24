@@ -1,5 +1,5 @@
 import { deletePlanner, listenPlanners, updatePlannerColor, updatePlannerName, updatePlannerVisibility } from '@/lib/planner/repository'
-import { collection, doc, getDoc, getDocs, Query, query, terminate, where } from 'firebase/firestore'
+import { collection, doc, getDoc, getDocs, Query, query, where } from 'firebase/firestore'
 import { createTestPlanner, deleteTestPlanners } from '@/test/utils/planners';
 import { afterEach, assert, beforeEach, describe, expect, test } from 'vitest'
 import { createPlannerConverter, Planner } from '@/lib/planner/type';
