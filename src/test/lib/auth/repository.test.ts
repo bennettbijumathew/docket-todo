@@ -3,6 +3,7 @@ import { createTestAccount, deleteTestAccount, TestAccount } from "@/test/utils/
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { auth } from "@/lib/shared/firebase-config";
 import { User } from "firebase/auth";
+import { terminate } from "firebase/firestore";
 
 describe("Auth - Repository", () => {
     let testUser: TestAccount;
@@ -93,7 +94,7 @@ describe("Auth - Repository", () => {
         let oldUsername; 
 
         if (oldUser !== null) {
-            oldUsername = oldUser.displayName
+            oldUsername = oldUser.displayName ?? "old-username"
 
             updateUsername({
                 user: oldUser,
@@ -110,7 +111,7 @@ describe("Auth - Repository", () => {
         })
 
 
-        if (newUser !== null) {        
+        if (newUser !== null) {
             expect(oldUsername).not.toEqual(newUser.displayName)
         }
         else {
