@@ -1,5 +1,11 @@
 # docket-todo
 
+## 2.1.2
+
+### Patch Changes
+
+- Integrated new test suite into the build workflow
+
 ## 2.1.1
 
 ### Patch Changes
