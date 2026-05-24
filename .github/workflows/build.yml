@@ -39,7 +39,7 @@ jobs:
         run: yarn run build
 
       - name: Installing Firebase Tools for upcoming tests
-        run: yarn add -D firebase-tools
+        run: npm install -g firebase-tools
 
       - name: Running the application's tests
         run: firebase emulators:exec --project docket-6f1df 'vitest run' --import=./firebase/exports --only 'firestore,auth'
