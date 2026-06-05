@@ -8,7 +8,7 @@
         "build": "tsc && vite build",
         "preview": "vite preview",
         "tauri": "tauri",
-        "firebase-emulators": "firebase emulators:start --import=./firebase/exports --only firestore,auth",
+        "firebase-emulators": "firebase emulators:start --import=./firebase/exports --only 'firestore,auth'",
         "ci-test": "firebase emulators:exec --project docket-6f1df --only firestore,auth --import=./firebase/exports 'vitest run'",
         "dev-test": "firebase emulators:exec 'vitest' --import=./firebase/exports --only 'firestore,auth'",
         "generate-routes": "sv-router",
@@ -39,7 +39,8 @@
         "svelte-check": "^4.4.6",
         "tailwind-scrollbar": "^4.0.2",
         "typescript": "~5.6.2",
-        "vite": "^8.0.16",
+        "vite": "^6.0.3",
         "vitest": "^4.1.1"
-    }
+    },
+    "packageManager": "yarn@4.16.0"
 }
