@@ -1,7 +1,7 @@
 import { type Icon, House, DoorOpen, UserPlus, ClipboardCheck, Notebook, LogIn, Cog } from '@lucide/svelte';
 
 // A type for the title for each route
-type RouteNames =
+export type RouteNames =
     | "Home"
     | "Log In"
     | "Log Out"
@@ -21,7 +21,7 @@ export type RoutePath =
     | "/settings";
     
 // An interface representing the metadata of the route
-interface RouteDetails {
+export interface RouteDetails {
     link: RoutePath, 
     icon: typeof Icon,
     hasSidebar: boolean

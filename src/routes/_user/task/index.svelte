@@ -1,78 +1,48 @@
 <!-- CODE -->
 <script lang="ts">
-    import { type Task } from "@/lib/task/type";
-    import TaskListByCompleted from "@/components/ui/task/list/task-list-by-completed.svelte";
-    import Main from "@/components/ui/layout/_user/main.svelte";
-    import Sidebar from "@/components/ui/layout/_user/sidebar.svelte";
-    import TaskInputs from "@/components/ui/task/list/parts/task-inputs.svelte";
-    import TaskContainer from "@/components/ui/task/list/parts/task-container.svelte";
-    import PlannerToggleList from "@/components/ui/task/sidebar/planner-toggle-list.svelte";
-    import Editor from "@/components/ui/layout/_user/editor.svelte";
-    import TaskEditor from "@/components/ui/task/editor/task-editor.svelte";
-    import { searchParams } from "sv-router";
-    import { paramKeys, paramValues } from "@/components/util/routes";
+    import SidebarRoot from "@/components/ui/sidebar/sidebar-root.svelte";
+    import SidebarRoutes from "@/components/ui/sidebar/sidebar-routes.svelte";
+    import PlannerToggleList from "@/components/ui/sidebar/task/planner-toggle-list.svelte";
+    import { PanelLeft } from "@lucide/svelte";
 
-    // These variables represent the current planner that is open on the modal
-    let selectedTask: Task | null = $state(null)
-
-    // This function opens the task editor. 
-    function openEditor(task: Task | null) {
-        // If the user has clicked on the same task, the editor closes
-        if (selectedTask == task) {
-            closeEditor()
-        }
-        // If a different task is selected, the task is opened
-        else if (task !== null) {
-            selectedTask = task
-            
-            // Replaces the "edit" search parameter with a true value.
-            searchParams.delete(paramKeys["editor"])
-            searchParams.append(paramKeys["editor"], paramValues["editor"].open)
-        }
-    }
-
-    // Closes the editor
-    function closeEditor() {
-        selectedTask = null
-        
-        // Deletes the current "edit" parameter.
-        searchParams.delete(paramKeys["editor"])
-    }   
+    // These are references to components used in the page.
+    // Used to call functions within each function such as toggle sidebar etc. 
+    let sidebar: ReturnType<typeof SidebarRoot>;
 </script>
 
-<!-- VIEW -->
-<!-- This shows a sidebar with a navigation bar and a planner list that can be toggled. -->
-<Sidebar>
+<!-- This is the sidebar of the application, includes routes and planner toggle list. -->
+<SidebarRoot bind:this={sidebar}>
+    <SidebarRoutes/>
+
     <PlannerToggleList/>
-</Sidebar>
+</SidebarRoot>
 
-<!-- This shows a header and a list of completed and incomplete tasks -->
-<Main>
-    <h2 class="
-        font-title font-semibold text-lg
-        text-center
-        sm:text-left
-    "> 
-        Task List 
-    </h2>
+<!-- This is main part of the application where the task list resides -->
+<section class="
+    flex flex-1 flex-col min-h-0 mt-safe
+    lg:flex-3 pt-safe
+">
+    <!-- The header that holds the title and the button to toggle the sidebar -->
 
-    <TaskContainer>
-        <!-- On selecting the task, the <Editor> opens -->
-        <TaskListByCompleted 
-            onTaskSelect={openEditor}
-        />
-    </TaskContainer>  
+    <header class="
+        flex justify-between border-b border-background-300 p-4 shrink-0
+        flex-col gap-2
+        sm:flex-row sm:gap-2
+    ">
+        <div class="flex items-center gap-x-2">
+            <button 
+                onclick={sidebar.toggle}
+                aria-label="Toggle the sidebar"
+                class="
+                    flex items-center gap-x-2 bg-background-100 hover:bg-background-200 rounded-lg cursor-pointer
+                    p-2
+                    sm:1
+                "
+            >      
+                <PanelLeft class="size-4"/>
+            </button>
 
-    <TaskInputs/>
-</Main> 
-
-<!-- If the page's "edit" parameter is set to true, the editor is shown. -->
-<Editor         
-    header="Edit Task"
-    onClose={() => closeEditor()}
->
-    <TaskEditor 
-        task={selectedTask}
-        onClose={() => closeEditor()}
-    />
-</Editor>
+            <h1 class="font-title font-semibold text-lg"> Task List </h1>
+        </div>
+    </header>
+</section>

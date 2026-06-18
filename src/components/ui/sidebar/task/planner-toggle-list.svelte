@@ -36,10 +36,10 @@
 {/snippet}
 
 <!-- VIEW: The sidebar structure has the website's logo and navigation links -->
-<h2 class="font-title font-semibold text-lg"> Planners </h2>
-
+<h2 class="font-title font-semibold text-lg px-4"> Planners </h2>
+    
 <div class="
-    flex flex-col flex-1 overflow-y-auto gap-y-1 h-fit 
+    flex flex-col flex-1 overflow-y-auto gap-y-1 h-fit px-4 pb-4
     scrollbar-thin scrollbar-track-background
 ">
     {#each planners.all as planner, index (index)}
