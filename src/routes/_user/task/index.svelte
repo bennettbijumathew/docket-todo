@@ -1,5 +1,6 @@
 <!-- CODE -->
 <script lang="ts">
+    import ScrollSection from "@/components/ui/layout/containers/scroll-section.svelte";
     import SidebarRoot from "@/components/ui/sidebar/sidebar-root.svelte";
     import SidebarRoutes from "@/components/ui/sidebar/sidebar-routes.svelte";
     import PlannerToggleList from "@/components/ui/sidebar/task/planner-toggle-list.svelte";
@@ -23,7 +24,6 @@
     lg:flex-3 pt-safe
 ">
     <!-- The header that holds the title and the button to toggle the sidebar -->
-
     <header class="
         flex justify-between border-b border-background-300 p-4 shrink-0
         flex-col gap-2
@@ -45,4 +45,22 @@
             <h1 class="font-title font-semibold text-lg"> Task List </h1>
         </div>
     </header>
+
+    <!-- The area that holds the task list. -->
+    <ScrollSection
+        rootClasses="flex-1 min-h-0 h-full"
+        viewportClasses="h-full p-4"
+    >
+
+    </ScrollSection>
+
+    <!-- This is the form to submit new tasks -->
+    <form
+        class="flex flex-col border-t border-background-300 shrink-0 pb-safe p-4"
+        onsubmit={(e) => { 
+            e.preventDefault(); 
+        }}
+    >
+
+    </form>
 </section>

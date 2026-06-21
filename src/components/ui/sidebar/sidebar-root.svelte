@@ -10,8 +10,6 @@
 
     let { children }: RootProps = $props()
 
-
-    
     // The sidebar is opened based on if the search params include the sidebar keyword. 
     const key: string = "sidebar"
     let sidebarOpen: boolean = $derived(searchParams.has(key))
