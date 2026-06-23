@@ -18,45 +18,50 @@
 </script>
 
 {#if app.platform === "windows"}
-    <header data-tauri-drag-region class="bg-transparent fixed top-0 left-0 w-full h-6 flex items-center justify-between z-100">
-        <div class="flex items-center transition-colors">
-            <button 
-                onclick={() => navigate(-1)} 
-                class="cursor-pointer hover:bg-background-200 px-2 h-6"
-            >
+    <header 
+        data-tauri-drag-region 
+        class="
+            bg-transparent fixed top-0 left-0 right-0 w-full h-titlebar flex items-center justify-between z-100 
+        "
+    >
+        <div class="
+            flex items-center transition-colors 
+            *:h-titlebar *:p-2 *:cursor-pointer *:hover:bg-background-100/60
+        ">
+            <button onclick={() => navigate(-1)}>
                 <ArrowLeft class="size-4"/>
             </button>
 
-            <button 
-                onclick={() => navigate(-1)} 
-                class="cursor-pointer hover:bg-background-200 px-2 h-6"
-            >
+            <button onclick={() => navigate(+1)}>
                 <ArrowRight class="size-4"/>
             </button>
         </div>
 
-        <div class="flex gap-x-2 ml-4">
+        <div class="
+            flex gap-x-2 ml-4 
+            *:h-titlebar *:py-1.5 *:px-2 *:cursor-pointer *:hover:bg-background-100/60 *:text-xs
+        ">
             {#each routes as [name, {link}]}
                 <a 
                     href={link}
-                    class="flex justify-center items-center text-xs cursor-pointer hover:bg-background-200 px-2 h-6"
                 >
                     {name}
                 </a>
             {/each}
         </div>
 
-        <div class="flex items-center transition-colors">
+        <div class="
+            flex items-center transition-colors 
+            *:h-titlebar *:p-2 *:cursor-pointer *:hover:bg-background-100/60
+        ">
             <button 
                 onclick={getCurrentWindow().minimize}
-                class="cursor-pointer hover:bg-background-200 px-2 h-6"
             >
                 <Minus class="size-4 text-content-900 hover:text-content-600"/>  
             </button>
 
             <button 
                 onclick={() => { getCurrentWindow().toggleMaximize(); isWindowMaximized() }}
-                class="cursor-pointer hover:bg-background-200 px-2 h-6"
             > 
                 {#if maximizedState == true}
                     <Minimize2 class="size-4 text-content-900"/>    

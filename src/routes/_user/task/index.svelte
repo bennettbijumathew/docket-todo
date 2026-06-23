@@ -4,7 +4,9 @@
     import SidebarRoot from "@/components/ui/sidebar/sidebar-root.svelte";
     import SidebarRoutes from "@/components/ui/sidebar/sidebar-routes.svelte";
     import PlannerToggleList from "@/components/ui/sidebar/task/planner-toggle-list.svelte";
+    import TaskInputs from "@/components/ui/task/list/parts/task-inputs.svelte";
     import TaskList from "@/components/ui/task/task-list.svelte";
+    import { getPlatform } from "@/lib/shared/platform";
     import { tasks } from "@/lib/task/store.svelte";
     import { ArrowDown, ArrowUp, FunnelIcon, PanelLeft, SearchIcon } from "@lucide/svelte";
 
@@ -37,15 +39,18 @@
 
 <!-- This is main part of the application where the task list resides. -->
 <section class="
-    flex flex-1 flex-col min-h-0 mt-safe
-    lg:flex-3 pt-safe
+    flex flex-1 flex-col min-h-0 pt-safe pb-safe
+    lg:flex-3
 ">
     <!-- The header that holds the title and buttons for toggling the sidebar, searching and filtering tasks.  -->
-    <header class="
-        flex justify-between border-b border-background-300 p-4 shrink-0
-        flex-col gap-2
-        lg:flex-row sm:gap-2
-    ">
+    <header 
+        class="
+            {getPlatform() == "windows" ? "pt-titlebar" : ""}
+            flex justify-between border-b border-background-300 p-4 shrink-0 
+            flex-col gap-2
+            lg:flex-row sm:gap-2
+        "
+    >
         <!-- The title and sidebar toggle -->
         <div class="flex items-center gap-x-2">
             <button 
@@ -125,12 +130,5 @@
     </ScrollSection>
 
     <!-- This is the form to submit new tasks. -->
-    <form
-        class="flex flex-col border-t border-background-300 shrink-0 pb-safe p-4"
-        onsubmit={(e) => { 
-            e.preventDefault(); 
-        }}
-    >
-
-    </form>
+    <TaskInputs/>
 </section>

@@ -4,26 +4,43 @@
 @plugin 'tailwind-scrollbar';
 
 @theme {
-  --color-background: var(--color-white);
-  --color-background-50: var(--color-neutral-50);
-  --color-background-100: var(--color-neutral-100);
-  --color-background-200: var(--color-neutral-200);
-  --color-background-300: var(--color-neutral-300);
-  --color-background-400: var(--color-neutral-400);
-  --color-background-500: var(--color-neutral-500);
+    --color-background: var(--color-white);
+    --color-background-50: var(--color-neutral-50);
+    --color-background-100: var(--color-neutral-100);
+    --color-background-200: var(--color-neutral-200);
+    --color-background-300: var(--color-neutral-300);
+    --color-background-400: var(--color-neutral-400);
+    --color-background-500: var(--color-neutral-500);
 
-  --color-content-600: var(--color-neutral-600);
-  --color-content-700: var(--color-neutral-700);
-  --color-content-800: var(--color-neutral-800);
-  --color-content-900: var(--color-neutral-900);
+    --color-content-600: var(--color-neutral-600);
+    --color-content-700: var(--color-neutral-700);
+    --color-content-800: var(--color-neutral-800);
+    --color-content-900: var(--color-neutral-900);
 
-  --font-title: "Playfair Display", serif;
-  --font-default: "Figtree", sans-serif;
+    --font-title: "Playfair Display", serif;
+    --font-default: "Figtree", sans-serif;
 
-  --inset-shadow-l-md: inset 8px 0 12px -4px rgba(0 0 0 / 0.1); 
+    --inset-shadow-l-md: inset 8px 0 12px -4px rgba(0 0 0 / 0.1); 
 
-  --inset-shadow-b-md: inset 0 -8px 12px -4px rgba(0 0 0 / 0.1); 
-  --inset-shadow-b-none: inset 0 0 0 0 rgba(0 0 0 / 0.1); 
+    --inset-shadow-b-md: inset 0 -8px 12px -4px rgba(0 0 0 / 0.1); 
+    --inset-shadow-b-none: inset 0 0 0 0 rgba(0 0 0 / 0.1); 
+}
+
+@utility pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+@utility pt-safe {
+    padding-top: calc(env(safe-area-inset-top));
+}
+
+/* Custom classes used to measure height of titlebar and the necessary padding to account for height*/
+@utility h-titlebar {
+    height: --spacing(7);
+}
+
+@utility pt-titlebar {
+    padding-top: calc((--spacing(7)) + (--spacing(1.5)));
 }
 
 .firebase-emulator-warning {

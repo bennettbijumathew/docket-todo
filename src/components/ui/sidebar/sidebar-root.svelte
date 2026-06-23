@@ -1,5 +1,6 @@
 <script lang="ts">
     import { routes } from '@/components/util/routes';
+    import { getPlatform } from '@/lib/shared/platform';
     import { searchParams } from 'sv-router';
     import { type Snippet } from 'svelte';
     import { fade, fly } from 'svelte/transition';
@@ -28,14 +29,14 @@
 <section 
     transition:fly={{ duration: 300 }}
     class="
+        {sidebarOpen ? 'w-75 sm:w-94' : 'w-0'} {getPlatform() == "windows" ? "pt-titlebar" : "pt-4"}
         box-border bg-background flex flex-col justify-between h-full overflow-hidden transition-[width] duration-200
         absolute left-0 z-10
         lg:relative lg:flex-none
-        {sidebarOpen ? 'w-75 sm:w-94' : 'w-0'}
     "
 >
     <!-- Application title -->
-    <div class="flex justify-between p-4"> 
+    <div class="flex justify-between px-4"> 
         <a
             aria-label="Link to Docket's Homepage"
             href={routes.get("Home")?.link}

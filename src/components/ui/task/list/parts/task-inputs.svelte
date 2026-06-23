@@ -26,60 +26,54 @@
 
 <!-- This is a form that on submit adds a new task -->
 <form
-    class="
-        block sticky bottom-8 shadow-lg/20 text-content-900 rounded-lg bg-background-50
-        sm:flex sm:bottom-0
-    "
+    class="flex shrink-0 border-t border-background-300 p-4 gap-x-2"
     onsubmit={(e) => { 
         e.preventDefault(); 
-        addNewTask() 
+        addNewTask();
     }}
 >
-    <div class="
-        flex-1 flex flex-row-reverse sm:flex-row items-center basis-full 
-        p-1.5 pb-0
-        sm:p-2"
-    >
-        <button 
-            class="
-                p-3 bg-background-100 hover:bg-background-200 rounded-lg cursor-pointer
-                sm:p-1.5
-            "
-            aria-label="Add New Task" 
-            type="submit"
-        >
-            <Plus class="size-4"/>
-        </button>
 
+    <div class="
+        flex flex-row flex-1 bg-background-100 p-1 rounded-lg gap-2
+        flex-wrap
+        lg:flex-nowrap
+    ">
         <input 
-            type="text" 
-            class="outline-none flex-1 pl-1.5 py-1.5 sm:py-0.5"
+            type="text"
+            class="
+                min-h-8 flex-auto px-2 hover:bg-background-200 rounded-lg grow
+            "
             placeholder="Enter a new task.."
             bind:value={newTask.name}
             aria-required="true"
             required
-        >
+        />
+        
+        <div class="flex-1 flex gap-2 justify-between overflow-x-visible">
+            <DatePicker 
+                bind:value={newTask.dueDate}
+                buttonStyle="min-h-8 flex-1 px-2 hover:bg-background-200"
+                pickerStyle="bg-background shadow-md"
+            />
+
+            <PlannerPicker 
+                bind:value={newTask.planners}
+                buttonStyle="min-h-8 flex-1 px-2 flex-1 hover:bg-background-200"
+                pickerStyle="bg-background shadow-md"
+            />
+        </div>
     </div>
 
-    <div class="flex overflow-x-scroll sm:overflow-x-visible p-1.5 gap-1.5">
-        <DatePicker 
-            bind:value={newTask.dueDate}
-            buttonStyle="
-                bg-background-100 hover:bg-background-200 justify-between h-full
-                min-w-60 py-1 px-2  
-                sm:min-w-54 sm:px-2 sm:py-0
-            "
-            pickerStyle="bg-background shadow-md"
-        />
-
-        <PlannerPicker 
-            bind:value={newTask.planners}
-            buttonStyle="
-                bg-background-100 hover:bg-background-200 h-full min-w-60
-                py-1 px-2
-                sm:px-2 sm:py-0
-            "
-            pickerStyle="bg-background shadow-md"
-        />
-    </div>
+    <button 
+        class="
+            flex items-center justify-center bg-background-100 hover:bg-background-200 rounded-lg 
+            w-14
+            sm:w-12
+            lg:w-10
+        "
+        aria-label="Add New Task" 
+        type="submit"
+    >
+        <Plus class="size-4"/>
+    </button>
 </form>
