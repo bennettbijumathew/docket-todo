@@ -1,15 +1,28 @@
 import { CalendarDateTime, DateFormatter, getLocalTimeZone } from "@internationalized/date";
 import { Timestamp } from "firebase/firestore";
 
-export const dateFormatter = new DateFormatter("en-US", {
-    dateStyle: "full",
-    timeStyle: "short",
-})
+/** This function takes a 'CalendarDateTime' object and formats it into a format like 'Saturday, November 6, 2026 at 7:00 PM'*/
+export function formatLongDate(date: CalendarDateTime): string {
+    const formatter = new DateFormatter("en-US", {
+        dateStyle: "full",
+        timeStyle: "short",
+    })
 
-export function formatLongDate(date: CalendarDateTime) {
-    return dateFormatter.format(date.toDate(getLocalTimeZone()))
+    return formatter.format(date.toDate(getLocalTimeZone()))
 }
 
+/** This function takes a 'CalendarDateTime' object and formats it into a format like 'November 6, 2026'*/
+export function formatDay(date: CalendarDateTime): string {
+    const formatter = new DateFormatter("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+    })
+
+    return formatter.format(date.toDate(getLocalTimeZone()))
+}
+
+/** This transform Firestore 'Timestamp' object into a 'CalendarDateTime' object */
 export function timestampToDate(timestamp: Timestamp): CalendarDateTime {
     const date = timestamp.toDate();
     
@@ -23,6 +36,7 @@ export function timestampToDate(timestamp: Timestamp): CalendarDateTime {
     );
 }
 
+/** This transform the 'CalendarDateTime' object into the Firestore 'Timestamp' object */
 export function dateToTimestamp(date: CalendarDateTime): Timestamp {
     const newDate = new Date(
         date.year,

@@ -2,8 +2,9 @@
     import { type TaskSort, type Task } from "@/lib/task/type";
     import { Accordion } from "bits-ui";
     import TaskItem from "./list/parts/task-item.svelte";
-    import AccordionItem from "../layout/containers/accordion-item.svelte";
+    import AccordionItem from "@/components/ui/layout/containers/accordion-item.svelte";
     import { tasks } from "@/lib/task/store.svelte";
+    import { formatDay } from "@/lib/shared/date";
 
     interface TaskListProps {
         list: Task[], 
@@ -41,11 +42,11 @@
             ]);
         }
         else if (sortBy == "due-date-asc") {
-            const groupedByDesc = Map.groupBy(list, ({ dueDate }) => dueDate.toString());
+            const groupedByDesc = Map.groupBy(list, ({ dueDate }) => formatDay(dueDate));
             return new Map([...groupedByDesc.entries()].reverse());
         }
         else if (sortBy == "due-date-desc") {
-            return Map.groupBy(list, ({ dueDate }) => dueDate.toString());
+            return Map.groupBy(list, ({ dueDate }) => formatDay(dueDate));
         }
         else {
             return new Map([

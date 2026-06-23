@@ -35,17 +35,18 @@
     <PlannerToggleList/>
 </SidebarRoot>
 
-<!-- This is main part of the application where the task list resides -->
+<!-- This is main part of the application where the task list resides. -->
 <section class="
     flex flex-1 flex-col min-h-0 mt-safe
     lg:flex-3 pt-safe
 ">
-    <!-- The header that holds the title and the button to toggle the sidebar -->
+    <!-- The header that holds the title and buttons for toggling the sidebar, searching and filtering tasks.  -->
     <header class="
         flex justify-between border-b border-background-300 p-4 shrink-0
         flex-col gap-2
         lg:flex-row sm:gap-2
     ">
+        <!-- The title and sidebar toggle -->
         <div class="flex items-center gap-x-2">
             <button 
                 onclick={() => sidebar.toggle()}
@@ -58,7 +59,7 @@
             <h1 class="font-title font-semibold text-lg"> Task List </h1>
         </div>
 
-
+        <!-- The search and sort toggle button. -->
         <div class="flex items-center gap-x-2">
             <div class="relative flex-1">
                 <SearchIcon
@@ -115,6 +116,7 @@
         rootClasses="flex-1 min-h-0 h-full"
         viewportClasses="h-full p-4"
     >
+        <!-- The task list shows a list of headers based on sort type and shows a list based on the sorted grouping -->
         <TaskList 
             list={searchedTasks} 
             sortBy={tasks.sortType}
@@ -122,7 +124,7 @@
         />
     </ScrollSection>
 
-    <!-- This is the form to submit new tasks -->
+    <!-- This is the form to submit new tasks. -->
     <form
         class="flex flex-col border-t border-background-300 shrink-0 pb-safe p-4"
         onsubmit={(e) => { 
