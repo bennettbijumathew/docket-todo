@@ -26,10 +26,8 @@
 
     <ScrollArea.Scrollbar
         orientation="vertical"
-        class="w-2 border-l"
+        class="w-2"
     >
-        <ScrollArea.Thumb
-            class="bg-black flex-1 h-80"
-        />
+        <ScrollArea.Thumb class="bg-background-300 flex-1 h-80"/>
     </ScrollArea.Scrollbar>
 </ScrollArea.Root>

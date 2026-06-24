@@ -5,7 +5,6 @@
     import { tasks } from "@/lib/task/store.svelte";
     import { formatDay } from "@/lib/shared/date";
     import { Accordion } from "bits-ui";
-    import { ArrowDown } from "@lucide/svelte";
 
     interface TaskListProps {
         list: Task[], 

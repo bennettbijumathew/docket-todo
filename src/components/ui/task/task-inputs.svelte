@@ -19,7 +19,6 @@
         createTask(newTask);
         
         newTask.name = ""; 
-        newTask.planners.clear(); 
         newTask.dueDate = toCalendarDateTime(today(getLocalTimeZone()), new Time(0, 0))
     }
 </script>
@@ -52,7 +51,10 @@
         <div class="flex-1 flex gap-2 justify-between overflow-x-visible">
             <DatePicker 
                 bind:value={newTask.dueDate}
-                buttonStyle="min-h-8 flex-1 px-2 hover:bg-background-200"
+                buttonStyle="
+                    min-h-8 flex-1 px-2 hover:bg-background-200 
+                    sm:min-w-52
+                "
                 pickerStyle="bg-background shadow-md"
             />
 

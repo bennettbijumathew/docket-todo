@@ -71,7 +71,7 @@
 
                 {#if taskPlanner != undefined}
                     <div class="
-                        flex items-center truncate bg-{colors[taskPlanner.color]} rounded-md
+                        flex justify-center items-center truncate bg-{colors[taskPlanner.color]} rounded-md
                         text-xs w-20 h-5 px-0.5
                         sm:text-sm sm:w-22 sm:h-7 sm:px-1
                     ">

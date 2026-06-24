@@ -72,9 +72,9 @@
             
             <button 
                 onclick={getCurrentWindow().close}
-                class="cursor-pointer hover:bg-red-500 px-2 h-6"
+                class="cursor-pointer  px-2 h-6"
             > 
-                <X class="size-4 text-content-900"/>    
+                <X class="size-4 text-content-900 hover:text-red-500"/>    
             </button>
         </div>
     </header>

@@ -36,11 +36,11 @@
 
 /* Custom classes used to measure height of titlebar and the necessary padding to account for height*/
 @utility h-titlebar {
-    height: --spacing(7);
+    height: --spacing(8);
 }
 
 @utility pt-titlebar {
-    padding-top: calc((--spacing(7)) + (--spacing(1.5)));
+    padding-top: calc((--spacing(8)) + (--spacing(1.5)));
 }
 
 .firebase-emulator-warning {
