@@ -7,13 +7,12 @@
     import SidebarRoutes from "@/components/ui/sidebar/sidebar-routes.svelte";
     import TaskEditor from "@/components/ui/editor/task/task-editor.svelte";
     import SidebarRoot from "@/components/ui/sidebar/sidebar-root.svelte";
+    import { sidebar } from "@/components/ui/sidebar/util.svelte";
     import TaskList from "@/components/ui/task/task-list.svelte";
     import { getPlatform } from "@/lib/shared/platform";
     import { tasks } from "@/lib/task/store.svelte";
 
-    /** These are references to components used in the page.
-    It is used to call functions within each function such as toggle sidebar etc. */
-    let sidebar: ReturnType<typeof SidebarRoot>;
+    /** References to task list, this enables functions from the components to be used */
     let list: ReturnType<typeof TaskList>;
 
     /** This is the variable that tracks the search input and searched tasks. */
@@ -32,7 +31,7 @@
 </script>
 
 <!-- This is the sidebar of the application, includes routes and planner toggle list. -->
-<SidebarRoot bind:this={sidebar}>
+<SidebarRoot>
     <SidebarRoutes/>
 
     <PlannerToggleList/>
