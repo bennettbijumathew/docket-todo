@@ -1,6 +1,6 @@
 <script lang="ts">
     import { type RouteDetails, type RouteNames, routes } from "@/components/util/routes";
-    import { sidebar } from '@/components/ui/sidebar/util.svelte.ts';
+    import { sidebar } from '@/components/ui/layout/sidebar/util.svelte';
     import { getPlatform } from '@/lib/shared/platform';
     import { isActive } from "sv-router/generated";
     import { fade, fly } from 'svelte/transition';

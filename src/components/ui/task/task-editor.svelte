@@ -7,8 +7,8 @@
     import { addPlannerToTask, removePlannerFromTask, removeTask, updateTaskDate, updateTaskName } from "@/lib/task/service";
     import { tasks } from "@/lib/task/store.svelte";
     import { fade } from "svelte/transition";
-    import EditorRoot from "@/components/ui/editor/root.svelte";
-    import { editor } from "@/components/ui/editor/util.svelte";
+    import EditorRoot from "@/components/ui/layout/editor/root.svelte";
+    import { editor } from "@/components/ui/layout/editor/util.svelte";
 
     /** A local reference for the current task id */
     let activeId = $state<string | null>(null);

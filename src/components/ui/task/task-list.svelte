@@ -1,7 +1,7 @@
 <script lang="ts">
     import AccordionItem from "@/components/ui/layout/containers/accordion-item.svelte";
+    import { editor } from "@/components/ui/layout/editor/util.svelte";
     import TaskItem from "@/components/ui/task/task-item.svelte";
-    import { editor } from "@/components/ui/editor/util.svelte";
     import { type TaskSort, type Task } from "@/lib/task/type";
     import { tasks } from "@/lib/task/store.svelte";
     import { formatDay } from "@/lib/shared/date";
@@ -53,7 +53,7 @@
             ])
         }
     })
-
+    
     let selectedTasks: SvelteSet<Task> = new SvelteSet()
         
     function taskSelect(eventType: MouseEvent, task: Task) {

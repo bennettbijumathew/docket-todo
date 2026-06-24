@@ -1,8 +1,8 @@
 <script lang="ts">
+    import { editor } from '@/components/ui/layout/editor/util.svelte';
     import { getPlatform } from '@/lib/shared/platform';
-    import { type Snippet } from 'svelte';
     import { fade, fly } from 'svelte/transition';
-    import { editor } from '@/components/ui/editor/util.svelte';
+    import { type Snippet } from 'svelte';
 
     type RootProps = { 
         children?: Snippet 
