@@ -1,13 +1,15 @@
 <script lang="ts">
     import AccordionItem from "@/components/ui/layout/containers/accordion-item.svelte";
+    import MenuTrigger from "@/components/ui/layout/menu/trigger.svelte";
     import { editor } from "@/components/ui/layout/editor/util.svelte";
     import TaskItem from "@/components/ui/task/task-item.svelte";
     import { type TaskSort, type Task } from "@/lib/task/type";
+    import MenuRoot from "../layout/menu/root.svelte";
     import { tasks } from "@/lib/task/store.svelte";
+    import { taskMenu } from "./task-menu.svelte";
     import { formatDay } from "@/lib/shared/date";
-    import { SvelteSet } from "svelte/reactivity";
     import { Accordion } from "bits-ui";
-    
+
     interface TaskListProps {
         list: Task[], 
         sortBy: TaskSort
@@ -53,22 +55,6 @@
             ])
         }
     })
-    
-    let selectedTasks: SvelteSet<Task> = new SvelteSet()
-        
-    function taskSelect(eventType: MouseEvent, task: Task) {
-        if (eventType.ctrlKey) {
-            if (selectedTasks.has(task)) {
-                selectedTasks.delete(task)
-            }
-            else {
-                selectedTasks.add(task)
-            }
-        }
-        else {
-            editor.value == task.id ? editor.close() : editor.open(task.id)
-        }
-    }
 </script>
 
 <!-- This is a list of headers that when opened show a list of tasks -->
@@ -88,21 +74,35 @@
                 flex flex-col gap-4 mb-4
             "
         >   
+            <!-- In each task item, context menus are provided to edit the tasks -->
+            <!-- On pressing ctrl+left click, you can select a list of tasks for the menu -->
+            <!-- On pressing left click, you can open the editor -->
             {#each groupList as task (task.id)}
-                <button 
-                    onclick={(e) => taskSelect(e, task)}
-                    class="
-                        {selectedTasks.has(task) ? 'border-2' : 'border'}
-                        flex items-center shrink-0 py-0.5 
-                        min-h-24 px-2 gap-2
-                        sm:min-h-22 sm:px-3 sm:gap-3
-                        lg:min-h-16
-                    "
-                >
-                    <TaskItem
-                        task={task}
-                    />
-                </button>
+                <MenuRoot items={taskMenu.items}>
+                    <MenuTrigger 
+                        onLeftClick={(e) => {
+                            if (e.ctrlKey) {
+                                taskMenu.select(task)
+                            }
+                            else {
+                                editor.value == task.id ? editor.close() : editor.open(task.id)
+                            }
+                        }}
+                        onRightClick={() => taskMenu.open(task)}
+                        ariaLabel="Button to view details about '{task.name}'"
+                        triggerClasses="
+                            {taskMenu.selectedTasks.has(task) ? 'border-2' : 'border'}
+                            flex items-center shrink-0 py-0.5 
+                            min-h-24 px-2 gap-2
+                            sm:min-h-22 sm:px-3 sm:gap-3
+                            lg:min-h-16
+                        "
+                    >
+                        <TaskItem
+                            task={task}
+                        />
+                    </MenuTrigger>
+                </MenuRoot>
             {/each}
         </AccordionItem>
     {/each}
