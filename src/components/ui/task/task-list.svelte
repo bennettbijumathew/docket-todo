@@ -1,20 +1,19 @@
 <script lang="ts">
-    import { type TaskSort, type Task } from "@/lib/task/type";
-    import { Accordion } from "bits-ui";
-    import TaskItem from "./list/parts/task-item.svelte";
     import AccordionItem from "@/components/ui/layout/containers/accordion-item.svelte";
+    import TaskItem from "@/components/ui/task/task-item.svelte";
+    import { editor } from "@/components/ui/editor/util.svelte";
+    import { type TaskSort, type Task } from "@/lib/task/type";
     import { tasks } from "@/lib/task/store.svelte";
     import { formatDay } from "@/lib/shared/date";
-
+    import { SvelteSet } from "svelte/reactivity";
+    import { Accordion } from "bits-ui";
+    
     interface TaskListProps {
         list: Task[], 
         sortBy: TaskSort
     }
 
-    let { 
-        list, 
-        sortBy 
-    }: TaskListProps = $props() 
+    let { list, sortBy }: TaskListProps = $props() 
 
     /** This function is called when user wants to toggle the task view */
     export function toggleSort() {
@@ -54,6 +53,22 @@
             ])
         }
     })
+
+    let selectedTasks: SvelteSet<Task> = new SvelteSet()
+        
+    function taskSelect(eventType: MouseEvent, task: Task) {
+        if (eventType.ctrlKey) {
+            if (selectedTasks.has(task)) {
+                selectedTasks.delete(task)
+            }
+            else {
+                selectedTasks.add(task)
+            }
+        }
+        else {
+            editor.value == task.id ? editor.close() : editor.open(task.id)
+        }
+    }
 </script>
 
 <!-- This is a list of headers that when opened show a list of tasks -->
@@ -65,18 +80,29 @@
         <AccordionItem 
             title={group}
             triggerClasses="
-                bg-background-200 hover:bg-background-300 cursor-pointer mb-2 rounded-lg 
+                bg-background-100 hover:bg-background-200 cursor-pointer mb-2 rounded-lg 
                 w-full px-1 py-2
                 lg:w-auto lg:px-2 lg:py-0
             "
             contentClasses="
                 flex flex-col gap-4 mb-4
             "
-        >
+        >   
             {#each groupList as task (task.id)}
-                <TaskItem
-                    task={task}
-                />
+                <button 
+                    onclick={(e) => taskSelect(e, task)}
+                    class="
+                        {selectedTasks.has(task) ? 'border-2' : 'border'}
+                        flex items-center shrink-0 py-0.5 
+                        min-h-24 px-2 gap-2
+                        sm:min-h-22 sm:px-3 sm:gap-3
+                        lg:min-h-16
+                    "
+                >
+                    <TaskItem
+                        task={task}
+                    />
+                </button>
             {/each}
         </AccordionItem>
     {/each}

@@ -1,14 +1,15 @@
 <!-- CODE -->
 <script lang="ts">
-    import ScrollSection from "@/components/ui/layout/containers/scroll-section.svelte";
-    import SidebarRoot from "@/components/ui/sidebar/sidebar-root.svelte";
-    import SidebarRoutes from "@/components/ui/sidebar/sidebar-routes.svelte";
     import PlannerToggleList from "@/components/ui/sidebar/task/planner-toggle-list.svelte";
+    import { ArrowDown, ArrowUp, FunnelIcon, PanelLeft, SearchIcon } from "@lucide/svelte";
+    import ScrollSection from "@/components/ui/layout/containers/scroll-section.svelte";
     import TaskInputs from "@/components/ui/task/list/parts/task-inputs.svelte";
+    import SidebarRoutes from "@/components/ui/sidebar/sidebar-routes.svelte";
+    import TaskEditor from "@/components/ui/editor/task/task-editor.svelte";
+    import SidebarRoot from "@/components/ui/sidebar/sidebar-root.svelte";
     import TaskList from "@/components/ui/task/task-list.svelte";
     import { getPlatform } from "@/lib/shared/platform";
     import { tasks } from "@/lib/task/store.svelte";
-    import { ArrowDown, ArrowUp, FunnelIcon, PanelLeft, SearchIcon } from "@lucide/svelte";
 
     /** These are references to components used in the page.
     It is used to call functions within each function such as toggle sidebar etc. */
@@ -123,12 +124,14 @@
     >
         <!-- The task list shows a list of headers based on sort type and shows a list based on the sorted grouping -->
         <TaskList 
+            bind:this={list}
             list={searchedTasks} 
             sortBy={tasks.sortType}
-            bind:this={list}
         />
     </ScrollSection>
 
     <!-- This is the form to submit new tasks. -->
     <TaskInputs/>
 </section>
+
+<TaskEditor/>

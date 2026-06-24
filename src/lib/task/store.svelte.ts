@@ -11,6 +11,11 @@ export class TaskStore {
     get all() {
         return this.#list
     }
+
+    get({id}: {id: string}): Task | null {
+        return this.#list.find((task: Task) => task.id === id) ?? null
+    }
+
     set sortType (type: TaskSort) {
         this.#sort = type; 
     }
