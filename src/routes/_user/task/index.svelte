@@ -3,10 +3,9 @@
     import PlannerToggleList from "@/components/ui/sidebar/task/planner-toggle-list.svelte";
     import { ArrowDown, ArrowUp, FunnelIcon, PanelLeft, SearchIcon } from "@lucide/svelte";
     import ScrollSection from "@/components/ui/layout/containers/scroll-section.svelte";
-    import TaskInputs from "@/components/ui/task/list/parts/task-inputs.svelte";
-    import SidebarRoutes from "@/components/ui/sidebar/sidebar-routes.svelte";
     import TaskEditor from "@/components/ui/editor/task/task-editor.svelte";
     import SidebarRoot from "@/components/ui/sidebar/sidebar-root.svelte";
+    import TaskInputs from "@/components/ui/task/task-inputs.svelte";
     import { sidebar } from "@/components/ui/sidebar/util.svelte";
     import TaskList from "@/components/ui/task/task-list.svelte";
     import { getPlatform } from "@/lib/shared/platform";
@@ -32,8 +31,6 @@
 
 <!-- This is the sidebar of the application, includes routes and planner toggle list. -->
 <SidebarRoot>
-    <SidebarRoutes/>
-
     <PlannerToggleList/>
 </SidebarRoot>
 

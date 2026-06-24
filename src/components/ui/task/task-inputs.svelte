@@ -1,11 +1,11 @@
 <script lang="ts">
-    import { type NewTaskData } from "@/lib/task/type";
-    import { Plus } from "@lucide/svelte";
-    import DatePicker from "@/components/ui/inputs/date-picker.svelte";
     import { getLocalTimeZone, Time, toCalendarDateTime, today } from "@internationalized/date";
     import PlannerPicker from "@/components/ui/inputs/planner-picker.svelte";
+    import DatePicker from "@/components/ui/inputs/date-picker.svelte";
+    import { type NewTaskData } from "@/lib/task/type";
     import { createTask } from "@/lib/task/service";
     import { SvelteSet } from "svelte/reactivity";
+    import { Plus } from "@lucide/svelte";
 
     // This variable is used to handle new tasks that come in from the inputs
     let newTask: NewTaskData = $state({

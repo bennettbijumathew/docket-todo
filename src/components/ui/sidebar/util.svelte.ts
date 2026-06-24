@@ -28,7 +28,7 @@ export const sidebar = {
 
     /** This function toggles the sidebar to be open / closed */
     toggle(): void { 
-        if (sidebar.isOpen) {
+        if (sidebar.isOpen == false) {
             sidebar.open();
         }
         else {
