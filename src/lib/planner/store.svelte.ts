@@ -27,6 +27,10 @@ class PlannerStore {
         return this.#onlyIdPlanners; 
     }
 
+    get({id}: {id: string}): Planner | null {
+        return this.#list.find((planner: Planner) => planner.id === id) ?? null
+    }
+
     getItemsById({idList, includeHidden}: {idList: SvelteSet<string>, includeHidden: boolean}) {
         // Returns all planners that are a part of the id list. 
         if (includeHidden == true) {            

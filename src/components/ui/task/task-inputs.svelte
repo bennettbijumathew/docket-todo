@@ -60,8 +60,6 @@
 
             <PlannerPicker 
                 bind:value={newTask.planners}
-                buttonStyle="min-h-8 flex-1 px-2 flex-1 hover:bg-background-200"
-                pickerStyle="bg-background shadow-md"
             />
         </div>
     </div>
