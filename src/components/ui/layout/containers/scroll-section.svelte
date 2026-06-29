@@ -1,24 +1,23 @@
 <script lang="ts">
-    import { ScrollArea } from "bits-ui";
-    import { type Snippet } from "svelte";
+    import { ScrollArea, type WithoutChild } from "bits-ui";
 
-    interface ScrollProps {
-        children?: Snippet,
-        rootClasses: string, 
-        viewportClasses: string,    
-    }
+    type ScrollProps = WithoutChild<ScrollArea.RootProps> & {
+        viewportClasses?: string;
+    };
     
     let { 
+        ref = $bindable(null),
         children,
-        rootClasses,
-        viewportClasses
+        viewportClasses,
+        ...restProps
     }: ScrollProps = $props()
 </script>
 
 <!-- This creates a scroll area that on hover shows a custom scrollbar -->
 <ScrollArea.Root 
+    bind:ref 
     type="hover" 
-    class={rootClasses}
+    {...restProps}
 >
     <ScrollArea.Viewport class={viewportClasses}>
         {@render children?.()}

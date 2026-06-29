@@ -13,7 +13,7 @@
         unCheckedStyle?: string
         disabled?: boolean
         stopPropagation?: boolean, 
-        ariaLabel: string
+        ariaLabel?: string
     }
 
     let { 

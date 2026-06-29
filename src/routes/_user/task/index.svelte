@@ -112,7 +112,7 @@
 
     <!-- The area that holds the task list. -->
     <ScrollSection
-        rootClasses="flex-1 min-h-0 h-full"
+        class="flex-1 min-h-0 h-full"
         viewportClasses="h-full p-4"
     >
         <!-- The task list shows a list of headers based on sort type and shows a list based on the sorted grouping -->

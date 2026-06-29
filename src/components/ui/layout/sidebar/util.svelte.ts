@@ -13,7 +13,7 @@ export const sidebar = {
 
     /** This function gets the sidebar's open state */
     get isOpen(): boolean {
-        return searchParams.has(KEY);
+        return searchParams.has(KEY) && searchParams.get(KEY) == true;
     },
 
     /** This function opens the sidebar through setting a search parameter */
