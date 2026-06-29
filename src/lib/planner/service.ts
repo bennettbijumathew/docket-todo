@@ -7,6 +7,7 @@ import { deletePlanner, updatePlannerColor, updatePlannerName, updatePlannerVisi
 import { toast } from "svelte-sonner";
 import { authentication } from "@/lib/auth/store.svelte";
 import { NewPlannerData } from "@/lib/planner/type";
+import { planners } from "./store.svelte";
 
 // This function deletes the planner by using the repository.
 export function createPlanner(newPlanner: NewPlannerData): void {
@@ -29,6 +30,11 @@ type deleteArgs = {
 }
 
 export function removePlanner({id}: deleteArgs): void {
+    if (planners.all.length - 1 <= 0) {
+        toast.error("Could not delete the planner as there is not enough planners");
+        return;
+    }
+
     if (id.trim() === "") {
         toast.error("Could not delete the planner");
         return;
