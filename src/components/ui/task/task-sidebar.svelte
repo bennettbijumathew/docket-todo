@@ -5,6 +5,8 @@
     import { colors } from '@/components/util/color';
     import { planners } from '@/lib/planner/store.svelte';
     import { editPlannerVisibility } from '@/lib/planner/service';
+    import SidebarRoot from '@/components/ui/layout/sidebar/root.svelte';
+    import ScrollSection from '@/components/ui/layout/containers/scroll-section.svelte';
 </script>
 
 <!-- COMPONENT: This is planner tile snippet that is used to show a single task in a list -->
@@ -35,14 +37,17 @@
     </button>
 {/snippet}
 
-<!-- VIEW: The sidebar structure has the website's logo and navigation links -->
-<h2 class="font-title font-semibold text-lg"> Planners </h2>
+<SidebarRoot>
+    <h2 class="font-title font-semibold text-lg"> Planners </h2>
 
-<div class="
-    flex flex-col flex-1 overflow-y-auto gap-y-1 h-fit 
-    scrollbar-thin scrollbar-track-background
-">
-    {#each planners.all as planner, index (index)}
-        {@render plannerTile(planner)}
-    {/each}
-</div>
+    <ScrollSection  
+        class="flex-1 min-h-0 h-full"
+        viewportClasses="h-full mb-4"
+    >  
+        <div class="flex flex-col">
+            {#each planners.all as planner, index (index)}
+                {@render plannerTile(planner)}
+            {/each}
+        </div>
+    </ScrollSection>
+</SidebarRoot>

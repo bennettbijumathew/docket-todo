@@ -1,5 +1,38 @@
 # docket-todo
 
+## 2.3.0
+
+### Minor Changes
+
+- Refactored the task page to allow for new features.
+- Migrated task page's scrolling to bits-ui's scroll area component
+  - This allows consistent behavior across the website
+  - Removes buggy behaviour as the tailwind-scrollbar package uses React. This led to dependency issues and missing features.
+- Added a search functionality for the /task page
+  - On reaching the page, a user can search for specific tasks that are visible.
+- Added a grouping functionality for the /task page
+  - The user can now group tasks into categories such as: 
+    - All
+    - Completed
+    - Due Date
+  - Through the different groups, all tasks are placed under different headers.
+
+## 2.2.0
+
+### Minor Changes
+
+- Redesigned the task item within the task list
+  - Changed the task planner list to show 5 planner names with extra being shown on hover.
+    - This allows planners to be more distinctive.
+    - Able to distinguish planners that are concealed / displayed.
+
+  - Added mass actions for the task list
+    - A Context Menu is added so that user can do these actions:
+      - Complete
+      - Incomplete
+      - Delete
+    - On clicking `CTRL + 'CLICK`, a user can select multiple tasks and run actions for the selected tasks.
+
 ## 2.1.2
 
 ### Patch Changes

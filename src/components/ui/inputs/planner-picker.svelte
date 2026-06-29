@@ -1,158 +1,111 @@
 <script lang="ts">
     import { colors } from "@/components/util/color";
     import { planners } from "@/lib/planner/store.svelte";
-    import { type Planner } from "@/lib/planner/type";
     import { ArrowDown, ArrowUp, Notebook } from "@lucide/svelte";
-    import { Combobox } from "bits-ui";
+    import { Select } from "bits-ui";
     import Checkbox from "./checkbox.svelte";
-    import { MAX_PLANNERS } from "@/lib/task/repository";
     import { SvelteSet } from "svelte/reactivity";
-    import { toast } from "svelte-sonner";
-  
-    // This receives an array of planners id as a prop, updates from the component update the caller's array.
-    interface PickerProps {
-        value: SvelteSet<string>,
-        buttonStyle: string,
-        pickerStyle: string
-    }
-
-    let { 
-        value = $bindable(), 
-        buttonStyle = "bg-background hover:bg-background-100 px-2",
-        pickerStyle = "bg-background",
-    }: PickerProps = $props()
-
+    import { MAX_PLANNERS } from "@/lib/task/repository";
     
-    // Gets a list of planners selected by the user. It shows hidden and visible planners. 
-    const selectedPlanners: Planner[] = $derived(
-        planners.getItemsById({
-            idList: value,
-            includeHidden: true
-        })
-    )
-
-    // Using the search input, the list of planners are filtered. 
-    let searchInput: string = $state("");
-
-    const searchedPlanners: Planner[] = $derived(
-        planners.all.filter((item) => item.name.toLowerCase().includes(searchInput.toLowerCase()))
-    );
-
-
-    // Utility variables / function that is used for validation of code and user interface.
-    const isSelectedPlannersOverMax = $derived(selectedPlanners.length >= MAX_PLANNERS);
-    const isPlannerSelected = (plannerId: string) => value.has(plannerId);
-    const isPlannerDisabled = (plannerId: string) => isSelectedPlannersOverMax == true && isPlannerSelected(plannerId) == false;
-
-
-    // Submit function to handle changes to the list of selected planners. 
-    function handleSubmit(plannerId: string): void {
-        if (isPlannerSelected(plannerId) == true) {
-            value.delete(plannerId)
-        } 
-        else {
-            if (!isSelectedPlannersOverMax == true) {
-                value.add(plannerId)
-            } 
-            else {
-                toast.error(`A task is only allowed to hold ${MAX_PLANNERS} planners.`)
-            }
-        }
+    type PlannerPickerProps = { 
+        value: SvelteSet<string> 
     }
+
+    let { value = $bindable() }: PlannerPickerProps = $props()
+
+    /** A derived list of item */
+    const items = $derived(planners.all.map((item) => {
+        return {
+            value: item.id, 
+            label: item.name 
+        }
+    }))
 </script>
-
-{#snippet colorGrid()}
-    <!-- The minimum number of slots shown on the row of the task's planner grid. -->
-    {@const colsInPlannerRow = MAX_PLANNERS / 2}
-
-    <div class="
-        grid grid-cols-5 grid-rows-1 *:rounded-xs *:size-2 select-none
-        gap-2
-        sm:gap-0.5
-    ">
-        {#each {length: MAX_PLANNERS - selectedPlanners.length}, slotNum}
-            <!-- This logic ensures that multiple rows aren't shown beyond the amount that is required -->
-            <!-- The styling hides slots based on the user using medias such as phones or tablets -->
-            {#if slotNum < colsInPlannerRow && selectedPlanners.length <= colsInPlannerRow}
-                <div class="hidden"> </div>
-            {:else}
-                <div class="border border-background-300"> </div>
-            {/if}
-        {/each}
-
-        {#each selectedPlanners as planner}    
-            <div class="flex items-center justify-center bg-{colors[planner.color]}"> </div>
-        {/each}
-    </div>
-{/snippet}
-
-<Combobox.Root
-    type="multiple"
-    inputValue={searchInput}
-    required={true}
-    onOpenChangeComplete={(isOpen) => {
-        if (!isOpen) searchInput = "";
+ 
+<Select.Root 
+    type="multiple" 
+    items={items} 
+    onValueChange={(changedValues) => {
+        value = new SvelteSet([...changedValues])
     }}
+
+    allowDeselect={true}
 >
-    <!-- Input to open the combobox options and triggers the combobox search. -->
-    <Combobox.Trigger class="{buttonStyle} flex items-center justify-between rounded-lg text-center gap-x-2 cursor-pointer">
-        <Notebook class="size-4"/>
-
-        <!-- Search input to filter through the planners.  -->
-        <Combobox.Input
-            onclick={(e) => e.stopPropagation()}
-            oninput={(e) => searchInput = e.currentTarget.value }
-            placeholder="Select a planner..."
-            aria-label="Select a planner..."
-            class="flex-1 w-32 border-background-100 focus:outline-0"
-            autocomplete="off"
-            clearOnDeselect={true}
-            required={value.size <= 0 ? true : false}
-        />
-
-        {@render colorGrid()}
-    </Combobox.Trigger>
-
-    <!-- The content that is shown once the trigger is pressed. -->
-    <Combobox.Content 
-        sideOffset={25} 
-        collisionPadding={25}
-        class="{pickerStyle} rounded-lg w-full max-h-60 overflow-y-auto"
-        side="top"
+    <Select.Trigger
+        class="flex items-center gap-x-4 border border-background-300 hover:border-background-400 rounded-lg cursor-pointer p-1 outline-none"
+        aria-label="Select a list of planners"
     >
-        <!-- Scroll up button for the menu -->    
-        <Combobox.ScrollUpButton class="flex justify-center p-2 pb-0 bg-background rounded-lg">
-            <ArrowUp class="size-6 hover:bg-background-100 p-1 rounded-lg"/>
-        </Combobox.ScrollUpButton>
+        <Notebook class="size-4 mx-1"/>
 
-        <!-- The main content for the menu -->
-        <Combobox.Viewport class="bg-background p-2 w-60 min-w-(--bits-combobox-anchor-width)">
-            {#each searchedPlanners as planner (planner.id)}
-                <!-- If selected planners exceed 10 planners, the option to select is deleted. -->
-                <Combobox.Item
-                    value={planner.id}
-                    label={planner.name}
-                    class="flex justify-between items-center data-highlighted:bg-background-100 p-1 px-2 cursor-pointer rounded-lg gap-x-2 data-disabled:cursor-not-allowed"
-                    disabled={isPlannerDisabled(planner.id)}
-                    onclick={() => handleSubmit(planner.id)}
-                >   
-                    <p class="truncate flex-1"> {planner.name} </p> 
+        <Select.Value
+            placeholder="Select a planner"
+            class="flex items-center justify-between flex-row gap-x-0.5"
+        >
+            {#snippet child({ selection, placeholder })}
+                <div class="
+                    flex flex-row-reverse gap-0.5 
+                    w-29 flex-wrap
+                    sm:w-54 sm:flex-nowrap
+                "> 
+                    {#if selection.type === "multiple" && selection.selected.length > 0}
+                        {#each selection.selected as selectedPlanner (selectedPlanner.value)}
+                            {@const planner = planners.get({id: selectedPlanner.value})}
+                            
+                            {#if planner}
+                                <p class="h-5 w-5 flex items-center justify-center py-1 bg-{colors[planner.color]} shrink-0 text-xs rounded-md">
+                                    {selectedPlanner.label[0]}
+                                </p>
+                            {/if}
+                        {/each}
+                    {:else}
+                        <p class="h-5 flex items-center text-content-600 text-left">
+                            {placeholder}
+                        </p>
+                    {/if}
+                </div>
+            {/snippet}
+        </Select.Value>
+    </Select.Trigger>
 
-                    <Checkbox 
-                        value={value.has(planner.id)}
-                        checkedStyle="size-4 bg-{colors[planner.color]}"
-                        unCheckedStyle="size-4 border-{colors[planner.color]}"
-                        disabled={isPlannerDisabled(planner.id)}
-                    />
-                </Combobox.Item>
-            {:else}
-                <p class="text-content-400 p-1">No planners found.</p>
+    <Select.Content
+        sideOffset={10}
+        class="h-60 bg-background shadow-md rounded-lg p-1"
+    >
+        <Select.ScrollUpButton class="flex items-center justify-center py-1 rounded-lg hover:bg-background-100">
+            <ArrowUp class="size-4" />
+        </Select.ScrollUpButton>
+
+        <Select.Viewport class="w-(--bits-select-anchor-width) ">
+            {#each items as item, i (i + item.value)}
+                {@const isSelectedOverMax = value.size >= MAX_PLANNERS && !value.has(item.value)}
+
+                <Select.Item
+                    class="flex items-center justify-between data-highlighted:bg-background-100 cursor-pointer p-1 px-2 rounded-lg"
+                    value={item.value}
+                    label={item.label}
+                    aria-label="Option to select the '{item.label}' planner"
+                    disabled={isSelectedOverMax}
+                >
+                    {#snippet children({ selected })}
+                        {@const planner = planners.get({id: item.value})}
+
+                        {#if planner}
+                            <p> {planner.name} </p>
+
+                            <Checkbox
+                                value={selected}
+                                checkedStyle="size-5 bg-{colors[planner.color]} border border-{colors[planner.color]}"
+                                unCheckedStyle="size-5 border border-{colors[planner.color]}"
+                                disabled={isSelectedOverMax}
+                            />
+                        {/if}
+                    {/snippet}
+                </Select.Item>
             {/each}
-        </Combobox.Viewport>
+        </Select.Viewport>
 
-        <!-- Scroll down button for the menu -->
-        <Combobox.ScrollDownButton class="flex justify-center p-2 pt-0 bg-background rounded-lg">
-            <ArrowDown class="size-6 hover:bg-background-100 p-1 rounded-lg"/>
-        </Combobox.ScrollDownButton>
-    </Combobox.Content>
-</Combobox.Root>
+        <Select.ScrollDownButton class="flex items-center justify-center py-1 rounded-lg hover:bg-background-100">
+            <ArrowDown class="size-4" />
+        </Select.ScrollDownButton>
+    </Select.Content>
+</Select.Root>

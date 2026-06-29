@@ -1,78 +1,130 @@
 <!-- CODE -->
 <script lang="ts">
-    import { type Task } from "@/lib/task/type";
-    import TaskListByCompleted from "@/components/ui/task/list/task-list-by-completed.svelte";
-    import Main from "@/components/ui/layout/_user/main.svelte";
-    import Sidebar from "@/components/ui/layout/_user/sidebar.svelte";
-    import TaskInputs from "@/components/ui/task/list/parts/task-inputs.svelte";
-    import TaskContainer from "@/components/ui/task/list/parts/task-container.svelte";
-    import PlannerToggleList from "@/components/ui/task/sidebar/planner-toggle-list.svelte";
-    import Editor from "@/components/ui/layout/_user/editor.svelte";
-    import TaskEditor from "@/components/ui/task/editor/task-editor.svelte";
-    import { searchParams } from "sv-router";
-    import { paramKeys, paramValues } from "@/components/util/routes";
+    import TaskSidebar from "@/components/ui/task/task-sidebar.svelte";
+    import { ArrowDown, ArrowUp, FunnelIcon, PanelLeft, SearchIcon } from "@lucide/svelte";
+    import ScrollSection from "@/components/ui/layout/containers/scroll-section.svelte";
+    import TaskEditor from "@/components/ui/task/task-editor.svelte";
+    import TaskInputs from "@/components/ui/task/task-inputs.svelte";
+    import { sidebar } from "@/components/ui/layout/sidebar/util.svelte";
+    import TaskList from "@/components/ui/task/task-list.svelte";
+    import { getPlatform } from "@/lib/shared/platform";
+    import { tasks } from "@/lib/task/store.svelte";
 
-    // These variables represent the current planner that is open on the modal
-    let selectedTask: Task | null = $state(null)
+    /** References to task list, this enables functions from the components to be used */
+    let list: ReturnType<typeof TaskList>;
 
-    // This function opens the task editor. 
-    function openEditor(task: Task | null) {
-        // If the user has clicked on the same task, the editor closes
-        if (selectedTask == task) {
-            closeEditor()
+    /** This is the variable that tracks the search input and searched tasks. */
+    let searchInput: string = $state("")
+
+    /** This is a task list that filters by names that are similar to the search input  */
+    const searchedTasks = $derived.by(() => {
+        const search = searchInput.trim().toLowerCase();
+        if (!search) {
+            return tasks.all;
         }
-        // If a different task is selected, the task is opened
-        else if (task !== null) {
-            selectedTask = task
-            
-            // Replaces the "edit" search parameter with a true value.
-            searchParams.delete(paramKeys["editor"])
-            searchParams.append(paramKeys["editor"], paramValues["editor"].open)
-        }
-    }
-
-    // Closes the editor
-    function closeEditor() {
-        selectedTask = null
-        
-        // Deletes the current "edit" parameter.
-        searchParams.delete(paramKeys["editor"])
-    }   
+        return tasks.all.filter((task) => 
+            task.name.toLowerCase().includes(search)
+        );
+    });
 </script>
 
-<!-- VIEW -->
-<!-- This shows a sidebar with a navigation bar and a planner list that can be toggled. -->
-<Sidebar>
-    <PlannerToggleList/>
-</Sidebar>
+<!-- This is the sidebar of the application, includes routes and planner toggle list. -->
+<TaskSidebar/>
 
-<!-- This shows a header and a list of completed and incomplete tasks -->
-<Main>
-    <h2 class="
-        font-title font-semibold text-lg
-        text-center
-        sm:text-left
-    "> 
-        Task List 
-    </h2>
+<!-- This is main part of the application where the task list resides. -->
+<section class="
+    flex flex-1 flex-col min-h-0 pt-safe pb-safe
+    lg:flex-3
+">
+    <!-- The header that holds the title and buttons for toggling the sidebar, searching and filtering tasks.  -->
+    <header 
+        class="
+            {getPlatform() == "windows" ? "pt-titlebar" : ""}
+            flex justify-between border-b border-background-300 p-4 shrink-0 
+            flex-col gap-2
+            lg:flex-row sm:gap-2
+        "
+    >
+        <!-- The title and sidebar toggle -->
+        <div class="flex items-center gap-x-2">
+            <button 
+                onclick={() => sidebar.toggle()}
+                aria-label="Toggle the sidebar"
+                class="flex items-center justify-center bg-background-100 hover:bg-background-200 rounded-lg cursor-pointer size-8"
+            >      
+                <PanelLeft class="size-4"/>
+            </button>
 
-    <TaskContainer>
-        <!-- On selecting the task, the <Editor> opens -->
-        <TaskListByCompleted 
-            onTaskSelect={openEditor}
+            <h1 class="font-title font-semibold text-lg"> Task List </h1>
+        </div>
+
+        <!-- The search and sort toggle button. -->
+        <div class="flex items-center gap-x-2">
+            <div class="relative flex-1">
+                <SearchIcon
+                    class="absolute left-2 top-1/2 size-4 -translate-y-1/2 pointer-events-none"
+                />
+
+                <input
+                    bind:value={searchInput}
+                    class="
+                        h-8 bg-background-100 hover:bg-background-200 rounded-lg pl-7.5 pr-2 cursor-pointer
+                        w-full
+                        sm:flex-1 
+                        lg:flex-none lg:w-60
+                    "
+                    placeholder="Search for tasks"
+                    aria-placeholder="Search for tasks"
+                />
+            </div>
+            
+            <button 
+                onclick={() => list.toggleSort()}
+                aria-label="Toggle the sorting mode of the task list"
+                class="
+                    h-8 flex items-center justify-between gap-x-1 bg-background-100 hover:bg-background-200 rounded-lg cursor-pointer px-2
+                    w-32
+                    sm:w-34
+                "
+            >
+                <FunnelIcon class="size-4"/>
+
+                <p class="
+                    flex items-center gap-x-1
+                ">
+                    {#if tasks.sortType == "completed"}
+                        Completed
+                    {:else if tasks.sortType == "due-date-asc"}
+                        Due Date
+                        <ArrowUp class="size-3"/>
+                    {:else if tasks.sortType == "due-date-desc"}
+                        Due Date
+                        <ArrowDown class="size-3"/>
+                    {:else if tasks.sortType == "all"}
+                        All
+                        <ArrowDown class="size-3"/>
+                    {/if}
+                </p>
+            </button>
+
+        </div>
+    </header>
+
+    <!-- The area that holds the task list. -->
+    <ScrollSection
+        class="flex-1 min-h-0 h-full"
+        viewportClasses="h-full p-4"
+    >
+        <!-- The task list shows a list of headers based on sort type and shows a list based on the sorted grouping -->
+        <TaskList 
+            bind:this={list}
+            list={searchedTasks} 
+            sortBy={tasks.sortType}
         />
-    </TaskContainer>  
+    </ScrollSection>
 
+    <!-- This is the form to submit new tasks. -->
     <TaskInputs/>
-</Main> 
+</section>
 
-<!-- If the page's "edit" parameter is set to true, the editor is shown. -->
-<Editor         
-    header="Edit Task"
-    onClose={() => closeEditor()}
->
-    <TaskEditor 
-        task={selectedTask}
-        onClose={() => closeEditor()}
-    />
-</Editor>
+<TaskEditor/>
