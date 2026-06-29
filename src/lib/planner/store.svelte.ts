@@ -1,12 +1,13 @@
 import { SvelteSet } from "svelte/reactivity";
-import { Planner } from "./type";
+import { type Planner, type PlannerSort } from "@/lib/planner/type";
 
 class PlannerStore {
     #list: Planner[] = $state([])
     #visiblePlanners: Planner[] = $derived(this.#list.filter((planner) => planner.visible === true))
     #hiddenPlanners: Planner[] = $derived(this.#list.filter((planner) => planner.visible === false))
     #onlyIdPlanners: string[] = $derived(this.#visiblePlanners.map((planner) => planner.id));
-    
+    #sort: PlannerSort = $state("visible")
+
     set all(newList: Planner[]) {
         this.#list = newList;
     }
@@ -41,6 +42,14 @@ class PlannerStore {
             return this.visible.filter((planner) => idList.has(planner.id))
         }
     }   
+
+    set sortType (type: PlannerSort) {
+        this.#sort = type; 
+    }
+
+    get sortType () {
+        return this.#sort; 
+    }
 }
 
 export const planners = new PlannerStore()

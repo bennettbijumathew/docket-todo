@@ -22,7 +22,7 @@
     value={title}
 >
     <Accordion.Header> 
-        <Accordion.Trigger class={triggerClasses}>
+        <Accordion.Trigger class="{triggerClasses} capitalize">
             {title}
         </Accordion.Trigger>
     </Accordion.Header>

@@ -50,3 +50,5 @@ export const createPlannerConverter = (userId?: string) => ({
         return planner;
     }
 });
+
+export type PlannerSort = "visible" | "color" | "all"
