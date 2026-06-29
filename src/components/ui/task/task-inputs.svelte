@@ -39,27 +39,35 @@
     ">
         <input 
             type="text"
-            class="
-                min-h-8 flex-auto px-2 hover:bg-background-200 rounded-lg grow
-            "
+            class="min-h-8 flex-1 px-2 hover:bg-background-200 outline-background-400 rounded-lg"
             placeholder="Enter a new task.."
             bind:value={newTask.name}
             aria-required="true"
             required
         />
         
-        <div class="flex-1 flex gap-2 justify-between overflow-x-visible">
+        <div class="
+            flex gap-2 justify-end overflow-x-visible
+            flex-1
+            lg:flex-none
+        ">
             <DatePicker 
                 bind:value={newTask.dueDate}
                 buttonStyle="
-                    min-h-8 flex-1 px-2 hover:bg-background-200 
-                    sm:min-w-52
+                    border border-background-300 hover:border-background-400 outline-background-400 rounded-lg p-1 text-right
+                    w-full flex-1
+                    lg:w-70 lg:flex-none
                 "
                 pickerStyle="bg-background shadow-md"
             />
 
             <PlannerPicker 
                 bind:value={newTask.planners}
+                triggerClass="                    
+                    border border-background-300 hover:border-background-400 outline-background-400 rounded-lg p-1 
+                    w-full flex-1
+                    lg:w-70 lg:flex-none
+                "
             />
         </div>
     </div>

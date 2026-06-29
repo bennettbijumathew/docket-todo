@@ -1,20 +1,24 @@
 <script lang="ts">
-    import { ArrowDown, ArrowUp, Check, PaintBucket } from "@lucide/svelte";
+    import { ArrowDown, ArrowUp, PaintBucket } from "@lucide/svelte";
     import { Select } from "bits-ui";
     import { type ColorKey, colors } from "@/components/util/color";
+    import Checkbox from "./checkbox.svelte";
 
     interface PageProps {
+        /** The value for the current color that is chosen by the user. */
         value: ColorKey, 
+
+        /** Function that is called on change of the user's selected color */
         onChangeFn: (color: ColorKey) => void
-        offset?: number,
-        buttonClass?: string
+
+        /** Classes to style the outer design of the trigger such as background colors, trigger hovers and width */
+        triggerClass?: string
     }
 
     let { 
         value, 
         onChangeFn,
-        offset = 15,
-        buttonClass = "w-36 px-2",
+        triggerClass = "",
     }: PageProps = $props()
 </script>
  
@@ -23,52 +27,47 @@
     onValueChange={(v) => onChangeFn(v as ColorKey)}
 >
     <!-- Button that opens the select menu -->
-    <Select.Trigger class="{buttonClass} bg-{colors[value]} hover:opacity-90 flex items-center cursor-pointer transition-all rounded-md">
-        <PaintBucket class="size-4 text-{colors[value]} mr-2"/>
+    <Select.Trigger 
+        class="{triggerClass} flex gap-x-4 items-center justify-between cursor-pointer"
+        aria-label="Select a color from a list of colors"
+    >
+        <PaintBucket class="size-4 mx-1"/>
 
-        <p class="rounded-lg">{value.charAt(0).toUpperCase()}{value.slice(1)}</p>
+        <p class="rounded-lg capitalize w-25 px-2 bg-{colors[value]}">{value}</p>
     </Select.Trigger>
 
     <Select.Content 
-        sideOffset={offset}
-        class="bg-background border border-background-300 rounded-lg max-h-70"
+        sideOffset={15}
+        class="h-60 bg-background shadow-md rounded-lg p-1"
     >
         <!-- Scroll up button for the menu -->
-        <Select.ScrollUpButton class="flex justify-center p-2 pb-0 bg-background rounded-lg">
-            <ArrowUp class="size-6 hover:bg-background-100 p-1 rounded-lg"/>
+        <Select.ScrollUpButton class="flex items-center justify-center py-1 mt-1 rounded-lg hover:bg-background-100">
+            <ArrowUp class="size-4"/>
         </Select.ScrollUpButton>
         
         <!-- The main select menu -->
-        <Select.Viewport class="w-(--bits-select-anchor-width) p-2 rounded-lg">
+        <Select.Viewport class="w-(--bits-select-anchor-width)">
             <!-- On pressing the color button, the onChange function provided by the caller is used -->
             {#each Object.entries(colors) as [id]}
                 <Select.Item 
                     value={id}
-                    class="flex justify-between items-center hover:bg-background-100 p-1 px-2 cursor-pointer rounded-lg"
-                >
-                    <!-- Showcases a ticked checkbox  -->
-                    {#if id === value}
-                        <p> {id.charAt(0).toUpperCase()}{id.slice(1)} </p>
-                        
-                        <div class="bg-{colors[id as ColorKey]} size-4 flex justify-center items-center rounded-xs">
-                            <Check 
-                                class="size-3 text-content-900"
-                                strokeWidth={5}
-                            />
-                        </div>
-                    <!-- Showcases a unchecked checkbox  -->
-                    {:else}
-                        <p> {id.charAt(0).toUpperCase()}{id.slice(1)} </p>
+                    class="flex items-center justify-between data-highlighted:bg-background-100 cursor-pointer p-1 px-2 rounded-lg"
+                    aria-label="Option to select the color '{id}'."
+                >   
+                    <p class="capitalize"> {id} </p>
 
-                        <div class="border-2 border-{colors[id as ColorKey]} size-4 flex justify-center items-center rounded-xs"></div>
-                    {/if} 
+                    <Checkbox
+                        value={id == value}
+                        checkedStyle="size-5 bg-{colors[id as ColorKey]} border border-{colors[id as ColorKey]}"
+                        unCheckedStyle="size-5 border border-{colors[id as ColorKey]}"
+                    />
                 </Select.Item>
             {/each}
         </Select.Viewport>
 
         <!-- Scroll down button for the menu -->
-        <Select.ScrollDownButton class="flex justify-center p-2 pt-0 bg-background rounded-lg">
-            <ArrowDown class="size-6 hover:bg-background-100 p-1 rounded-lg"/>
+        <Select.ScrollDownButton class="flex items-center justify-center py-1 mt-1 rounded-lg hover:bg-background-100">
+            <ArrowDown class="size-4"/>
         </Select.ScrollDownButton>
     </Select.Content>
 </Select.Root>

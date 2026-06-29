@@ -7,13 +7,20 @@
     import { SvelteSet } from "svelte/reactivity";
     import { MAX_PLANNERS } from "@/lib/task/repository";
     
-    type PlannerPickerProps = { 
-        value: SvelteSet<string> 
+    interface PlannerPickerProps { 
+        /** A list of planner ids that is selected by the user.  */
+        value: SvelteSet<string>,
+
+        /** Classes to style the outer design of the trigger such as background colors, trigger hovers and width */
+        triggerClass?: string
     }
 
-    let { value = $bindable() }: PlannerPickerProps = $props()
+    let { 
+        value = $bindable(), 
+        triggerClass = "" 
+    }: PlannerPickerProps = $props()
 
-    /** A derived list of item */
+    /** A derived list of all planners which hold their planner id and name. */
     const items = $derived(planners.all.map((item) => {
         return {
             value: item.id, 
@@ -28,14 +35,13 @@
     onValueChange={(changedValues) => {
         value = new SvelteSet([...changedValues])
     }}
-
     allowDeselect={true}
 >
     <Select.Trigger
-        class="flex items-center gap-x-4 border border-background-300 hover:border-background-400 rounded-lg cursor-pointer p-1 outline-none"
+        class="{triggerClass} flex gap-x-4 items-center justify-between cursor-pointer"
         aria-label="Select a list of planners"
     >
-        <Notebook class="size-4 mx-1"/>
+        <Notebook class="size-4 box-border"/>
 
         <Select.Value
             placeholder="Select a planner"
@@ -71,7 +77,7 @@
         sideOffset={10}
         class="h-60 bg-background shadow-md rounded-lg p-1"
     >
-        <Select.ScrollUpButton class="flex items-center justify-center py-1 rounded-lg hover:bg-background-100">
+        <Select.ScrollUpButton class="flex items-center justify-center py-1 mt-1 rounded-lg hover:bg-background-100">
             <ArrowUp class="size-4" />
         </Select.ScrollUpButton>
 
@@ -90,7 +96,7 @@
                         {@const planner = planners.get({id: item.value})}
 
                         {#if planner}
-                            <p> {planner.name} </p>
+                            <p class="truncate mr-1"> {planner.name} </p>
 
                             <Checkbox
                                 value={selected}
@@ -104,7 +110,7 @@
             {/each}
         </Select.Viewport>
 
-        <Select.ScrollDownButton class="flex items-center justify-center py-1 rounded-lg hover:bg-background-100">
+        <Select.ScrollDownButton class="flex items-center justify-center py-1 mt-1 rounded-lg hover:bg-background-100">
             <ArrowDown class="size-4" />
         </Select.ScrollDownButton>
     </Select.Content>
