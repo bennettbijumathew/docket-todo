@@ -25,7 +25,7 @@
 
 <!-- This is a form that on submit adds a new task -->
 <form
-    class="flex shrink-0 border-t border-background-300 p-4 gap-x-2"
+    class="flex border-t border-background-300 p-4 gap-x-2"
     onsubmit={(e) => { 
         e.preventDefault(); 
         addNewTask();
@@ -53,12 +53,11 @@
         ">
             <DatePicker 
                 bind:value={newTask.dueDate}
-                buttonStyle="
-                    border border-background-300 hover:border-background-400 outline-background-400 rounded-lg p-1 text-right
+                triggerClass="
+                    border border-background-300 hover:border-background-400 outline-background-400 rounded-lg p-1
                     w-full flex-1
-                    lg:w-70 lg:flex-none
+                    lg:w-52 lg:flex-none
                 "
-                pickerStyle="bg-background shadow-md"
             />
 
             <PlannerPicker 
@@ -66,7 +65,7 @@
                 triggerClass="                    
                     border border-background-300 hover:border-background-400 outline-background-400 rounded-lg p-1 
                     w-full flex-1
-                    lg:w-70 lg:flex-none
+                    lg:w-64 lg:flex-none
                 "
             />
         </div>

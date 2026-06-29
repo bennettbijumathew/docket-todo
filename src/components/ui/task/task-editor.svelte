@@ -106,8 +106,7 @@
 
                 <DatePicker 
                     bind:value={inputs.dueDate}
-                    buttonStyle="bg-background-50 hover:bg-background-100 shadow-md rounded-lg p-1 px-1.5 w-full"
-                    pickerStyle="bg-background shadow-md"
+                    triggerClass="bg-background-50 hover:bg-background-100 shadow-md rounded-lg p-1 px-1.5 w-full"
                     onChangeFn={() => {
                         updateTaskDate({
                             id: task.id, 
