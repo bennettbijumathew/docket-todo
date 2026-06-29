@@ -2,8 +2,8 @@
     import { type RouteDetails, type RouteNames, routes } from "@/components/util/routes";
     import { sidebar } from '@/components/ui/layout/sidebar/util.svelte';
     import { getPlatform } from '@/lib/shared/platform';
-    import { isActive } from "sv-router/generated";
-    import { fade, fly } from 'svelte/transition';
+    import { isActive, p } from "sv-router/generated";
+    import { fade } from 'svelte/transition';
     import { type Snippet } from 'svelte';
 
     type RootProps = { 
@@ -21,11 +21,11 @@
 </script>
 
 <section 
-    transition:fly={{ duration: 300 }}
     class="
-        {sidebar.isOpen ? 'w-75 sm:w-94' : 'w-0'} {getPlatform() == "windows" ? "pt-titlebar" : "pt-4"}
-        box-border bg-background flex flex-col justify-between h-full overflow-hidden transition-[width] duration-200
-        absolute left-0 z-10
+        {getPlatform() == "windows" ? "pt-titlebar" : "pt-4"} 
+        {sidebar.isOpen ? 'w-75 sm:w-94' : 'w-0'}
+        box-border bg-background flex flex-col justify-between h-full overflow-hidden transition-[width] duration-300
+        fixed top-0 left-0 z-10 
         lg:relative lg:flex-none
     "
 >
@@ -53,7 +53,7 @@
 
                 <!-- Shows unique icon and different highlighting for active / inactive routes. -->
                 <a 
-                    href={link} 
+                    href={p(link, {search: {sidebar: true}})} 
                     class="
                         flex flex-row items-center gap-x-2 rounded-md transition-color
                         h-8 px-1
@@ -68,12 +68,14 @@
         </div>
     </div> 
 
-    <!-- Renders element that is inside this element. -->
-    {@render children?.()}
+    <div class="h-80 p-4">
+        <!-- Renders element that is inside this element. -->
+        {@render children?.()}
+    </div>
 </section>
 
-<!-- This is a dark overlay over the app that on clicking it removes the sidebar. -->
 {#if sidebar.isOpen == true}
+    <!-- This is a dark overlay over the app that on clicking it removes the sidebar. -->
     <button 
         transition:fade={{duration: 200}} 
         onclick={sidebar.toggle} 
