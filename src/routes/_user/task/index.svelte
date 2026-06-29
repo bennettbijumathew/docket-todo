@@ -23,7 +23,7 @@
             return tasks.all;
         }
         return tasks.all.filter((task) => 
-            task.name.toLowerCase().includes(search)
+            task.name.toLowerCase().includes(search.toLowerCase())
         );
     });
 </script>

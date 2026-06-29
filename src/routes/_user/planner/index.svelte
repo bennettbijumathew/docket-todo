@@ -70,14 +70,14 @@
                         sm:flex-1 
                         lg:flex-none lg:w-60
                     "
-                    placeholder="Search for tasks"
-                    aria-placeholder="Search for tasks"
+                    placeholder="Search for planners"
+                    aria-placeholder="Search for planners"
                 />
             </div>
             
             <button 
                 onclick={() => plannerList.toggleSort()}
-                aria-label="Toggle the sorting mode of the task list"
+                aria-label="Toggle the sorting mode of the planner list"
                 class="
                     h-8 flex items-center justify-between gap-x-1 bg-background-100 hover:bg-background-200 rounded-lg cursor-pointer px-2
                     w-32
