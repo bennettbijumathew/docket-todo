@@ -1,6 +1,6 @@
 <!-- CODE -->
 <script lang="ts">
-    import PlannerInputs from "@/components/ui/planner/list/parts/planner-inputs.svelte";
+    import PlannerInputs from "@/components/ui/planner/planner-inputs.svelte";
     import ScrollSection from "@/components/ui/layout/containers/scroll-section.svelte";
     import PlannerList from "@/components/ui/planner/planner-list.svelte";
     import { sidebar } from "@/components/ui/layout/sidebar/util.svelte";
@@ -98,7 +98,6 @@
                     {/if}
                 </p>
             </button>
-
         </div>
     </header>
 
