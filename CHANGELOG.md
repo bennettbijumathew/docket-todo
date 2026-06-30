@@ -1,5 +1,30 @@
 # docket-todo
 
+## 2.5.0
+
+### Minor Changes
+
+  - Added mass actions for the planner list
+    - A Context Menu is added so that user can do these actions:
+      - Delete
+      - Toggle to Visible State
+      - Toggle to Hidden State
+    - On clicking `CTRL + 'CLICK`, a user can select multiple planners and run actions for the selected planners.
+
+## 2.4.0
+
+### Minor Changes
+
+- Refactored the planner page to be similar to the task page.
+- Added a search functionality for the /planner page.
+  - On reaching the page, a user can search for specific planners.
+- Added a grouping functionality for the /planner page
+  - The user can now group tasks into categories such as:
+    - Visible
+    - All
+    - Colour
+  - Through the different groups, all tasks are placed under different headers.
+
 ## 2.3.0
 
 ### Minor Changes
@@ -11,7 +36,7 @@
 - Added a search functionality for the /task page
   - On reaching the page, a user can search for specific tasks that are visible.
 - Added a grouping functionality for the /task page
-  - The user can now group tasks into categories such as: 
+  - The user can now group tasks into categories such as:
     - All
     - Completed
     - Due Date
