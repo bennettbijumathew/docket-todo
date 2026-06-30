@@ -71,8 +71,7 @@
 
             <ColorPicker 
                 value={inputs.color} 
-                buttonClass="rounded-lg px-2 py-1"
-                offset={5}
+                triggerClass="rounded-lg px-2 py-1"
                 onChangeFn={(newColor) => { 
                     inputs.color = newColor as ColorKey
 

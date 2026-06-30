@@ -8,6 +8,7 @@
     import { FunnelIcon, PanelLeft, SearchIcon } from "@lucide/svelte";
     import { planners } from "@/lib/planner/store.svelte";
     import { getPlatform } from "@/lib/shared/platform";
+    import PlannerEditor from "@/components/ui/planner/planner-editor.svelte";
 
     /** This is the variable that tracks the search input and searched planners. */
     let searchInput: string = $state("")
@@ -111,3 +112,5 @@
 
     <PlannerInputs/>
 </section>
+
+<PlannerEditor/>
