@@ -1,4 +1,4 @@
-import { type TaskSort, type Task } from "@/lib/task/type";
+import { type TaskSort, type Task, taskSortList } from "@/lib/task/type";
 
 export class TaskStore {
     #list: Task[] = $state([])
@@ -16,12 +16,24 @@ export class TaskStore {
         return this.#list.find((task: Task) => task.id === id) ?? null
     }
 
-    set sortType (type: TaskSort) {
+    set sortType(type: TaskSort) {
         this.#sort = type; 
     }
 
-    get sortType () {
+    get sortType() {
         return this.#sort; 
+    }
+
+    toggleSort() {
+        let currentIndex = taskSortList.findIndex((item) => item == this.#sort) 
+
+        // Cycles to the next sort type.
+        if (taskSortList[currentIndex + 1] == null) {
+            this.#sort = taskSortList[0]
+        }
+        else {
+            this.#sort = taskSortList[currentIndex + 1] 
+        }
     }
 }
 

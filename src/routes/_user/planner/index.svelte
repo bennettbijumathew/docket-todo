@@ -9,9 +9,6 @@
     import { planners } from "@/lib/planner/store.svelte";
     import { getPlatform } from "@/lib/shared/platform";
 
-    /** References to task list, this enables functions from the components to be used */
-    let plannerList: ReturnType<typeof PlannerList>;
-
     /** This is the variable that tracks the search input and searched planners. */
     let searchInput: string = $state("")
 
@@ -76,7 +73,7 @@
             </div>
             
             <button 
-                onclick={() => plannerList.toggleSort()}
+                onclick={() => planners.toggleSort()}
                 aria-label="Toggle the sorting mode of the planner list"
                 class="
                     h-8 flex items-center justify-between gap-x-1 bg-background-100 hover:bg-background-200 rounded-lg cursor-pointer px-2
@@ -108,7 +105,6 @@
     >
         <!-- The task list shows a list of headers based on sort type and shows a list based on the sorted grouping -->
         <PlannerList 
-            bind:this={plannerList}
             list={searchedPlanners} 
             sortBy={planners.sortType}
         />

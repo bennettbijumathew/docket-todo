@@ -51,4 +51,5 @@ export const createPlannerConverter = (userId?: string) => ({
     }
 });
 
-export type PlannerSort = "visible" | "color" | "all"
+export const plannerSortList: string[] = ['visible', 'color', 'all'] as const;
+export type PlannerSort = typeof plannerSortList[number]; 

@@ -42,4 +42,5 @@ export const createTaskConverter = () => ({
     }
 })
 
-export type TaskSort = "completed" | "due-date-asc" | "due-date-desc" | "all"
+export const taskSortList: string[] = ['completed', 'due-date-asc', 'due-date-desc', 'all'] as const;
+export type TaskSort = typeof taskSortList[number]; 

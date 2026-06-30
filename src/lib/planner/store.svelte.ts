@@ -1,5 +1,5 @@
 import { SvelteSet } from "svelte/reactivity";
-import { type Planner, type PlannerSort } from "@/lib/planner/type";
+import { plannerSortList, type Planner, type PlannerSort } from "@/lib/planner/type";
 
 class PlannerStore {
     #list: Planner[] = $state([])
@@ -43,12 +43,20 @@ class PlannerStore {
         }
     }   
 
-    set sortType (type: PlannerSort) {
-        this.#sort = type; 
-    }
-
     get sortType () {
         return this.#sort; 
+    }
+
+    toggleSort() {
+        let currentIndex = plannerSortList.findIndex((item) => item == this.#sort) 
+
+        // Cycles to the next sort type.
+        if (plannerSortList[currentIndex + 1] == null) {
+            this.#sort = plannerSortList[0]
+        }
+        else {
+            this.#sort = plannerSortList[currentIndex + 1] 
+        }
     }
 }
 

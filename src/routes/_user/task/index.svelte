@@ -10,9 +10,6 @@
     import { getPlatform } from "@/lib/shared/platform";
     import { tasks } from "@/lib/task/store.svelte";
 
-    /** References to task list, this enables functions from the components to be used */
-    let list: ReturnType<typeof TaskList>;
-
     /** This is the variable that tracks the search input and searched tasks. */
     let searchInput: string = $state("")
 
@@ -79,7 +76,7 @@
             </div>
             
             <button 
-                onclick={() => list.toggleSort()}
+                onclick={() => tasks.toggleSort()}
                 aria-label="Toggle the sorting mode of the task list"
                 class="
                     h-8 flex items-center justify-between gap-x-1 bg-background-100 hover:bg-background-200 rounded-lg cursor-pointer px-2
@@ -117,7 +114,6 @@
     >
         <!-- The task list shows a list of headers based on sort type and shows a list based on the sorted grouping -->
         <TaskList 
-            bind:this={list}
             list={searchedTasks} 
             sortBy={tasks.sortType}
         />
