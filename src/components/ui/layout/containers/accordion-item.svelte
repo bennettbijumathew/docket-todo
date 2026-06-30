@@ -1,12 +1,13 @@
 <script lang="ts">
     import { ChevronDown } from "@lucide/svelte";
-    import { Accordion } from "bits-ui";
-    import { type Snippet } from "svelte";
     import { slide } from "svelte/transition";
+    import { type Snippet } from "svelte";
+    import { Accordion } from "bits-ui";
 
     interface AccordionItemProps {
         children: Snippet,
-        title: string
+        title: string,
+        subText?: string,
         triggerClasses: string
         contentClasses: string
     }
@@ -14,6 +15,7 @@
     let { 
         children,
         title, 
+        subText,
         triggerClasses, 
         contentClasses
     }: AccordionItemProps = $props()
@@ -26,9 +28,11 @@
         <Accordion.Trigger class="{triggerClasses} flex items-center cursor-pointer px-2 gap-x-2 [&[data-state=open]>svg]:rotate-180">
             <ChevronDown class="size-4 transition-all duration-300"/>
 
-            <p class="capitalize">
-                {title}            
-            </p>
+            <span class="capitalize flex items-center gap-x-1">
+                <p> {title} </p>
+
+                {subText}
+            </span>
         </Accordion.Trigger>
     </Accordion.Header>
 

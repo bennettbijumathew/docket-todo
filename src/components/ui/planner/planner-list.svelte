@@ -4,6 +4,7 @@
     import { planners } from "@/lib/planner/store.svelte";
     import { type Planner } from "@/lib/planner/type";
     import { Accordion } from "bits-ui";
+    import { onMount } from "svelte";
 
     interface PlannerListProps {
         list: Planner[], 
@@ -33,6 +34,12 @@
     })
                 
     let values: string[] = $state([])
+
+    
+    //** On loading, the first filtered groups are shown to the user. */
+    onMount(() => {
+        values = filteredGroups.map((item) => item.title)
+    })
 </script>
 
 <!-- This is a list of headers that when opened show a list of planner -->
@@ -42,7 +49,8 @@
 >
     {#each filteredGroups as group}
         <AccordionItem 
-            title="{group.title}  ({group.list.length})"
+            title={group.title}
+            subText="({group.list.length})"
             triggerClasses="
                 bg-background-100 hover:bg-background-200 rounded-md mb-1 
                 w-full py-1.5
