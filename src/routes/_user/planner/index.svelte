@@ -106,7 +106,6 @@
         <!-- The task list shows a list of headers based on sort type and shows a list based on the sorted grouping -->
         <PlannerList 
             list={searchedPlanners} 
-            sortBy={planners.sortType}
         />
     </ScrollSection>
 

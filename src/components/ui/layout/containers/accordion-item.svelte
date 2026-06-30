@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { ChevronDown } from "@lucide/svelte";
     import { Accordion } from "bits-ui";
     import { type Snippet } from "svelte";
     import { slide } from "svelte/transition";
@@ -22,8 +23,12 @@
     value={title}
 >
     <Accordion.Header> 
-        <Accordion.Trigger class="{triggerClasses} capitalize">
-            {title}
+        <Accordion.Trigger class="{triggerClasses} flex items-center cursor-pointer px-2 gap-x-2 [&[data-state=open]>svg]:rotate-180">
+            <ChevronDown class="size-4 transition-all duration-300"/>
+
+            <p class="capitalize">
+                {title}            
+            </p>
         </Accordion.Trigger>
     </Accordion.Header>
 

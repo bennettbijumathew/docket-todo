@@ -1,75 +1,61 @@
 <script lang="ts">
     import AccordionItem from "@/components/ui/layout/containers/accordion-item.svelte";
     import TaskItem from "@/components/ui/task/task-item.svelte";
-    import { type TaskSort, type Task } from "@/lib/task/type";
     import { tasks } from "@/lib/task/store.svelte";
     import { formatDay } from "@/lib/shared/date";
+    import { type Task } from "@/lib/task/type";
     import { Accordion } from "bits-ui";
 
     interface TaskListProps {
         list: Task[], 
-        sortBy: TaskSort
     }
 
-    let { list, sortBy }: TaskListProps = $props() 
-
-    /** This function is called when user wants to toggle the task view */
-    export function toggleSort() {
-        switch (sortBy) {
-            case "completed":
-                tasks.sortType = "due-date-asc"
-                break; 
-            case "due-date-asc": 
-                tasks.sortType = "due-date-desc"
-                break;
-            case "due-date-desc": 
-                tasks.sortType = "all"
-                break;
-            case "all": 
-                tasks.sortType = "completed"
-        }
+    interface TaskGroup {
+        title: string, 
+        list: Task[]
     }
 
-    /** This is the filtered version of the tasks, it is sorted by the received sort type. */
-    let filteredTasks: Map<string, Task[]> = $derived.by(() => {
-        if (sortBy == "completed") {
-            return new Map([
-                ["Incomplete Tasks", list.filter(task => !task.completed)], 
-                ["Complete Tasks", list.filter(task => task.completed)], 
-            ]);
+    let { list }: TaskListProps = $props() 
+
+    /** A list of groups that filter by different sort types for tasks */
+    let filteredGroups: TaskGroup[] = $derived.by(() => {     
+        if (tasks.sortType == "completed") {
+            return [
+                { title: "Incomplete Tasks", list: list.filter(task => !task.completed) }, 
+                { title: "Complete Tasks", list: list.filter(task => task.completed) }, 
+            ];
         }
-        else if (sortBy == "due-date-asc") {
-            const groupedByDesc = Map.groupBy(list, ({ dueDate }) => formatDay(dueDate));
-            return new Map([...groupedByDesc.entries()].reverse());
+        else if (tasks.sortType == "due-date-asc") {
+            return [...Map.groupBy(list, ({ dueDate }) => formatDay(dueDate))].map(([title, list]) => ({ title, list })).reverse();
         }
-        else if (sortBy == "due-date-desc") {
-            return Map.groupBy(list, ({ dueDate }) => formatDay(dueDate));
+        else if (tasks.sortType == "due-date-desc") {
+            return [...Map.groupBy(list, ({ dueDate }) => formatDay(dueDate))].map(([title, list]) => ({ title, list }));
         }
         else {
-            return new Map([
-                ["All", list], 
-            ])
+            return [{ title: "All", list: list }]
         }
     })
+                
+    let values: string[] = $state([])
 </script>
 
-<!-- This is a list of headers that when opened show a list of tasks -->
+<!-- This is a list of headers that when opened show a list of planner -->
 <Accordion.Root
     type="multiple"
-    value={[...filteredTasks.keys()]}
+    bind:value={values}
 >
-    {#each filteredTasks as [group, groupList] }
+    {#each filteredGroups as group}
         <AccordionItem 
-            title={group}
+            title="{group.title}  ({group.list.length})"
             triggerClasses="
-                hover:bg-background-200 cursor-pointer mb-2 rounded-md font-title font-medium
-                bg-background-100 w-full px-1 py-1.5 
-                lg:w-auto lg:px-2 lg:py-0 lg:bg-transparent
+                bg-background-100 hover:bg-background-200 rounded-md mb-1 
+                w-full py-1.5
+                lg:w-auto lg:py-0.5
             "
-            contentClasses="flex flex-col gap-4 mb-4"
+            contentClasses="flex flex-col gap-4 mb-5"
         >   
-            <!-- In each task item, context menus are provided to edit the tasks -->
-            {#each groupList as task (task.id)}
+            <!-- In each task item, context menus are provided to edit the planner -->
+            {#each group.list as task}
                 <TaskItem task={task}/>
             {/each}
         </AccordionItem>
