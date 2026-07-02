@@ -30,7 +30,7 @@
 
 <!-- This is main part of the application where the task list resides. -->
 <section class="
-    flex flex-1 flex-col min-h-0 pt-safe
+    flex flex-1 flex-col min-h-0 min-w-0 pt-safe
     lg:flex-3
 ">
     <!-- The header that holds the title and buttons for toggling the sidebar, searching and filtering tasks.  -->
