@@ -27,7 +27,7 @@
                 }
             }}
             offset={app.platform === "android" ? "100px" : undefined}
-            position={app.platform === "android" ? "top-center" : "bottom-right"}
+            position={"top-center"}
         />
     </main>
 {:else if authentication.status === "unauthenticated"}

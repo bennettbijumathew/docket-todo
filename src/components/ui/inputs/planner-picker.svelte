@@ -38,39 +38,49 @@
     allowDeselect={true}
 >
     <Select.Trigger
-        class="{triggerClass} flex gap-x-4 items-center justify-between cursor-pointer"
+        class="{triggerClass} flex gap-x-1 items-center justify-between cursor-pointer"
         aria-label="Select a list of planners"
-    >
-        <Notebook class="size-4 box-border"/>
+    >   
+        <div>
+            <Notebook class="size-4"/>
+        </div>
+
+        <div class="
+            flex flex-row-reverse gap-0.5
+            w-29 flex-wrap
+            sm:w-54 sm:flex-nowrap
+        "> 
 
         <Select.Value
             placeholder="Select a planner"
-            class="flex items-center justify-between flex-row gap-x-0.5"
+            class="flex items-center flex-row gap-0.5 flex-wrap"
         >
             {#snippet child({ selection, placeholder })}
-                <div class="
-                    flex flex-row-reverse gap-0.5 
-                    w-29 flex-wrap
-                    sm:w-54 sm:flex-nowrap
-                "> 
-                    {#if selection.type === "multiple" && selection.selected.length > 0}
-                        {#each selection.selected as selectedPlanner (selectedPlanner.value)}
-                            {@const planner = planners.get({id: selectedPlanner.value})}
-                            
-                            {#if planner}
-                                <p class="h-5 w-5 flex items-center justify-center py-1 bg-{colors[planner.color]} shrink-0 text-xs rounded-md">
-                                    {selectedPlanner.label[0]}
-                                </p>
-                            {/if}
-                        {/each}
-                    {:else}
-                        <p class="h-5 flex items-center text-content-600 text-left">
-                            {placeholder}
-                        </p>
-                    {/if}
-                </div>
-            {/snippet}
-        </Select.Value>
+                {#if selection.type === "multiple" && selection.selected.length > 0}
+                    {#each selection.selected as selectedPlanner (selectedPlanner.value)}
+                        {@const planner = planners.get({id: selectedPlanner.value})}
+                        
+                        {#if planner}
+                            <p class="h-5 w-5 flex items-center justify-center py-1 bg-{colors[planner.color]} shrink-0 text-xs rounded-md">
+                                {selectedPlanner.label[0]}
+                            </p>
+                            <p class="h-5 w-5 flex items-center justify-center py-1 bg-{colors[planner.color]} shrink-0 text-xs rounded-md">
+                                {selectedPlanner.label[0]}
+                            </p>
+                        {/if}
+                    {/each}
+                {:else}
+                    <p class="
+                        flex items-center text-content-600 text-right
+                        text-xs
+                        sm:text-sm
+                    ">
+                        {placeholder}
+                    </p>
+                {/if}
+                {/snippet}
+            </Select.Value>
+        </div>
     </Select.Trigger>
 
     <Select.Content

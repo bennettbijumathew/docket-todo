@@ -28,7 +28,7 @@
 <SidebarRoot/>
 
 <section class="
-    flex flex-1 flex-col min-h-0 pt-safe pb-safe
+    flex flex-1 flex-col min-h-0 pt-safe
     lg:flex-3
 ">
     <!-- The header that holds the title and buttons for toggling the sidebar, searching and filtering planners.  -->

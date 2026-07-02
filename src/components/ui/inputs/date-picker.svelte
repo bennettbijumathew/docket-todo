@@ -41,10 +41,14 @@
     <!-- Input Selector for the Date Picker. -->
     <DatePicker.Input>
         {#snippet children({ segments })}
-            <DatePicker.Trigger class="{triggerClass} flex justify-between items-center cursor-pointer">
+            <DatePicker.Trigger class="{triggerClass} flex justify-between items-center gap-x-2 cursor-pointer">
                 <Calendar class="size-4"/>
                 
-                <p class="text-right">
+                <p class="
+                    text-right
+                    text-xs
+                    sm:text-sm
+                ">
                     {#each segments as { value }}
                         {value.toUpperCase()}
                     {/each}

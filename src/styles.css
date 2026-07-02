@@ -26,12 +26,8 @@
     --inset-shadow-b-none: inset 0 0 0 0 rgba(0 0 0 / 0.1); 
 }
 
-@utility pb-safe {
-    padding-bottom: env(safe-area-inset-bottom);
-}
-
 @utility pt-safe {
-    padding-top: calc(env(safe-area-inset-top));
+    padding-top: env(safe-area-inset-top);
 }
 
 /* Custom classes used to measure height of titlebar and the necessary padding to account for height*/
