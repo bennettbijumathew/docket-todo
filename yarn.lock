@@ -245,6 +245,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@choochmeque/tauri-plugin-notifications-api@npm:^0.5.0-rc.14":
+  version: 0.5.0-rc.14
+  resolution: "@choochmeque/tauri-plugin-notifications-api@npm:0.5.0-rc.14"
+  dependencies:
+    "@tauri-apps/api": "npm:^2.8.0"
+  checksum: 10c0/5f133e85864d600bcd96347830ee6960a524637db66de5be3559f0f63a5b66b6c428ac804ac60ad8f21118311503f208a0ccf5818fb3b9dccab2026b6f4b8a9e
+  languageName: node
+  linkType: hard
+
 "@emnapi/core@npm:^1.11.1":
   version: 1.11.2
   resolution: "@emnapi/core@npm:1.11.2"
@@ -2223,6 +2232,7 @@ __metadata:
   resolution: "docket-todo@workspace:."
   dependencies:
     "@changesets/cli": "npm:^2.30.0"
+    "@choochmeque/tauri-plugin-notifications-api": "npm:^0.5.0-rc.14"
     "@internationalized/date": "npm:^3.11.0"
     "@lucide/svelte": "npm:^0.563.1"
     "@sveltejs/vite-plugin-svelte": "npm:^6.2.1"
