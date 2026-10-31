@@ -1,6 +1,6 @@
 <!-- CODE -->
 <script lang="ts">
-    import { isAndroidPermissionsGranted } from "@/lib/notification/repository";
+    import { isPermissionAllowed } from "@/lib/notification/android/repository";
     import { getPlatform } from "@/lib/shared/platform";
     import { Bell } from "@lucide/svelte";
     import { onMount } from "svelte";
@@ -8,7 +8,7 @@
     let permissionGranted: boolean | null = $state(null);
 
     onMount(async () => {
-        permissionGranted =  await isAndroidPermissionsGranted();
+        permissionGranted =  await isPermissionAllowed();
     })
 </script>
 
