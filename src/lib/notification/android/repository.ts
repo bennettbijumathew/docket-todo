@@ -1,6 +1,7 @@
 import { cancel, Channel, createChannel, Importance, isPermissionGranted, requestPermission, Schedule, sendNotification, Visibility } from "@choochmeque/tauri-plugin-notifications-api";
 import { Notif, RemoveNotif } from "@/lib/notification/android/type";
 import { getLocalTimeZone } from "@internationalized/date";
+import { getPlatform } from "@/lib/shared/platform";
 
 // Creates a channel to group android notifications.
 const channel: Channel = {
@@ -15,7 +16,9 @@ const channel: Channel = {
     lightColor: '#FF0000'
 }
 
-await createChannel(channel);
+if (getPlatform() === "android") {    
+    await createChannel(channel);
+}
 
 
 // This function checks if user has allowed access for notification sending. 

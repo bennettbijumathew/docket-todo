@@ -1,7 +1,12 @@
 import { type TaskSort, type Task, taskSortList } from "@/lib/task/type";
+import { planners } from "@/lib/planner/store.svelte";
 
 export class TaskStore {
     #list: Task[] = $state([])
+    #visibleList: Task[] = $derived.by(() => {
+        const visibleIds = new Set(planners.visibleIds)
+        return this.#list.filter((task) => [...task.planners].some((id) => visibleIds.has(id)))
+    })
     #sort: TaskSort = $state("completed")
 
     set all(newList: Task[]) {
@@ -10,6 +15,10 @@ export class TaskStore {
 
     get all() {
         return this.#list
+    }
+
+    get visible() {
+        return this.#visibleList
     }
 
     get({id}: {id: string}): Task | null {

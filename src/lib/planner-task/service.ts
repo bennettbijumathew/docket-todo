@@ -19,7 +19,7 @@ export function startPlannerTasks({userId}: startArgs) {
         
         unSubFromTaskUpdates?.()
 
-        unSubFromTaskUpdates = listenTasks(planners.ids, (newTasks) => {
+        unSubFromTaskUpdates = listenTasks(planners.allIds, (newTasks) => {
             tasks.all = newTasks
         })
     })
