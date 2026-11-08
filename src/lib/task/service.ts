@@ -1,9 +1,11 @@
 import { toast } from "svelte-sonner"
-import { NewTaskData } from "./type"
-import { deleteTask, MIN_PLANNERS, writeNewTask, appendPlannerToTask, detachPlannerFromTask, editName, editDate, editComplete } from "./repository"
+import { NewTaskData, Task } from "@/lib/task/type"
+import { deleteTask, MIN_PLANNERS, writeNewTask, appendPlannerToTask, detachPlannerFromTask, editName, editDate, editComplete, MAX_PLANNERS } from "./repository"
 import { CalendarDateTime } from "@internationalized/date"
 import { FirestoreError } from "firebase/firestore"
 import { FirebaseError } from "firebase/app"
+import { tasks } from "@/lib/task/store.svelte"
+import { planners } from "@/lib/planner/store.svelte"
 
 // This creates a new task and updates the user interface on errors
 export async function createTask(newTask: NewTaskData): Promise<boolean> {
@@ -75,6 +77,19 @@ export async function addPlannerToTask({taskId, newPlannerId}: addPlannerArgs): 
             throw new Error("The planner could not be added to the task")
         }
 
+        const currentTask: Task | null = tasks.get({ id: taskId })
+
+        if (currentTask == null) {
+            throw new Error("The task that you are adding a planner to does not exist.")
+        }
+        else if (planners.get({ id: newPlannerId }) == null) {
+            throw new Error("The planner that you are adding to the task does not exist.")
+        }        
+        else if (currentTask.planners.size + 1 > MAX_PLANNERS) {
+            throw new Error(`Cant add more planner to task as it exceeds the ${MAX_PLANNERS} planners limit`)
+        }
+
+        // If all checks have been passed, a new planner is added to the specificed task's planner stash.
         await appendPlannerToTask({
             taskId: taskId, 
             newPlannerId: newPlannerId
@@ -101,6 +116,18 @@ export async function removePlannerFromTask({taskId, oldPlannerId}: removePlanne
     try {
         if (taskId.trim() == "" || oldPlannerId.trim() == "") {
             throw new Error("The planner could not be removed from the task")
+        }
+
+        const currentTask: Task | null = tasks.get({ id: taskId })
+        
+        if (planners.get({ id: oldPlannerId }) == null) {
+            throw new Error("The planner that you are removing from the task does not exist.")
+        }
+        else if (currentTask == null) {
+            throw new Error("The task that you are removing a planner from does not exist.")
+        }
+        else if (MIN_PLANNERS >= currentTask.planners.size - 1) {
+            throw new Error(`Cant remove planner from the task as the task needs more than ${MIN_PLANNERS} planners.`)
         }
 
         await detachPlannerFromTask({

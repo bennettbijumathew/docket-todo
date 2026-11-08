@@ -73,19 +73,7 @@ type appendPlannerArgs = {
 
 export async function appendPlannerToTask({taskId, newPlannerId}: appendPlannerArgs): Promise<void> {
     try {
-        const isPlannerReal = (await getDoc(doc(db, plannerDb, newPlannerId))).exists();
         const taskRef = doc(db, taskDb, taskId);
-        const taskDoc = (await getDoc(taskRef)).data()
-
-        if (isPlannerReal === false) {
-            throw new Error("The planner that you are adding to the task does not exist.")
-        }
-        else if (taskDoc == undefined) {
-            throw new Error("The task that you are adding a planner to does not exist.")
-        }
-        else if (taskDoc.planners.length + 1 > MAX_PLANNERS) {
-            throw new Error(`Cant add more planner to task as it exceeds the ${MAX_PLANNERS} planners limit`)
-        }
 
         // The "arrayUnion" function prevents duplicate ids from being added to the array.
         await updateDoc(taskRef, {
@@ -107,19 +95,7 @@ type detachPlannerArgs = {
 
 export async function detachPlannerFromTask({taskId, oldPlannerId}: detachPlannerArgs): Promise<void> {    
     try {
-        const isPlannerReal = (await getDoc(doc(db, plannerDb, oldPlannerId))).exists();
         const taskRef = doc(db, taskDb, taskId);
-        const taskDoc = (await getDoc(taskRef)).data()
-
-        if (isPlannerReal === false) {
-            throw new Error("The planner that you are removing from the task does not exist.")
-        }
-        else if (taskDoc == undefined) {
-            throw new Error("The task that you are removing a planner from does not exist.")
-        }
-        else if (MIN_PLANNERS >= taskDoc.planners.length - 1 ) {
-            throw new Error(`Cant remove planner from the task as the task needs more than ${MIN_PLANNERS} planners.`)
-        }
 
         // The "arrayUnion" function prevents duplicate ids from being added to the array.
         await updateDoc(taskRef, {
