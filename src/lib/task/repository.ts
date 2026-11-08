@@ -8,16 +8,16 @@ const taskDb: string = import.meta.env.VITE_FIRESTORE_TASK_DB;
 const plannerDb: string = import.meta.env.VITE_FIRESTORE_PLANNER_DB;
 
 // This returns a listeners that returns the list of tasks based on the visible planners.
-export function listenTasks(visiblePlanners: string[], callbackFn: (tasks: Task[]) => void) {
+export function listenTasks(userPlanners: string[], callbackFn: (tasks: Task[]) => void) {
     // If there is no planners, an empty array and empty function are given for the caller.
-    if (visiblePlanners.length <= MIN_PLANNERS) {
+    if (userPlanners.length <= MIN_PLANNERS) {
         callbackFn([])
         return () => {}
     }
 
     // Query - Gets tasks which are related to the visible planners.
     // Converter - Converts data from Firestore to the Planner object.
-    const q: Query = query(collection(db, taskDb), where("planners", "array-contains-any", visiblePlanners)).withConverter(createTaskConverter())
+    const q: Query = query(collection(db, taskDb), where("planners", "array-contains-any", userPlanners)).withConverter(createTaskConverter())
 
     // This snapshot sets the planner list while adding a visible attribute for each user 
     return onSnapshot(q, (querySnapshot: QuerySnapshot) => {

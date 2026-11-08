@@ -1,6 +1,6 @@
 <script lang="ts">
     import { app } from '@/lib/app/main.svelte';
-    import { isAndroidPermissionsGranted } from '@/lib/notification/repository';
+    import { isPermissionAllowed } from '@/lib/notification/android/repository';
     import { getPlatform } from '@/lib/shared/platform';
     import { check } from '@tauri-apps/plugin-updater';
     import { p } from 'sv-router/generated';
@@ -20,7 +20,7 @@
         }
 
         if (getPlatform() === "android") {
-            isAndroidPermissionsGranted()
+            await isPermissionAllowed()
         }
     })
 

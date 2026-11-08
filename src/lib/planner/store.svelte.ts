@@ -5,7 +5,8 @@ class PlannerStore {
     #list: Planner[] = $state([])
     #visiblePlanners: Planner[] = $derived(this.#list.filter((planner) => planner.visible === true))
     #hiddenPlanners: Planner[] = $derived(this.#list.filter((planner) => planner.visible === false))
-    #onlyIdPlanners: string[] = $derived(this.#visiblePlanners.map((planner) => planner.id));
+    #ids: string[] = $derived(this.#list.map((planner) => planner.id));
+    #visibleIds: string[] = $derived(this.#visiblePlanners.map((planner) => planner.id));
     #sort: PlannerSort = $state("visible")
 
     set all(newList: Planner[]) {
@@ -24,8 +25,12 @@ class PlannerStore {
         return this.#hiddenPlanners;
     }
 
-    get ids() {
-        return this.#onlyIdPlanners; 
+    get allIds() {
+        return this.#ids; 
+    }
+
+    get visibleIds() {
+        return this.#visibleIds; 
     }
 
     get({id}: {id: string}): Planner | null {
