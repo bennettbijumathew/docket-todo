@@ -17,12 +17,12 @@
     },
     "dependencies": {
         "@changesets/cli": "^2.30.0",
+        "@choochmeque/tauri-plugin-notifications-api": "^0.5.0-rc.14",
         "@internationalized/date": "^3.11.0",
         "@lucide/svelte": "^0.563.1",
         "@sveltejs/vite-plugin-svelte": "^6.2.1",
         "@tailwindcss/vite": "^4.1.18",
         "@tauri-apps/api": "^2.11.0",
-        "@tauri-apps/plugin-notification": "^2.3.3",
         "@tauri-apps/plugin-opener": "^2.5.4",
         "@tauri-apps/plugin-os": "^2.3.2",
         "@tauri-apps/plugin-process": "~2",

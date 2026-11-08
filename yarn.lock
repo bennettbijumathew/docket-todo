@@ -245,6 +245,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@choochmeque/tauri-plugin-notifications-api@npm:^0.5.0-rc.14":
+  version: 0.5.0-rc.14
+  resolution: "@choochmeque/tauri-plugin-notifications-api@npm:0.5.0-rc.14"
+  dependencies:
+    "@tauri-apps/api": "npm:^2.8.0"
+  checksum: 10c0/5f133e85864d600bcd96347830ee6960a524637db66de5be3559f0f63a5b66b6c428ac804ac60ad8f21118311503f208a0ccf5818fb3b9dccab2026b6f4b8a9e
+  languageName: node
+  linkType: hard
+
 "@emnapi/core@npm:^1.11.1":
   version: 1.11.2
   resolution: "@emnapi/core@npm:1.11.2"
@@ -1791,15 +1800,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tauri-apps/plugin-notification@npm:^2.3.3":
-  version: 2.3.3
-  resolution: "@tauri-apps/plugin-notification@npm:2.3.3"
-  dependencies:
-    "@tauri-apps/api": "npm:^2.8.0"
-  checksum: 10c0/a0af7a159a2e71ef080d356789fa219f8df98eff3b9adf7b8a37367b1de6a8a51eb8bc1aa91d42217a41f8fad4931a17251d86f66ab904b738416c3f272fa6df
-  languageName: node
-  linkType: hard
-
 "@tauri-apps/plugin-opener@npm:^2.5.4":
   version: 2.5.4
   resolution: "@tauri-apps/plugin-opener@npm:2.5.4"
@@ -2223,13 +2223,13 @@ __metadata:
   resolution: "docket-todo@workspace:."
   dependencies:
     "@changesets/cli": "npm:^2.30.0"
+    "@choochmeque/tauri-plugin-notifications-api": "npm:^0.5.0-rc.14"
     "@internationalized/date": "npm:^3.11.0"
     "@lucide/svelte": "npm:^0.563.1"
     "@sveltejs/vite-plugin-svelte": "npm:^6.2.1"
     "@tailwindcss/vite": "npm:^4.1.18"
     "@tauri-apps/api": "npm:^2.11.0"
     "@tauri-apps/cli": "npm:^2.11.0"
-    "@tauri-apps/plugin-notification": "npm:^2.3.3"
     "@tauri-apps/plugin-opener": "npm:^2.5.4"
     "@tauri-apps/plugin-os": "npm:^2.3.2"
     "@tauri-apps/plugin-process": "npm:~2"

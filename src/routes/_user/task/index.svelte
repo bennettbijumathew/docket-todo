@@ -17,9 +17,9 @@
     const searchedTasks = $derived.by(() => {
         const search = searchInput.trim().toLowerCase();
         if (!search) {
-            return tasks.all;
+            return tasks.visible;
         }
-        return tasks.all.filter((task) => 
+        return tasks.visible.filter((task) => 
             task.name.toLowerCase().includes(search.toLowerCase())
         );
     });
