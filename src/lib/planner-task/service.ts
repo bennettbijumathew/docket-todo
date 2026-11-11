@@ -1,7 +1,7 @@
 import { listenPlanners } from "@/lib/planner/repository";
-import { planners } from "@/lib/planner/store.svelte"
-import { listenTasks } from "@/lib/task/repository";
-import { tasks } from "@/lib/task/store.svelte"
+import { planners } from "@/lib/planner/store.svelte";
+import { listenTasks } from "../task/repository";
+import { tasks } from "@/lib/task/store.svelte";
 
 let unSubFromPlannerUpdates: () => void = () => {};
 let unSubFromTaskUpdates: () => void = () => {};
@@ -11,17 +11,21 @@ type startArgs = {
 }
 
 export function startPlannerTasks({userId}: startArgs) {
-    unSubFromPlannerUpdates?.()
-    unSubFromTaskUpdates?.()
+    unSubFromPlannerUpdates()
     
-    unSubFromPlannerUpdates = listenPlanners(userId, (newPlanners) => {
-        planners.all = newPlanners;
-        
-        unSubFromTaskUpdates?.()
+    unSubFromPlannerUpdates = listenPlanners(userId, (loadedPlanners) => {
+        let oldPlannerLength = planners.all.length; 
 
-        unSubFromTaskUpdates = listenTasks(planners.allIds, (newTasks) => {
-            tasks.all = newTasks
-        })
+        planners.all = loadedPlanners;
+        
+        // Only updates tasks if the planners have changed
+        if (oldPlannerLength != loadedPlanners.length) {
+            unSubFromTaskUpdates?.()
+
+            unSubFromTaskUpdates = listenTasks(planners.allIds, (loadedTasks) => {
+                tasks.all = loadedTasks
+            })
+        }
     })
 }
 

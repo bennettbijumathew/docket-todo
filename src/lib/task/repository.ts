@@ -1,13 +1,12 @@
 import { db } from "@/lib/shared/firebase-config"
-import { collection, query, onSnapshot, QuerySnapshot, where, doc, updateDoc, arrayRemove, DocumentReference, Query, getDoc, arrayUnion, addDoc, deleteDoc } from "firebase/firestore";
+import { collection, query, onSnapshot, QuerySnapshot, where, doc, updateDoc, arrayRemove, DocumentReference, Query, arrayUnion, addDoc, deleteDoc } from "firebase/firestore";
 import { type NewTaskData, Task, createTaskConverter } from "./type";
 import { CalendarDateTime } from "@internationalized/date";
 import { dateToTimestamp } from "@/lib/shared/date";
 
 const taskDb: string = import.meta.env.VITE_FIRESTORE_TASK_DB;
-const plannerDb: string = import.meta.env.VITE_FIRESTORE_PLANNER_DB;
 
-// This returns a listeners that returns the list of tasks based on the visible planners.
+/** This returns a listeners that returns the list of tasks based on the user's planners. */ 
 export function listenTasks(userPlanners: string[], callbackFn: (tasks: Task[]) => void) {
     // If there is no planners, an empty array and empty function are given for the caller.
     if (userPlanners.length <= MIN_PLANNERS) {
@@ -17,7 +16,10 @@ export function listenTasks(userPlanners: string[], callbackFn: (tasks: Task[]) 
 
     // Query - Gets tasks which are related to the visible planners.
     // Converter - Converts data from Firestore to the Planner object.
-    const q: Query = query(collection(db, taskDb), where("planners", "array-contains-any", userPlanners)).withConverter(createTaskConverter())
+    const q: Query = query(
+        collection(db, taskDb), 
+        where("planners", "array-contains-any", userPlanners)
+    ).withConverter(createTaskConverter())
 
     // This snapshot sets the planner list while adding a visible attribute for each user 
     return onSnapshot(q, (querySnapshot: QuerySnapshot) => {
