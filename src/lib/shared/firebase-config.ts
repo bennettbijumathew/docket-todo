@@ -6,7 +6,7 @@
 // The exported objects are mainly used in controllers, repositories, and stores.  
 
 import { initializeApp } from 'firebase/app';
-import { connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
+import { connectFirestoreEmulator, initializeFirestore, persistentLocalCache, persistentSingleTabManager } from 'firebase/firestore';
 import { connectAuthEmulator, getAuth } from 'firebase/auth';
 
 // The firebase config uses a .env file to load information, this config is then
@@ -24,7 +24,13 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 
 // Creates a database and authentication instance using the configured app.
-export const db = getFirestore(firebaseApp)
+// export const db = getFirestore(firebaseApp)
+export const db = initializeFirestore(firebaseApp, {
+  localCache: persistentLocalCache({
+    tabManager: persistentSingleTabManager(undefined)
+  })
+});
+
 export const auth = getAuth(firebaseApp)
 
 // This is used for developer to connect an emulator to the instance. 

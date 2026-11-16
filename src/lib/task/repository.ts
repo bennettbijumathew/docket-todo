@@ -1,13 +1,12 @@
 import { db } from "@/lib/shared/firebase-config"
-import { collection, query, onSnapshot, QuerySnapshot, where, doc, updateDoc, arrayRemove, DocumentReference, Query, getDoc, arrayUnion, addDoc, deleteDoc } from "firebase/firestore";
+import { collection, query, onSnapshot, QuerySnapshot, where, doc, updateDoc, arrayRemove, DocumentReference, Query, arrayUnion, addDoc, deleteDoc } from "firebase/firestore";
 import { type NewTaskData, Task, createTaskConverter } from "./type";
 import { CalendarDateTime } from "@internationalized/date";
 import { dateToTimestamp } from "@/lib/shared/date";
 
 const taskDb: string = import.meta.env.VITE_FIRESTORE_TASK_DB;
-const plannerDb: string = import.meta.env.VITE_FIRESTORE_PLANNER_DB;
 
-// This returns a listeners that returns the list of tasks based on the visible planners.
+/** This returns a listeners that returns the list of tasks based on the user's planners. */ 
 export function listenTasks(userPlanners: string[], callbackFn: (tasks: Task[]) => void) {
     // If there is no planners, an empty array and empty function are given for the caller.
     if (userPlanners.length <= MIN_PLANNERS) {
@@ -17,7 +16,10 @@ export function listenTasks(userPlanners: string[], callbackFn: (tasks: Task[]) 
 
     // Query - Gets tasks which are related to the visible planners.
     // Converter - Converts data from Firestore to the Planner object.
-    const q: Query = query(collection(db, taskDb), where("planners", "array-contains-any", userPlanners)).withConverter(createTaskConverter())
+    const q: Query = query(
+        collection(db, taskDb), 
+        where("planners", "array-contains-any", userPlanners)
+    ).withConverter(createTaskConverter())
 
     // This snapshot sets the planner list while adding a visible attribute for each user 
     return onSnapshot(q, (querySnapshot: QuerySnapshot) => {
@@ -40,7 +42,7 @@ export async function writeNewTask({name, planners, dueDate}: NewTaskData): Prom
         });
     }
     catch (error) {
-        console.log(error);
+        console.error(error);
         throw error;
     }
 }
@@ -59,7 +61,7 @@ export async function deleteTask({id}: deleteArgs): Promise<void> {
         await deleteDoc(taskRef)
     }
     catch (error) {
-        console.log(error);
+        console.error(error);
         throw error;
     }
 }
@@ -73,19 +75,7 @@ type appendPlannerArgs = {
 
 export async function appendPlannerToTask({taskId, newPlannerId}: appendPlannerArgs): Promise<void> {
     try {
-        const isPlannerReal = (await getDoc(doc(db, plannerDb, newPlannerId))).exists();
         const taskRef = doc(db, taskDb, taskId);
-        const taskDoc = (await getDoc(taskRef)).data()
-
-        if (isPlannerReal === false) {
-            throw new Error("The planner that you are adding to the task does not exist.")
-        }
-        else if (taskDoc == undefined) {
-            throw new Error("The task that you are adding a planner to does not exist.")
-        }
-        else if (taskDoc.planners.length + 1 > MAX_PLANNERS) {
-            throw new Error(`Cant add more planner to task as it exceeds the ${MAX_PLANNERS} planners limit`)
-        }
 
         // The "arrayUnion" function prevents duplicate ids from being added to the array.
         await updateDoc(taskRef, {
@@ -93,7 +83,7 @@ export async function appendPlannerToTask({taskId, newPlannerId}: appendPlannerA
         });
     }
     catch (error) {
-        console.log(error);
+        console.error(error);
         throw error; 
     }
 }
@@ -107,19 +97,7 @@ type detachPlannerArgs = {
 
 export async function detachPlannerFromTask({taskId, oldPlannerId}: detachPlannerArgs): Promise<void> {    
     try {
-        const isPlannerReal = (await getDoc(doc(db, plannerDb, oldPlannerId))).exists();
         const taskRef = doc(db, taskDb, taskId);
-        const taskDoc = (await getDoc(taskRef)).data()
-
-        if (isPlannerReal === false) {
-            throw new Error("The planner that you are removing from the task does not exist.")
-        }
-        else if (taskDoc == undefined) {
-            throw new Error("The task that you are removing a planner from does not exist.")
-        }
-        else if (MIN_PLANNERS >= taskDoc.planners.length - 1 ) {
-            throw new Error(`Cant remove planner from the task as the task needs more than ${MIN_PLANNERS} planners.`)
-        }
 
         // The "arrayUnion" function prevents duplicate ids from being added to the array.
         await updateDoc(taskRef, {
@@ -127,7 +105,7 @@ export async function detachPlannerFromTask({taskId, oldPlannerId}: detachPlanne
         });
     }
     catch (error) {
-        console.log(error);
+        console.error(error);
         throw error; 
     }
 }
@@ -148,7 +126,7 @@ export async function editName({id, name}: editNameArgs): Promise<void> {
         })
     }
     catch (error) {
-        console.log(error);
+        console.error(error);
         throw error; 
     }
 }
@@ -169,7 +147,7 @@ export async function editDate({id, date}: editDateArgs): Promise<void> {
         })
     }
     catch (error) {
-        console.log(error);
+        console.error(error);
         throw error; 
     }
 }
@@ -190,7 +168,7 @@ export async function editComplete({id, complete}: editCompleteArgs): Promise<vo
         })
     }
     catch (error) {
-        console.log(error);
+        console.error(error);
         throw error; 
     }
 }

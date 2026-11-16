@@ -3,24 +3,26 @@
 // In this case, the functions can edit, listen, write, delete and update a planner in the planners collection.
 
 import { db } from "@/lib/shared/firebase-config"
-import { collection, query, onSnapshot, QuerySnapshot, doc, Unsubscribe, updateDoc, addDoc, deleteDoc, where, CollectionReference, DocumentData, Query, FirestoreDataConverter, limit } from "firebase/firestore";
+import { collection, query, onSnapshot, QuerySnapshot, doc, Unsubscribe, updateDoc, addDoc, deleteDoc, where, limit } from "firebase/firestore";
 import { createPlannerConverter, NewPlannerData, Planner } from "@/lib/planner/type";
 import { ColorKey } from "@/components/util/color";
 
 
 const plannerDb: string = import.meta.env.VITE_FIRESTORE_PLANNER_DB;
 
-
 // This returns a listeners that returns the list of planners that are related to the user.
 export function listenPlanners(userId: string, callbackFn: (planner: Planner[]) => void): Unsubscribe {
-    const databaseRef: CollectionReference<DocumentData, DocumentData> = collection(db, plannerDb);
-    const dataConverter: FirestoreDataConverter<NewPlannerData> = createPlannerConverter(userId);
+    const databaseRef = collection(db, plannerDb);
+    const dataConverter = createPlannerConverter(userId);
 
     // Query - Gets planners where the current user is enrolled into the planners' user field. True or false means that they are enrolled.
     // Converter - Converts data from Firestore to the Planner object.
-    const q: Query<NewPlannerData> = query(databaseRef, where(`users.${userId}`, "in", [true, false]), limit(MAX_STORED_PLANNERS)).withConverter(dataConverter);
+    const q = query(
+        databaseRef, 
+        where(`users.${userId}`, "in", [true, false]), 
+        limit(MAX_STORED_PLANNERS)
+    ).withConverter(dataConverter);
 
-    
     // This snapshot sets the planner list while adding a visible attribute for each user.
     return onSnapshot(q, (querySnapshot: QuerySnapshot) => {
         let planners: Planner[] = querySnapshot.docs.map((doc) => doc.data()) as Planner[];
@@ -33,7 +35,7 @@ export function listenPlanners(userId: string, callbackFn: (planner: Planner[]) 
         
         // This sends the planner into the callback function. 
         callbackFn(planners);
-    })            
+    })
 }
 
 
