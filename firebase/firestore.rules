@@ -32,7 +32,7 @@ service cloud.firestore {
         match /planners/{plannerId} { 
             allow read: if isUserAuthenticated() == true && isPlannerVisibleToUser() == true;
             allow write: if isUserAuthenticated() == true && isPlannerWriteValid(request.resource.data);
-            allow delete: if isUserAuthenticated() == true;
+            allow delete: if isUserAuthenticated() == true && isPlannerVisibleToUser() == true;
         }
 
         match /tasks/{taskId} {

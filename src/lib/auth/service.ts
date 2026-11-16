@@ -19,7 +19,7 @@ export function listenForAuth({authenticatedFn, unauthenticatedFn}: listenAuthAr
     return listenAuth((user) => {
         app.loading = false
 
-        if (user) {
+        if (user != null && user.emailVerified == true) {
             authentication.status = "authenticated";
             authentication.user = user;
 

@@ -42,7 +42,7 @@ export async function writeNewTask({name, planners, dueDate}: NewTaskData): Prom
         });
     }
     catch (error) {
-        console.log(error);
+        console.error(error);
         throw error;
     }
 }
@@ -61,7 +61,7 @@ export async function deleteTask({id}: deleteArgs): Promise<void> {
         await deleteDoc(taskRef)
     }
     catch (error) {
-        console.log(error);
+        console.error(error);
         throw error;
     }
 }
@@ -83,7 +83,7 @@ export async function appendPlannerToTask({taskId, newPlannerId}: appendPlannerA
         });
     }
     catch (error) {
-        console.log(error);
+        console.error(error);
         throw error; 
     }
 }
@@ -105,7 +105,7 @@ export async function detachPlannerFromTask({taskId, oldPlannerId}: detachPlanne
         });
     }
     catch (error) {
-        console.log(error);
+        console.error(error);
         throw error; 
     }
 }
@@ -126,7 +126,7 @@ export async function editName({id, name}: editNameArgs): Promise<void> {
         })
     }
     catch (error) {
-        console.log(error);
+        console.error(error);
         throw error; 
     }
 }
@@ -147,7 +147,7 @@ export async function editDate({id, date}: editDateArgs): Promise<void> {
         })
     }
     catch (error) {
-        console.log(error);
+        console.error(error);
         throw error; 
     }
 }
@@ -168,7 +168,7 @@ export async function editComplete({id, complete}: editCompleteArgs): Promise<vo
         })
     }
     catch (error) {
-        console.log(error);
+        console.error(error);
         throw error; 
     }
 }
